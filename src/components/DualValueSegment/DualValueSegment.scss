@@ -1,0 +1,51 @@
+.dual-value-segment {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    .title-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .title {
+        font-size: 16px;
+        font-weight: 500;
+        border-bottom: 1px solid #6e6a6a;
+        padding-bottom: 2px;
+        flex-grow: 1;
+    }
+
+
+    .values-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .value-entry {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .value-label {
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px; // Rounded corners for the box
+            box-shadow: 2px 4px 10px 1px rgba(255, 254, 254, 0.47); // Box shadow for the label box
+            background-color: #E2E4E6;
+            min-width: 130px; // Minimum width of the box
+            text-align: center;
+        }
+    }
+
+    .counter-box {
+        font-weight: bold;
+        padding-right: 2rem;
+    }
+}

@@ -1,0 +1,70 @@
+.menu-container {
+    padding: 5px 40px 0;
+    display: block;
+}
+
+.menu-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+
+.segment-label {
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+.dropdowns-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.dropdown-select {
+    min-height: 36px;
+    min-width: 150px;
+    width: auto;
+    max-width: 100%;
+}
+
+.dropdown-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.all-select-checkbox {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem; // Spacing between 'All' checkbox and dropdowns
+}
+
+.all-select-label {
+    margin-left: 0.5rem; // Spacing between 'All' checkbox and its label
+    font-size: 13.5px;
+}
+
+
+.all-select-checkbox {
+    margin-left: 1rem;
+}
+
+.button-container {
+
+    .submit-button,
+    .reset-button {
+        padding: 0.36rem 0.7rem; // Reduced padding
+        font-size: 0.8rem; // Smaller font size
+        line-height: 1.4; // Adjusted line height
+        border-radius: 0.2rem; // Smaller border radius
+        color: #fff;
+    }
+
+    .submit-button {
+        margin-left: 1rem;
+        background-color: #594DA3;
+        border-color: #594DA3;
+    }
+}

@@ -1,0 +1,43 @@
+.my-navbar.shadow-sm {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: block;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.nav-link {
+    padding: 0 20px;
+    white-space: nowrap;
+    display: flex;
+}
+
+/* .hr-content {
+    padding-left: 40px;
+    padding-right: 40px;
+} */
+
+.hr-spec {
+    border: none;
+    height: 1px;
+    border-bottom: 2px solid #352c26;
+    opacity: 0.2;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .navbar-brand h4 {
+        font-size: 1rem;
+    }
+
+    .navbar-brand img {
+        width: 30px;
+    }
+
+    .nav-link {
+        padding: 0 10px;
+    }
+}

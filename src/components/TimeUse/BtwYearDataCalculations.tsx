@@ -1,0 +1,71 @@
+import { ActivityOption, ChartDataProps, DataRow } from '../Types';
+import { calculateYearlyActivityAverages } from '../../utils/Helpers';
+
+
+export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption): {
+    chartData: ChartDataProps, averages: { inHomeAvg: number, outHomeAvg: number }, maxYear: string,
+    inHomeChangePercent: number,
+    outHomeChangePercent: number
+} => {
+    const yearlyAverages = calculateYearlyActivityAverages(filteredData, selectedActivity);
+    const labels = yearlyAverages.map(item => item.year);
+
+    // Convert string averages to numbers
+    const inHomeData = yearlyAverages.map(item => parseFloat(item.inHomeAvg));
+    const outHomeData = yearlyAverages.map(item => parseFloat(item.outHomeAvg));
+
+    // Calculate the overall average
+    const inHomeAvg = parseFloat((inHomeData.reduce((a, b) => a + b, 0) / inHomeData.length).toFixed(1));
+    const outHomeAvg = parseFloat((outHomeData.reduce((a, b) => a + b, 0) / outHomeData.length).toFixed(1));
+
+    //Calculate the percentage change
+    const maxYear = labels[labels.length - 1];
+
+    const calculateChangePercentage = (data: any) => {
+        if (data.length > 1) {
+            const firstValue = data[0];
+            const lastValue = data[data.length - 1];
+
+            if (firstValue === 0) {
+                return 0;
+            }
+
+            return ((lastValue - firstValue) / firstValue) * 100;
+        }
+        return 0;
+    };
+
+    const inHomeChangePercent = calculateChangePercentage(inHomeData);
+    const outHomeChangePercent = calculateChangePercentage(outHomeData);
+
+
+    const chartData: ChartDataProps = {
+        labels,
+        datasets: [
+            {
+                label: 'In-home',
+                data: inHomeData,
+                backgroundColor: '#8164E2',
+                borderColor: '#8164E2',
+                borderWidth: 1,
+                barThickness: 20
+            },
+            {
+                label: 'Out-of-home',
+                data: outHomeData,
+                backgroundColor: '#AD88F1',
+                borderColor: '#AD88F1',
+                borderWidth: 1,
+                barThickness: 20
+            }
+        ]
+    };
+
+    return {
+        chartData,
+        averages: { inHomeAvg, outHomeAvg },
+        maxYear,
+        inHomeChangePercent,
+        outHomeChangePercent
+    };
+};

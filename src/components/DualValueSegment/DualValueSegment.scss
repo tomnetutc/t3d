@@ -39,13 +39,12 @@
             border-radius: 4px; // Rounded corners for the box
             box-shadow: 2px 4px 10px 1px rgba(255, 254, 254, 0.47); // Box shadow for the label box
             background-color: #E2E4E6;
-            min-width: 130px; // Minimum width of the box
+            min-width: 110px; // Minimum width of the box
             text-align: center;
         }
     }
 
     .counter-box {
         font-weight: bold;
-        padding-right: 2rem;
     }
 }

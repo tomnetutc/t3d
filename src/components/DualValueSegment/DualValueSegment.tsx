@@ -4,10 +4,26 @@ import { DualValueSegmentProps } from '../Types';
 
 
 
-const DualValueSegment: React.FC<DualValueSegmentProps> = ({ title, inHomeValue, outOfHomeValue }) => {
+const DualValueSegment: React.FC<DualValueSegmentProps> = ({ title, inHomeValue, outOfHomeValue, inHomeChangeValue, outOfHomeChangeValue }) => {
 
     const getColorBasedOnValue = (value: any) => {
         return parseFloat(value) >= 0 ? '#2ECC71' : '#E74C3C';
+    };
+
+    const formatChangeValue = (value: any) => {
+        // Determine the absolute value for formatting
+        const absoluteValue = Math.abs(value);
+
+        // Determine the unit based on the absolute value
+        const unit = absoluteValue === 1 ? 'min' : 'mins';
+
+        // Format the value with sign and unit
+        return `${value >= 0 ? '+' : '-'}${absoluteValue.toFixed(1)} ${unit}`;
+    };
+
+    const formatPercentChangeValue = (value: any): string => {
+        if (value === null) return 'N/A'; // Handle null or undefined values
+        return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`; // Format with sign and percentage
     };
 
     return (
@@ -18,11 +34,11 @@ const DualValueSegment: React.FC<DualValueSegmentProps> = ({ title, inHomeValue,
             <div className="values-container">
                 <div className="value-entry">
                     <span className="value-label" style={{ backgroundColor: '#8164E2', color: 'white' }}>In-home</span>
-                    <div className="counter-box" style={{ color: getColorBasedOnValue(inHomeValue) }}>{inHomeValue}</div>
+                    <div className="counter-box" style={{ color: getColorBasedOnValue(inHomeValue) }}>{formatChangeValue(inHomeChangeValue)} ({formatPercentChangeValue(inHomeValue)})</div>
                 </div>
                 <div className="value-entry">
                     <span className="value-label" style={{ backgroundColor: '#AD88F1', color: 'white' }}>Out-of-home</span>
-                    <div className="counter-box" style={{ color: getColorBasedOnValue(outOfHomeValue) }}>{outOfHomeValue}</div>
+                    <div className="counter-box" style={{ color: getColorBasedOnValue(outOfHomeValue) }}>{formatChangeValue(outOfHomeChangeValue)} ({formatPercentChangeValue(outOfHomeValue)})</div>
                 </div>
             </div>
         </div>

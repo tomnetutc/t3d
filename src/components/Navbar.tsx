@@ -13,7 +13,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange }) => {
             <Nav className="w-100 px-3">
                 <NavLink to="/" className="navbar-brand d-flex align-items-center me-auto" style={{ padding: '2px 20px' }}>
                     <img src={timeTravelIcon} alt="Time Use Icon" style={{ width: '34px' }} />
-                    <h4 className="fw-bold mb-0 ml-2">Time Use and Travel Data Hub</h4>
+                    <h4 className="fw-bold mb-0 ml-2">Time Use, Travel, and Telework Dashboard</h4>
                 </NavLink>
                 <div className="d-flex flex-row align-items-center" style={{ padding: '2px 20px' }}>
                     <NavLink to="/" className="nav-link">

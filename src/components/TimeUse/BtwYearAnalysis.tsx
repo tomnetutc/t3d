@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import "../../css/timeuse.scss";
 import BtwYearMenu from '../BtwYearMenu';
 import BubbleChart from '../Bubble/Bubble';
-import LoadingOverlay from '../LoadingOverlay';
 import VerticalStackedBarChart from '../VerticalChart/VerticalChart';
 import DualValueSegment from '../DualValueSegment/DualValueSegment';
 import { prepareVerticalChartData } from './BtwYearDataCalculations';
@@ -12,7 +11,6 @@ import { WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/H
 
 export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptions }) => {
 
-    const [isbtwLoading, setIsBtwLoading] = useState(false);
     const [btwYearFilteredData, setBtwYearFilteredData] = useState<any[]>([]);
     const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, activity: ActivityOption }>({ week: WeekOptions[0], activity: { label: "All", inHome: "All", outHome: "All" } });
     const [processedVerticalChartData, setProcessedVerticalChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
@@ -21,6 +19,8 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
     const [maxYear, setMaxYear] = useState('');
     const [inHomeChangePercent, setInHomeChangePercent] = useState<number | null>(null);
     const [outHomeChangePercent, setOutHomeChangePercent] = useState<number | null>(null);
+    const [inHomeChangeValue, setInHomeChangeValue] = useState<number | null>(null);
+    const [outHomeChangeValue, setOutHomeChangeValue] = useState<number | null>(null);
 
 
     const handleBtwYearMenuChange = useCallback((selections: { week: weekOption, activity: ActivityOption }) => {
@@ -31,14 +31,13 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
     }, [btwYearSelections]);
 
     useEffect(() => {
-        setIsBtwLoading(true);
 
         Promise.all([
             fetchAndFilterDataForBtwYearAnalysis(menuSelectedOptions, btwYearSelections.week)
         ]).then(([btwYearFilteredData]) => {
             setBtwYearFilteredData(btwYearFilteredData);
 
-            const { chartData: verticalData, averages, maxYear, inHomeChangePercent, outHomeChangePercent } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.activity);
+            const { chartData: verticalData, averages, maxYear, inHomeChangePercent, outHomeChangePercent, inHomeChangeValue, outHomeChangeValue } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.activity);
             setProcessedVerticalChartData(verticalData);
 
             setInHomeAverage(averages.inHomeAvg);
@@ -46,16 +45,16 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
             setMaxYear(maxYear);
             setInHomeChangePercent(inHomeChangePercent);
             setOutHomeChangePercent(outHomeChangePercent);
+            setInHomeChangeValue(inHomeChangeValue);
+            setOutHomeChangeValue(outHomeChangeValue);
 
-            setIsBtwLoading(false);
         });
     }, [menuSelectedOptions, btwYearSelections]);
 
 
     return (
         <>
-            {isbtwLoading && <LoadingOverlay />}
-            <div className='home'>
+            <div className='home' style={{ padding: '20px 0' }}>
 
                 <BtwYearMenu onSelectionChange={handleBtwYearMenuChange} />
 
@@ -71,15 +70,17 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
 
                     <div className="box ChartAverage"><VerticalStackedBarChart
                         chartData={processedVerticalChartData}
-                        title="Average minute per day per person" />
+                        title="Average time spent per person per day (min)" />
                     </div>
 
                     <div className="box SegmentChanges">
                         {maxYear && inHomeChangePercent !== null && outHomeChangePercent !== null && (
                             <DualValueSegment
                                 title={`Change from 2003 to ${maxYear}`}
-                                inHomeValue={`${inHomeChangePercent.toFixed(1)}%`}
-                                outOfHomeValue={`${outHomeChangePercent.toFixed(1)}%`}
+                                inHomeValue={inHomeChangePercent}
+                                outOfHomeValue={outHomeChangePercent}
+                                inHomeChangeValue={inHomeChangeValue}
+                                outOfHomeChangeValue={outHomeChangeValue}
                             />
                         )}
                     </div>

@@ -4,6 +4,7 @@ import { Navbar } from "../components/Navbar";
 import { WithinYearAnalysis } from "../components/TimeUse/WithinYearAnalysis";
 import { BtwYearAnalysis } from '../components/TimeUse/BtwYearAnalysis';
 import { Option } from "../components/Types";
+import Footer from '../components/Footer';
 
 export function TimeUse(): JSX.Element {
 
@@ -21,12 +22,8 @@ export function TimeUse(): JSX.Element {
             <div className="home" style={{ backgroundColor: '#f5f5f5', padding: '130px 20px 20px' }}>
                 <WithinYearAnalysis menuSelectedOptions={menuSelectedOptions} />
                 <BtwYearAnalysis menuSelectedOptions={menuSelectedOptions} />
+                <Footer />
             </div>
-
-            {/* Flag Counter */}
-            <a href="https://www.flagcounter.me/details/ei0">
-                <img src="https://www.flagcounter.me/ei0/" alt="Flag Counter" id="flag-counter-img" />
-            </a>
         </>
     );
 }

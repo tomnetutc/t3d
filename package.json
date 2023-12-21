@@ -2,7 +2,7 @@
   "name": "t3_datahub",
   "homepage": "https://tomnetutc.github.io/t3_datahub",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -24,7 +24,7 @@ export class DataProvider {
     public async loadData(): Promise<DSVRowString<string>[]> {
         if (this.data === null) {
             try {
-                this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3_datahub/main/public/df.csv');
+                this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3_datahub/main/public/df_time_use.csv');
             } catch (error) {
                 console.error('Error loading data:', error);
                 throw error;
@@ -134,15 +134,6 @@ export const calculateYearlyActivityAverages = (data: DataRow[], selectedActivit
         outHomeAvg: (outHome / count).toFixed(1)
     }));
 };
-
-
-export const BubbleMapValueToRange = (value: number, minData: number, maxData: number, minSize: number, maxSize: number) => {
-    const logRatio = (Math.log(value) - Math.log(minData)) / (Math.log(maxData) - Math.log(minData));
-
-    const size = logRatio * (maxSize - minSize) + minSize;
-    return Math.max(minSize, Math.min(size, maxSize));
-};
-
 
 
 export const GenderOptions: Option[] = [
@@ -272,17 +263,24 @@ export const RaceOptions: Option[] = [
 
 const EmploymentStatusOptions: Option[] = [
     {
-        value: "Employed",
-        label: "Employed",
-        id: "employed",
+        value: "Full-time worker",
+        label: "Full-time worker",
+        id: "full_time",
         val: "1.0",
         groupId: "Employment",
     },
     {
-        value: "Unemployed",
-        label: "Unemployed",
-        id: "employed",
-        val: "0.0",
+        value: "Part-time worker",
+        label: "Part-time worker",
+        id: "part_time",
+        val: "1.0",
+        groupId: "Employment",
+    },
+    {
+        value: "Non-worker",
+        label: "Non-worker",
+        id: "unemployed",
+        val: "1.0",
         groupId: "Employment",
     },
 ];
@@ -363,6 +361,44 @@ const LocationOptions: Option[] = [
         id: "non_metropolitan",
         val: "1.0",
         groupId: "Location",
+    },
+];
+
+const WorkArrangementOptions: Option[] = [
+    {
+        value: "Worker with zero work",
+        label: "Worker with zero work",
+        id: "zero_work",
+        val: "1.0",
+        groupId: "Work Arrangement",
+    },
+    {
+        value: "In-home only worker",
+        label: "In-home only worker",
+        id: "only_inhome_worker",
+        val: "1.0",
+        groupId: "Work Arrangement",
+    },
+    {
+        value: "Commuter only worker",
+        label: "Commuter only worker",
+        id: "commuter_only",
+        val: "1.0",
+        groupId: "Work Arrangement",
+    },
+    {
+        value: "Multi-site worker",
+        label: "Multi-site worker",
+        id: "multisite_worker",
+        val: "1.0",
+        groupId: "Work Arrangement",
+    },
+    {
+        value: "Non-worker",
+        label: "Non-worker",
+        id: "unemployed",
+        val: "1.0",
+        groupId: "Work Arrangement",
     },
 ];
 
@@ -447,10 +483,10 @@ export const groupedOptions: GroupedOption[] = [
         })),
     },
     {
-        label: "Employment status",
+        label: "Employment",
         options: EmploymentStatusOptions.map((obj) => ({
             ...obj,
-            groupName: "Employment status",
+            groupName: "Employment",
         })),
     },
     {
@@ -474,6 +510,14 @@ export const groupedOptions: GroupedOption[] = [
             groupName: "Location",
         })),
     },
+    {
+        label: "Work arrangement",
+        options: WorkArrangementOptions.map((obj) => ({
+            ...obj,
+            groupName: "Work arrangement",
+        })),
+    },
+
     {
         label: "Time poverty status",
         options: TimePovertyOptions.map((obj) => ({
@@ -594,7 +638,7 @@ export const ActivityOptions: ActivityOption[] = [
     {
         inHome: "in_other",
         outHome: "out_other",
-        label: "Data Codes (other)",
+        label: "Other",
     },
 ];
 

@@ -5,7 +5,9 @@ import { calculateYearlyActivityAverages } from '../../utils/Helpers';
 export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption): {
     chartData: ChartDataProps, averages: { inHomeAvg: number, outHomeAvg: number }, maxYear: string,
     inHomeChangePercent: number,
-    outHomeChangePercent: number
+    outHomeChangePercent: number,
+    inHomeChangeValue: number,
+    outHomeChangeValue: number
 } => {
     const yearlyAverages = calculateYearlyActivityAverages(filteredData, selectedActivity);
     const labels = yearlyAverages.map(item => item.year);
@@ -38,6 +40,13 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
     const inHomeChangePercent = calculateChangePercentage(inHomeData);
     const outHomeChangePercent = calculateChangePercentage(outHomeData);
 
+    const inHomeChangeValue = inHomeData.length > 1 ? inHomeData[inHomeData.length - 1] - inHomeData[0] : 0;
+    const outHomeChangeValue = outHomeData.length > 1 ? outHomeData[outHomeData.length - 1] - outHomeData[0] : 0;
+
+
+    const barCountThreshold = 4;
+
+    let barThickness = labels.length <= barCountThreshold ? 50 : 'flex' as 'flex';
 
     const chartData: ChartDataProps = {
         labels,
@@ -48,7 +57,7 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
                 backgroundColor: '#8164E2',
                 borderColor: '#8164E2',
                 borderWidth: 1,
-                barThickness: 20
+                barThickness: barThickness
             },
             {
                 label: 'Out-of-home',
@@ -56,7 +65,7 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
                 backgroundColor: '#AD88F1',
                 borderColor: '#AD88F1',
                 borderWidth: 1,
-                barThickness: 20
+                barThickness: barThickness
             }
         ]
     };
@@ -66,6 +75,8 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
         averages: { inHomeAvg, outHomeAvg },
         maxYear,
         inHomeChangePercent,
-        outHomeChangePercent
+        outHomeChangePercent,
+        inHomeChangeValue,
+        outHomeChangeValue
     };
 };

@@ -28,6 +28,10 @@
   z-index: 1000;
 }
 
+.custom-container {
+  padding: 0px !important;
+}
+
 html,
 body {
   min-width: 320px;

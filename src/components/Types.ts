@@ -83,7 +83,7 @@ export interface ChartDataProps {
         backgroundColor: string;
         borderColor: string;
         borderWidth: number;
-        barThickness: number;
+        barThickness: number | 'flex';
     }[];
 };
 
@@ -105,4 +105,6 @@ export interface DualValueSegmentProps {
     title: string;
     inHomeValue: number | string;
     outOfHomeValue: number | string;
+    inHomeChangeValue: number | null;
+    outOfHomeChangeValue: number | null;
 };

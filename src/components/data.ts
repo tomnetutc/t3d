@@ -31,7 +31,7 @@ export let segmentActivites = {
 }
 
 export const updateSegmentSize = (newCounter: number) => {
-    segmentSize = { ...segmentSize, counter: `N = ${newCounter} persons` };
+    segmentSize = { ...segmentSize, counter: `N = ${newCounter.toLocaleString()} persons` };
 };
 
 export const updateSegmentShare = (row1: number, row2: number) => {

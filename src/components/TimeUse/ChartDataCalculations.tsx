@@ -16,7 +16,7 @@ export const prepareChartData = (filteredData: DataRow[]): ChartDataProps => {
                 backgroundColor: '#8164E2',
                 borderColor: '#8164E2',
                 borderWidth: 1,
-                barThickness: 20
+                barThickness: 'flex' as 'flex'
             },
             {
                 label: 'Out-of-home',
@@ -24,7 +24,7 @@ export const prepareChartData = (filteredData: DataRow[]): ChartDataProps => {
                 backgroundColor: '#AD88F1',
                 borderColor: '#AD88F1',
                 borderWidth: 1,
-                barThickness: 20
+                barThickness: 'flex' as 'flex'
             }
         ]
     };

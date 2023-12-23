@@ -1,9 +1,10 @@
 import { ActivityOption, ChartDataProps, DataRow } from '../Types';
 import { calculateYearlyActivityAverages } from '../../utils/Helpers';
+import { min } from 'lodash';
 
 
 export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption): {
-    chartData: ChartDataProps, averages: { inHomeAvg: number, outHomeAvg: number }, maxYear: string,
+    chartData: ChartDataProps, averages: { inHomeAvg: number, outHomeAvg: number }, minYear: string, maxYear: string,
     inHomeChangePercent: number,
     outHomeChangePercent: number,
     inHomeChangeValue: number,
@@ -20,9 +21,11 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
     const inHomeAvg = parseFloat((inHomeData.reduce((a, b) => a + b, 0) / inHomeData.length).toFixed(1));
     const outHomeAvg = parseFloat((outHomeData.reduce((a, b) => a + b, 0) / outHomeData.length).toFixed(1));
 
-    //Calculate the percentage change
+
+    const minYear = labels[0];
     const maxYear = labels[labels.length - 1];
 
+    //Calculate the percentage change
     const calculateChangePercentage = (data: any) => {
         if (data.length > 1) {
             const firstValue = data[0];
@@ -44,7 +47,7 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
     const outHomeChangeValue = outHomeData.length > 1 ? outHomeData[outHomeData.length - 1] - outHomeData[0] : 0;
 
 
-    const barCountThreshold = 4;
+    const barCountThreshold = 6;
 
     let barThickness = labels.length <= barCountThreshold ? 50 : 'flex' as 'flex';
 
@@ -73,6 +76,7 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
     return {
         chartData,
         averages: { inHomeAvg, outHomeAvg },
+        minYear,
         maxYear,
         inHomeChangePercent,
         outHomeChangePercent,

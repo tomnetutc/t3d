@@ -16,6 +16,7 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
     const [processedVerticalChartData, setProcessedVerticalChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [inHomeAverage, setInHomeAverage] = useState<number | null>(null);
     const [outHomeAverage, setOutHomeAverage] = useState<number | null>(null);
+    const [minYear, setMinYear] = useState('');
     const [maxYear, setMaxYear] = useState('');
     const [inHomeChangePercent, setInHomeChangePercent] = useState<number | null>(null);
     const [outHomeChangePercent, setOutHomeChangePercent] = useState<number | null>(null);
@@ -37,11 +38,12 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
         ]).then(([btwYearFilteredData]) => {
             setBtwYearFilteredData(btwYearFilteredData);
 
-            const { chartData: verticalData, averages, maxYear, inHomeChangePercent, outHomeChangePercent, inHomeChangeValue, outHomeChangeValue } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.activity);
+            const { chartData: verticalData, averages, minYear, maxYear, inHomeChangePercent, outHomeChangePercent, inHomeChangeValue, outHomeChangeValue } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.activity);
             setProcessedVerticalChartData(verticalData);
 
             setInHomeAverage(averages.inHomeAvg);
             setOutHomeAverage(averages.outHomeAvg);
+            setMinYear(minYear);
             setMaxYear(maxYear);
             setInHomeChangePercent(inHomeChangePercent);
             setOutHomeChangePercent(outHomeChangePercent);
@@ -74,9 +76,9 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
                     </div>
 
                     <div className="box SegmentChanges">
-                        {maxYear && inHomeChangePercent !== null && outHomeChangePercent !== null && (
+                        {maxYear && minYear && inHomeChangePercent !== null && outHomeChangePercent !== null && (
                             <DualValueSegment
-                                title={`Change from 2003 to ${maxYear}`}
+                                title={`Change from ${minYear} to ${maxYear}`}
                                 inHomeValue={inHomeChangePercent}
                                 outOfHomeValue={outHomeChangePercent}
                                 inHomeChangeValue={inHomeChangeValue}

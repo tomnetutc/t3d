@@ -36,10 +36,15 @@ export const updateSegmentSize = (newCounter: number) => {
 
 export const updateSegmentShare = (row1: number, row2: number) => {
     const share = (row1 / row2) * 100;
-    segmentShare = { ...segmentShare, counter: `${share.toFixed(1)} %` };
+    const formatedSegmentShare = (share < 1 && share != 0) ? share.toFixed(2) : share.toFixed(1);
+    segmentShare = { ...segmentShare, counter: `${formatedSegmentShare} %` };
 };
 
 export const updateSegmentTimeSpent = (newAverage: number) => {
+    if (newAverage < 1 && newAverage != 0) {
+        segmentTimeSpent = { ...segmentTimeSpent, counter: `${(newAverage).toFixed(1)} mins` };
+        return;
+    }
     segmentTimeSpent = { ...segmentTimeSpent, counter: `${newAverage.toFixed(0)} mins` };
 };
 

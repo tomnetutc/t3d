@@ -2,14 +2,14 @@ import { ActivityOption, ChartDataProps, DataRow } from '../Types';
 import { calculateYearlyActivityAverages } from '../../utils/Helpers';
 
 
-export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption): {
+export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption, startYear: string, endYear: string): {
     chartData: ChartDataProps, averages: { inHomeAvg: number, outHomeAvg: number }, minYear: string, maxYear: string,
     inHomeChangePercent: number,
     outHomeChangePercent: number,
     inHomeChangeValue: number,
     outHomeChangeValue: number
 } => {
-    const yearlyAverages = calculateYearlyActivityAverages(filteredData, selectedActivity);
+    const yearlyAverages = calculateYearlyActivityAverages(filteredData, selectedActivity, startYear, endYear);
     const labels = yearlyAverages.map(item => item.year);
 
     // Convert string averages to numbers
@@ -29,10 +29,6 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
         if (data.length > 1) {
             const firstValue = data[0];
             const lastValue = data[data.length - 1];
-
-            if (firstValue === 0) {
-                return 0;
-            }
 
             return ((lastValue - firstValue) / firstValue) * 100;
         }

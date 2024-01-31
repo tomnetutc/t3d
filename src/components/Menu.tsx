@@ -42,6 +42,15 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOp
         });
     };
 
+    const scrollToSelectedOption = () => {
+        setTimeout(() => {
+            const selectedEl = document.querySelector(".dropdown-select__option--is-selected");
+            if (selectedEl) {
+                selectedEl.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
+            }
+        }, 15);
+    };
+
     const customStyles = {
         control: (provided: any) => ({
             ...provided,
@@ -64,6 +73,8 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOp
         <div className="dropdown-wrapper" onClick={() => isAllSelected && setIsAllSelected(false)}>
             <Select
                 className="dropdown-select"
+                classNamePrefix="dropdown-select"
+                onMenuOpen={scrollToSelectedOption}
                 value={selectedOptions[index]}
                 onChange={(selectedOption) => handleChange(index, selectedOption)}
                 options={groupedOptions.map(group => ({

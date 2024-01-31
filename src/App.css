@@ -10,9 +10,11 @@
     top: 50%;
     height: 1px;
     border-top: 2px dotted #ccc;
-    width: calc(150%);
+    width: var(--dotted-line-width, calc(150%));
     margin-left: 20px;
   }
+
+
 }
 
 .loading-overlay {

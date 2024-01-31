@@ -45,6 +45,20 @@ export type ActivityOption = {
     outHome: string;
 };
 
+export type TripPurposeOption = {
+    label: string;
+    value: string;
+    numberTrip: string;
+    durationTrips: string;
+};
+
+export type TravelModeOption = {
+    label: string;
+    value: string;
+    numberTrip: string;
+    durationTrips: string;
+};
+
 export type DataRow = {
     [key: string]: string;
 };
@@ -65,6 +79,7 @@ export interface SegmentProps {
 export interface DonutProps {
     title: string;
     data: ChartData<"doughnut">;
+    aspectRatio?: number;
 };
 
 export interface NavbarProps {
@@ -82,7 +97,7 @@ export interface ChartDataProps {
         data: number[];
         backgroundColor: string;
         borderColor: string;
-        borderWidth: number;
+        borderWidth?: number;
         barThickness: number | 'flex';
     }[];
 };

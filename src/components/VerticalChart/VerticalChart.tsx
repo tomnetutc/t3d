@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "../VerticalChart/VerticalChart.scss";
+import "./VerticalChart.scss";
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { ChartDataProps } from '../Types';
@@ -25,7 +25,7 @@ ChartJS.register(
     Legend
 );
 
-const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: string }> = ({ chartData, title }) => {
+const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: string, isStacked: boolean, showLegend: boolean }> = ({ chartData, title, isStacked, showLegend }) => {
 
     const verticalOptions = {
         indexAxis: 'x' as const,
@@ -41,6 +41,7 @@ const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: stri
                 display: false,
             },
             legend: {
+                display: showLegend,
                 position: 'top' as const,
                 align: 'end' as 'end',
                 labels: {
@@ -54,14 +55,14 @@ const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: stri
         },
         scales: {
             x: {
-                stacked: true,
+                stacked: isStacked,
                 grid: {
                     display: false,
                     drawBorder: false,
                 },
             },
             y: {
-                stacked: true,
+                stacked: isStacked,
                 max: calculateMaxYAxis(chartData),
             },
         }

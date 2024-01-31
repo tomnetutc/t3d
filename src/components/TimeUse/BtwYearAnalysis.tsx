@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import "../../css/timeuse.scss";
-import BtwYearMenu from '../BtwYearMenu';
+import BtwYearMenu from './BtwYearMenu';
 import BubbleChart from '../Bubble/Bubble';
 import VerticalStackedBarChart from '../VerticalChart/VerticalChart';
 import DualValueSegment from '../DualValueSegment/DualValueSegment';
 import { prepareVerticalChartData } from './BtwYearDataCalculations';
-import { ActivityOption, ChartDataProps, MenuSelectedProps, weekOption } from "../Types";
-import { WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
+import { ActivityOption, ChartDataProps, Option, weekOption } from "../Types";
+import { DataProvider, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 
 
-export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptions }) => {
+export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
 
     const [btwYearFilteredData, setBtwYearFilteredData] = useState<any[]>([]);
-    const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, activity: ActivityOption }>({ week: WeekOptions[0], activity: { label: "All", inHome: "All", outHome: "All" } });
+    const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, activity: ActivityOption, startYear: string, endYear: string }>({ week: WeekOptions[0], activity: { label: "All", inHome: "All", outHome: "All" }, startYear: "", endYear: "" });
     const [processedVerticalChartData, setProcessedVerticalChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [inHomeAverage, setInHomeAverage] = useState<number | null>(null);
     const [outHomeAverage, setOutHomeAverage] = useState<number | null>(null);
@@ -24,8 +24,8 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
     const [outHomeChangeValue, setOutHomeChangeValue] = useState<number | null>(null);
 
 
-    const handleBtwYearMenuChange = useCallback((selections: { week: weekOption, activity: ActivityOption }) => {
-        if (selections.activity === btwYearSelections.activity && selections.week === btwYearSelections.week) {
+    const handleBtwYearMenuChange = useCallback((selections: { week: weekOption, activity: ActivityOption, startYear: string, endYear: string }) => {
+        if (selections.activity === btwYearSelections.activity && selections.week === btwYearSelections.week && selections.startYear === btwYearSelections.startYear && selections.endYear === btwYearSelections.endYear) {
             return;
         }
         setBtwYearSelections(selections);
@@ -33,12 +33,16 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
 
     useEffect(() => {
 
+        if (btwYearSelections.startYear === '' || btwYearSelections.endYear === '') {
+            return;
+        }
+
         Promise.all([
-            fetchAndFilterDataForBtwYearAnalysis(menuSelectedOptions, btwYearSelections.week)
+            fetchAndFilterDataForBtwYearAnalysis(DataProvider.getInstance(), menuSelectedOptions, btwYearSelections.week) //filtering for activity type is done in prepareVerticalChartData function
         ]).then(([btwYearFilteredData]) => {
             setBtwYearFilteredData(btwYearFilteredData);
 
-            const { chartData: verticalData, averages, minYear, maxYear, inHomeChangePercent, outHomeChangePercent, inHomeChangeValue, outHomeChangeValue } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.activity);
+            const { chartData: verticalData, averages, minYear, maxYear, inHomeChangePercent, outHomeChangePercent, inHomeChangeValue, outHomeChangeValue } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.activity, btwYearSelections.startYear, btwYearSelections.endYear);
             setProcessedVerticalChartData(verticalData);
 
             setInHomeAverage(averages.inHomeAvg);
@@ -50,6 +54,8 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
             setInHomeChangeValue(inHomeChangeValue);
             setOutHomeChangeValue(outHomeChangeValue);
 
+        }).finally(() => {
+            setIsBtwYearLoading(false);
         });
     }, [menuSelectedOptions, btwYearSelections]);
 
@@ -72,7 +78,9 @@ export const BtwYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptio
 
                     <div className="box ChartAverage"><VerticalStackedBarChart
                         chartData={processedVerticalChartData}
-                        title="Average time spent per person per day (min)" />
+                        title="Average time spent per person per day (min)"
+                        isStacked={true}
+                        showLegend={true} />
                     </div>
 
                     <div className="box SegmentChanges">

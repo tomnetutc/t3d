@@ -1,11 +1,19 @@
-import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData } from "../components/Types";
+import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption } from "../components/Types";
 import { csv } from "d3";
 import { DSVRowString } from "d3-dsv";
 import firebase, { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, doc, updateDoc, getDoc, increment } from 'firebase/firestore';
 import firebaseConfig from "../firebaseConfig";
+import { useEffect } from "react";
 
+
+export const useDocumentTitle = (pageTitle: string) => {
+    useEffect(() => {
+        const initialTitle = 'T3 Data Dashboard';
+        document.title = `${initialTitle} | ${pageTitle}`;
+    }, [pageTitle]);
+};
 
 // Singleton class for data management
 export class DataProvider {
@@ -24,7 +32,7 @@ export class DataProvider {
     public async loadData(): Promise<DSVRowString<string>[]> {
         if (this.data === null) {
             try {
-                this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3_datahub/main/public/df_time_use.csv');
+                this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3d/main/public/df_time_use.csv');
             } catch (error) {
                 console.error('Error loading data:', error);
                 throw error;
@@ -34,9 +42,9 @@ export class DataProvider {
     }
 }
 
-export const getTotalRowsForYear = async (year: string) => {
+export const getTotalRowsForYear = async (dataProvider: { loadData: () => Promise<any[]> }, year: string) => {
     try {
-        const data = await DataProvider.getInstance().loadData();
+        const data = await dataProvider.loadData();
         return data.filter(row => row.year === year).length;
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -69,11 +77,9 @@ export function filterCriteria(selectedOptions: Option[], year: string, weekOpti
     };
 }
 
-
-
-export const fetchAndFilterData = async (selectedOptions: Option[], year: string, weekOption: weekOption) => {
+export const fetchAndFilterData = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], year: string, weekOption: weekOption) => {
     try {
-        const data = await DataProvider.getInstance().loadData();
+        const data = await dataProvider.loadData();
         return data.filter(filterCriteria(selectedOptions, year, weekOption));
     } catch (error) {
         console.error('Error fetching and filtering data:', error);
@@ -81,9 +87,9 @@ export const fetchAndFilterData = async (selectedOptions: Option[], year: string
     }
 };
 
-export const fetchAndFilterDataForBtwYearAnalysis = async (selectedOptions: Option[], weekOption: weekOption) => {
+export const fetchAndFilterDataForBtwYearAnalysis = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], weekOption: weekOption) => {
     try {
-        const data = await DataProvider.getInstance().loadData();
+        const data = await dataProvider.loadData();
         return data.filter(filterCriteria(selectedOptions, "", weekOption));
     } catch (error) {
         console.error('Error fetching and filtering data for between year analysis:', error);
@@ -106,26 +112,35 @@ export const calculateActivityAverages = (data: DataRow[]) => {
     });
 };
 
-export const calculateYearlyActivityAverages = (data: DataRow[], selectedActivity: ActivityOption): any[] => {
+export const calculateYearlyActivityAverages = (data: DataRow[], selectedActivity: ActivityOption, startYear: string, endYear: string): any[] => {
     const yearlyData: Record<string, YearlyActivityData> = {};
+
+    const startYearNum = parseInt(startYear, 10);
+    const endYearNum = parseInt(endYear, 10);
 
     data.forEach(row => {
         const year = row.year;
-        if (!yearlyData[year]) {
-            yearlyData[year] = { inHome: 0, outHome: 0, count: 0 };
+        const yearNum = parseInt(year, 10);
+
+        if (yearNum >= startYearNum && yearNum <= endYearNum) {
+
+            if (!yearlyData[year]) {
+                yearlyData[year] = { inHome: 0, outHome: 0, count: 0 };
+            }
+
+            if (selectedActivity.label === "All") {
+                ActivityOptions.forEach(activity => {
+                    yearlyData[year].inHome += parseFloat(row[activity.inHome] || '0');
+                    yearlyData[year].outHome += parseFloat(row[activity.outHome] || '0');
+                });
+            } else {
+                yearlyData[year].inHome += parseFloat(row[selectedActivity.inHome] || '0');
+                yearlyData[year].outHome += parseFloat(row[selectedActivity.outHome] || '0');
+            }
+
+            yearlyData[year].count += 1;
         }
 
-        if (selectedActivity.label === "All") {
-            ActivityOptions.forEach(activity => {
-                yearlyData[year].inHome += parseFloat(row[activity.inHome] || '0');
-                yearlyData[year].outHome += parseFloat(row[activity.outHome] || '0');
-            });
-        } else {
-            yearlyData[year].inHome += parseFloat(row[selectedActivity.inHome] || '0');
-            yearlyData[year].outHome += parseFloat(row[selectedActivity.outHome] || '0');
-        }
-
-        yearlyData[year].count += 1;
     });
 
     return Object.entries(yearlyData).map(([year, { inHome, outHome, count }]) => ({
@@ -135,6 +150,63 @@ export const calculateYearlyActivityAverages = (data: DataRow[], selectedActivit
     }));
 };
 
+
+// Singleton class for Traveldata management
+export class TravelDataProvider {
+    private static instance: TravelDataProvider;
+    private data: DSVRowString<string>[] | null = null;
+
+    private constructor() { }
+
+    public static getInstance(): TravelDataProvider {
+        if (!TravelDataProvider.instance) {
+            TravelDataProvider.instance = new TravelDataProvider();
+        }
+        return TravelDataProvider.instance;
+    }
+
+    public async loadData(): Promise<DSVRowString<string>[]> {
+        if (this.data === null) {
+            try {
+                this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3d/main/public/df_travel.csv');
+            } catch (error) {
+                console.error('Error loading data:', error);
+                throw error;
+            }
+        }
+        return this.data;
+    }
+}
+
+export const calculateTripAverages = (data: DataRow[]) => {
+    return TripPurposeOptions.map((tripPurpose) => {
+        const totalNumberTrip = data.reduce((sum, row) => sum + parseFloat(row[tripPurpose.numberTrip] || '0'), 0);
+        const totalDurationTrips = data.reduce((sum, row) => sum + parseFloat(row[tripPurpose.durationTrips] || '0'), 0);
+        const averageNumberTrip = totalNumberTrip / (data.length == 0 ? 1 : data.length);
+        const averageDurationTrips = totalDurationTrips / (data.length == 0 ? 1 : data.length);
+
+        return {
+            label: tripPurpose.label,
+            numberTrip: averageNumberTrip.toFixed(2), // Rounded to 2 decimal place
+            durationTrips: averageDurationTrips.toFixed(1) // Rounded to 1 decimal place
+        };
+    });
+};
+
+export const calculateTravelModeAverages = (data: DataRow[]) => {
+    return TravelModeOptions.map((travelMode) => {
+        const totalNumberTrip = data.reduce((sum, row) => sum + parseFloat(row[travelMode.numberTrip] || '0'), 0);
+        const totalDurationTrips = data.reduce((sum, row) => sum + parseFloat(row[travelMode.durationTrips] || '0'), 0);
+        const averageNumberTrip = totalNumberTrip / (data.length == 0 ? 1 : data.length);
+        const averageDurationTrips = totalDurationTrips / (data.length == 0 ? 1 : data.length);
+
+        return {
+            label: travelMode.label,
+            numberTrip: averageNumberTrip.toFixed(2), // Rounded to 2 decimal places
+            durationTrips: averageDurationTrips.toFixed(1) // Rounded to 1 decimal place
+        };
+    });
+};
 
 export const GenderOptions: Option[] = [
     {
@@ -642,6 +714,110 @@ export const ActivityOptions: ActivityOption[] = [
     },
 ];
 
+export const TripPurposeOptions: TripPurposeOption[] = [
+    {
+        label: "Work",
+        value: "Work",
+        numberTrip: "tr_work",
+        durationTrips: "tr_work_dur",
+    },
+    {
+        label: "Education",
+        value: "Education",
+        numberTrip: "tr_educ",
+        durationTrips: "tr_educ_dur",
+    },
+    {
+        label: "Shopping",
+        value: "Shopping",
+        numberTrip: "tr_shop",
+        durationTrips: "tr_shop_dur",
+    },
+    {
+        label: "Recreational",
+        value: "Recreational",
+        numberTrip: "tr_rec",
+        durationTrips: "tr_rec_dur",
+    },
+    {
+        label: "Social",
+        value: "Social",
+        numberTrip: "tr_soc",
+        durationTrips: "tr_soc_dur",
+    },
+    {
+        label: "Eating/Drinking",
+        value: "Eating/Drinking",
+        numberTrip: "tr_eat",
+        durationTrips: "tr_eat_dur",
+    },
+    {
+        label: "Adult or Child care",
+        value: "Adult or Child care",
+        numberTrip: "tr_ccare",
+        durationTrips: "tr_ccare_dur",
+    },
+    {
+        label: "Other",
+        value: "Other",
+        numberTrip: "tr_other",
+        durationTrips: "tr_other_dur",
+    },
+    {
+        label: "Return to home",
+        value: "Return to home",
+        numberTrip: "tr_home",
+        durationTrips: "tr_home_dur",
+    },
+    {
+        label: "All",
+        value: "All",
+        numberTrip: "tr_all",
+        durationTrips: "tr_all_dur",
+    },
+
+];
+
+export const TravelModeOptions: TravelModeOption[] = [
+    {
+        label: "Car",
+        value: "Car",
+        numberTrip: "mode_car",
+        durationTrips: "mode_car_dur",
+    },
+    {
+        label: "Transit",
+        value: "Transit",
+        numberTrip: "mode_pt",
+        durationTrips: "mode_pt_dur",
+    },
+    {
+        label: "Walk",
+        value: "Walk",
+        numberTrip: "mode_walk",
+        durationTrips: "mode_walk_dur",
+    },
+    {
+        label: "Bike",
+        value: "Bike",
+        numberTrip: "mode_bike",
+        durationTrips: "mode_bike_dur",
+    },
+    {
+        label: "Other",
+        value: "Other",
+        numberTrip: "mode_other",
+        durationTrips: "mode_other_dur",
+    },
+    {
+        label: "All",
+        value: "All",
+        numberTrip: "mode_all",
+        durationTrips: "mode_all_dur",
+    },
+];
+
+
 export function hideFlagCounter() {
     const flagCounterImage = document.querySelector('#flag-counter-img') as HTMLImageElement;
     if (flagCounterImage) {
@@ -656,16 +832,16 @@ const analytics = getAnalytics(app);
 export function tracking() {
     const websiteDocRef = doc(db, "websites", "FV2dPUi6VGoHSjRtDCLB");
 
-    //   const unique_counter = document.getElementById("visit-count");
-    //   const total_counter = document.getElementById("total-count");
+    // const unique_counter = document.getElementById("visit-count");
+    // const total_counter = document.getElementById("total-count");
 
     const getUniqueCount = async () => {
         const docSnap = await getDoc(websiteDocRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-            //   if (data) {
+            // if (data) {
             //     setValue(data.uniqueCount);
-            //   }
+            // }
         }
     };
 
@@ -673,9 +849,9 @@ export function tracking() {
         const docSnap = await getDoc(websiteDocRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-            //   if (data) {
+            // if (data) {
             //     setTotal(data.totalCount);
-            //   }
+            // }
         }
     };
 
@@ -693,17 +869,17 @@ export function tracking() {
         await getTotalCount();
     };
 
-    //   const setValue = (num: number) => {
+    // const setValue = (num: number) => {
     //     if (unique_counter) {
-    //       unique_counter.innerText = `Unique visitors: ${num}`;
+    //         unique_counter.innerText = `Unique visitors: ${num}`;
     //     }
-    //   };
+    // };
 
-    //   const setTotal = (num: number) => {
+    // const setTotal = (num: number) => {
     //     if (total_counter) {
-    //       total_counter.innerText = `Total visits: ${num}`;
+    //         total_counter.innerText = `Total visits: ${num}`;
     //     }
-    //   };
+    // };
 
     if (localStorage.getItem("hasVisited") == null) {
         incrementCountUnique()
@@ -727,6 +903,3 @@ export function tracking() {
         getTotalCount().catch((err) => console.log(err));
     }
 }
-
-
-

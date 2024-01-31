@@ -1,5 +1,5 @@
 import { TimeUse } from "./pages/TimeUse";
-// import { Travel } from "./pages/Travel";
+import { Travel } from "./pages/Travel";
 // import { Telework } from "./pages/Telework";
 import { Routes, Route } from "react-router-dom";
 import ReactGA from "react-ga4";
@@ -10,7 +10,6 @@ ReactGA.initialize('G-03ZSYS61MK');
 
 function App(): JSX.Element {
   useEffect(() => {
-    tracking();
     hideFlagCounter();
   });
 
@@ -21,11 +20,11 @@ function App(): JSX.Element {
         {/* <Route path="/travel" element={<Travel />} />
   <Route path="/telework" element={<Telework />} /> */}
 
-        {/* <Route path='/'>
+        <Route path='/'>
           <Route index element={<TimeUse />} />
           <Route path='travel' element={<Travel />} />
-          <Route path='telework' element={<Telework />} />
-        </Route> */}
+          {/* <Route path='telework' element={<Telework />} /> */}
+        </Route>
       </Routes>
     </>
   );

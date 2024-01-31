@@ -12,46 +12,48 @@ ChartJS.register(
     Legend
 );
 
-const options = {
-    indexAxis: 'y' as const,
-    elements: {
-        bar: {
-            borderWidth: 2,
+
+const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string, isStacked: boolean, showLegend: boolean }> = ({ chartData, title, isStacked, showLegend }) => {
+
+    const options = {
+        indexAxis: 'y' as const,
+        elements: {
+            bar: {
+                borderWidth: 2,
+            },
         },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        datalabels: {
-            display: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            datalabels: {
+                display: false,
+            },
+            legend: {
+                display: showLegend,
+                position: 'top' as const,
+                align: 'end' as 'end',
+                labels: {
+                    boxWidth: 10,
+                    boxHeight: 10
+                }
+            },
+            title: {
+                display: false
+            },
         },
-        legend: {
-            position: 'top' as const,
-            align: 'end' as 'end',
-            labels: {
-                boxWidth: 10,
-                boxHeight: 10
-            }
-        },
-        title: {
-            display: false
-        },
-    },
-    scales: {
-        x: {
-            stacked: true,
-        },
-        y: {
-            stacked: true,
-            grid: {
-                display: false, // This will remove the grid lines
-                drawBorder: false,
+        scales: {
+            x: {
+                stacked: isStacked,
+            },
+            y: {
+                stacked: isStacked,
+                grid: {
+                    display: false, // This will remove the grid lines
+                    drawBorder: false,
+                }
             }
         }
-    }
-};
-
-const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string }> = ({ chartData, title }) => {
+    };
 
     return (
         <div className="chart-container">

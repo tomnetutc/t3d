@@ -5,21 +5,19 @@ import Donut from '../Donut/Donut';
 import Segment from '../Segment/Segment';
 import YearMenu from '../WithinYearMenu';
 import ChartComponent from '../Chart/Chart';
-import LoadingOverlay from '../LoadingOverlay';
-import { ChartDataProps, MenuSelectedProps, weekOption } from "../Types";
+import { ChartDataProps, Option, weekOption } from "../Types";
 import { prepareChartData } from '../../components/TimeUse/ChartDataCalculations';
 import { segmentActivites, segmentShare, segmentSize, segmentTimeSpent } from "../../components/data";
 import { updateSegmentSize, updateSegmentShare, updateSegmentActivities, updateSegmentTimeSpent } from "../../components/data";
 import {
+    DataProvider,
     WeekOptions,
     fetchAndFilterData,
     getTotalRowsForYear
 } from "../../utils/Helpers";
 
+export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsWithinYearLoading }) => {
 
-export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptions }) => {
-
-    const [isLoading, setIsWithinLoading] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [yearMenuSelections, setYearMenuSelections] = useState<{ week: weekOption, year: string }>({ week: WeekOptions[0], year: "" });
     const [timePovertyData, setTimePovertyData] = useState<ChartData<"doughnut", number[], unknown>>({ labels: [], datasets: [] });
@@ -37,16 +35,13 @@ export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOp
         const selectedYear = yearMenuSelections.year;
         const weekOption = yearMenuSelections.week;
 
-
         if (!yearMenuSelections.year) {
             return;
         }
 
-        setIsWithinLoading(true);
-
         Promise.all([
-            fetchAndFilterData(menuSelectedOptions, selectedYear, weekOption),
-            getTotalRowsForYear(selectedYear)
+            fetchAndFilterData(DataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption),
+            getTotalRowsForYear(DataProvider.getInstance(), selectedYear)
         ]).then(([filteredData, totalRowsForYear]) => {
             let totalOutTime = 0, totalActivities = 0, totalNecessary = 0, totalCommitted = 0;
             let timePoorCount = 0;
@@ -104,14 +99,13 @@ export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOp
             // Horizontal Chart data
             const chartData = prepareChartData(filteredData);
             setProcessedChartData(chartData);
-
-            setIsWithinLoading(false);
+        }).finally(() => {
+            setIsWithinYearLoading(false);
         });
     }, [menuSelectedOptions, yearMenuSelections]);
 
     return (
         <>
-            {isLoading && <LoadingOverlay />}
             <div className='home'>
 
                 <YearMenu onSelectionChange={handleYearMenuChange} />
@@ -122,13 +116,17 @@ export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOp
                     <div className="box SegmentActivities"><Segment {...segmentActivites} /></div>
                     <div className="box DonutAllocation"><Donut
                         title="Time allocation by activity type"
-                        data={allocationData} /></div>
+                        data={allocationData}
+                        aspectRatio={1.2} /></div>
                     <div className="box ChartComponent"><ChartComponent
                         chartData={processedChartData}
-                        title='Average time spent per person per day (min)' /></div>
+                        title='Average time spent per person per day (min)'
+                        isStacked={true}
+                        showLegend={true} /></div>
                     <div className="box DonutPoverty"><Donut
                         title="Time poverty"
-                        data={timePovertyData} /></div>
+                        data={timePovertyData}
+                        aspectRatio={1.2} /></div>
                 </div>
 
             </div>

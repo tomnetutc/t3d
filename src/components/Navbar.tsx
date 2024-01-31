@@ -19,6 +19,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange }) => {
                     <NavLink to="/" className="nav-link">
                         Time Use
                     </NavLink>
+                    <NavLink to="/travel" className="nav-link">
+                        Travel
+                    </NavLink>
                     {/* Additional NavLinks go here */}
                 </div>
             </Nav>

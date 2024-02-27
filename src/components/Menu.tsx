@@ -121,14 +121,14 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOp
                 <div className="button-container">
                     <Button
                         size="sm"
-                        variant="primary"
+                        variant='success'
                         onClick={handleSubmit}
                         className="submit-button"
                         disabled={!isAllSelected && !selectedOptions.some(option => option !== null)}
                     >
                         Apply
                     </Button>
-                    <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px', backgroundColor: '#E74C3C' }}>
+                    <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px' }}>
                         Reset
                     </Button>
                 </div>

@@ -29,7 +29,14 @@ export function TimeUse(): JSX.Element {
             <div className="home" style={{ backgroundColor: '#f5f5f5', padding: '130px 20px 20px' }}>
                 <WithinYearAnalysis menuSelectedOptions={menuSelectedOptions} setIsWithinYearLoading={setIsWithinYearLoading} />
                 <BtwYearAnalysis menuSelectedOptions={menuSelectedOptions} setIsBtwYearLoading={setIsBtwYearLoading} />
-                <Footer />
+                <Footer
+                    //Unique for each page
+                    flagCounterHref='https://www.flagcounter.me/details/ewn'
+                    flagCounterSrc='https://www.flagcounter.me/ewn/'
+                    docRefID="8KJIyEzI8atItLmnwiou_timeuse"
+                    page="hasVistedTimeUsePage"
+                    expiry='timeUseExpiry'
+                />
             </div>
         </>
     );

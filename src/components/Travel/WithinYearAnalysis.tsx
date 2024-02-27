@@ -38,6 +38,8 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
             return;
         }
 
+        setIsWithinYearLoading(true);
+
         Promise.all([
             fetchAndFilterData(TravelDataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption),
             getTotalRowsForYear(TravelDataProvider.getInstance(), selectedYear)
@@ -59,12 +61,11 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
             const averageTrips = filteredData.length > 0 ? trips / filteredData.length : 0;
             const averageTravelDuration = filteredData.length > 0 ? travelDuration / filteredData.length : 0;
 
-
-            setFilteredData(filteredData);
             updateSegmentSize(filteredData.length);
             updateSegmentShare(filteredData.length, totalRowsForYear);
             updateSegmentTrips(averageTrips);
             updateSegmentTravel(averageTravelDuration);
+            setFilteredData(filteredData);
 
             // Donut chart data
 
@@ -83,15 +84,15 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
             const transitPercentage = parseFloat((transitAverage / (averageSum) * 100).toFixed(1));
             const walkPercentage = parseFloat((walkAverage / (averageSum) * 100).toFixed(1));
             const bikePercentage = parseFloat((bikeAverage / (averageSum) * 100).toFixed(1));
-            const otherPercentage = parseFloat((otherAverage / (averageSum) * 100).toFixed(1));
+            const otherPercentage = parseFloat((100 - carPercentage - transitPercentage - walkPercentage - bikePercentage).toFixed(1));
 
 
             setTripMakingData({
                 labels: ['Trip-maker', 'Zero trip-maker'],
                 datasets: [{
                     data: [tripMakerPercentage, zeroTripMakerPercentage],
-                    backgroundColor: ['#5088D3', '#f2c45f'],
-                    borderColor: ['#5088D3', '#F2C45F'],
+                    backgroundColor: ['#EAD97C', '#8E9B97'],
+                    borderColor: ['#EAD97C', '#8E9B97'],
                     borderWidth: 1
                 }]
             });
@@ -100,8 +101,8 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
                 labels: ['Car', 'Transit', 'Walk', 'Bike', 'Other'],
                 datasets: [{
                     data: [carPercentage, transitPercentage, walkPercentage, bikePercentage, otherPercentage],
-                    backgroundColor: ['#5088D3', '#AC77EF', '#F7CE6B', '#ED6E86', '#6DBDBF'],
-                    borderColor: ['#5088D3', '#AC77EF', '#F7CE6B', '#ED6E86', '#6DBDBF'],
+                    backgroundColor: ['#507DBC', '#67CBA0', '#F9A875', '#FBCB9D', '#8E9B97'],
+                    borderColor: ['#507DBC', '#67CBA0', '#F9A875', '#FBCB9D', '#8E9B97'],
                     borderWidth: 1
                 }]
             });

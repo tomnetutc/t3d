@@ -1,4 +1,4 @@
-import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption } from "../components/Types";
+import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption, DayofWeekOption } from "../components/Types";
 import { csv } from "d3";
 import { DSVRowString } from "d3-dsv";
 import firebase, { initializeApp } from "firebase/app";
@@ -42,23 +42,30 @@ export class DataProvider {
     }
 }
 
-export const getTotalRowsForYear = async (dataProvider: { loadData: () => Promise<any[]> }, year: string) => {
+export const getTotalRowsForYear = async (dataProvider: { loadData: () => Promise<any[]> }, year: string, filterUnemployed: boolean = false) => {
     try {
         const data = await dataProvider.loadData();
+        if (filterUnemployed) //Filter the data without the unemployed data for Telework dashboard. This is a conditional argument hence by default it is false and doesn't expect a value
+            return data.filter(row => row.year === year && row.unemployed == '0.0').length;
+
         return data.filter(row => row.year === year).length;
+
     } catch (error) {
         console.error('Error fetching data:', error);
         return 0;
     }
 };
 
-export function filterCriteria(selectedOptions: Option[], year: string, weekOption: weekOption) {
+export function filterCriteria(selectedOptions: Option[], year: string, weekOption: weekOption, filterUnemployed: boolean = false) {
     return function (row: DSVRowString<string>) {
         if (year && row['year'] !== year) return false;
 
         if (weekOption.value !== "All") {
             if (row[weekOption.id] !== weekOption.val) return false;
         }
+
+        //Filter the data without the unemployed data for Telework dashboard. This is a conditional argument hence by default it is false and doesn't expect a value
+        if (filterUnemployed && row['unemployed'] === "1.0") return false;
 
         const groupedOptions = selectedOptions.reduce((acc: GroupedOptions, option) => {
             const groupId = option.groupId;
@@ -77,20 +84,21 @@ export function filterCriteria(selectedOptions: Option[], year: string, weekOpti
     };
 }
 
-export const fetchAndFilterData = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], year: string, weekOption: weekOption) => {
+export const fetchAndFilterData = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], year: string, weekOption: weekOption, filterUnemployed: boolean = false) => {
     try {
         const data = await dataProvider.loadData();
-        return data.filter(filterCriteria(selectedOptions, year, weekOption));
+        return data.filter(filterCriteria(selectedOptions, year, weekOption, filterUnemployed));
     } catch (error) {
         console.error('Error fetching and filtering data:', error);
         return [];
     }
+    //Added a conditional argument filterunemployed to filter the data without the unemployed data for Telework dashboard. This is a conditional argument hence by default it is false and doesn't expect a value
 };
 
-export const fetchAndFilterDataForBtwYearAnalysis = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], weekOption: weekOption) => {
+export const fetchAndFilterDataForBtwYearAnalysis = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], weekOption: weekOption, filterUnemployed: boolean = false) => {
     try {
         const data = await dataProvider.loadData();
-        return data.filter(filterCriteria(selectedOptions, "", weekOption));
+        return data.filter(filterCriteria(selectedOptions, "", weekOption, filterUnemployed));
     } catch (error) {
         console.error('Error fetching and filtering data for between year analysis:', error);
         return [];
@@ -436,7 +444,7 @@ const LocationOptions: Option[] = [
     },
 ];
 
-const WorkArrangementOptions: Option[] = [
+export const WorkArrangementOptions: Option[] = [
     {
         value: "Workers with zero work",
         label: "Workers with zero work",
@@ -445,15 +453,8 @@ const WorkArrangementOptions: Option[] = [
         groupId: "Work Arrangement",
     },
     {
-        value: "Commuters only",
-        label: "Commuters only",
-        id: "commuter_only",
-        val: "1.0",
-        groupId: "Work Arrangement",
-    },
-    {
-        value: "Work at home only",
-        label: "Work at home only",
+        value: "In-home only workers",
+        label: "In-home only workers",
         id: "only_inhome_worker",
         val: "1.0",
         groupId: "Work Arrangement",
@@ -462,6 +463,13 @@ const WorkArrangementOptions: Option[] = [
         value: "Multi-site workers",
         label: "Multi-site workers",
         id: "multisite_worker",
+        val: "1.0",
+        groupId: "Work Arrangement",
+    },
+    {
+        value: "Commuters only",
+        label: "Commuters only",
+        id: "commuter_only",
         val: "1.0",
         groupId: "Work Arrangement",
     },
@@ -624,14 +632,14 @@ export const WeekOptions: weekOption[] = [
         label: "Weekday",
         id: "weekday",
         val: "1.0",
-        groupId: "Week",
+        groupId: "Weekday",
     },
     {
         value: "Weekend",
         label: "Weekend",
         id: "weekday",
         val: "0.0",
-        groupId: "Week",
+        groupId: "Weekend",
     },
 ];
 
@@ -817,6 +825,58 @@ export const TravelModeOptions: TravelModeOption[] = [
     },
 ];
 
+export const DayofWeek: DayofWeekOption[] = [
+    {
+        label: "Monday",
+        value: "Monday",
+        id: "day",
+        val: "2.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Tuesday",
+        value: "Tuesday",
+        id: "day",
+        val: "3.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Wednesday",
+        value: "Wednesday",
+        id: "day",
+        val: "4.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Thursday",
+        value: "Thursday",
+        id: "day",
+        val: "5.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Friday",
+        value: "Friday",
+        id: "day",
+        val: "6.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Saturday",
+        value: "Saturday",
+        id: "day",
+        val: "7.0",
+        groupId: "Weekend",
+    },
+    {
+        label: "Sunday",
+        value: "Sunday",
+        id: "day",
+        val: "1.0",
+        groupId: "Weekend",
+    },
+];
+
 
 export function hideFlagCounter() {
     const flagCounterImage = document.querySelector('#flag-counter-img') as HTMLImageElement;
@@ -829,19 +889,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
 
-export function tracking() {
-    const websiteDocRef = doc(db, "websites", "FV2dPUi6VGoHSjRtDCLB");
+export function tracking(docRefID: string, page: string, expiry: string) {
+    const websiteDocRef = doc(db, "t3dashboard", docRefID);
 
-    // const unique_counter = document.getElementById("visit-count");
-    // const total_counter = document.getElementById("total-count");
+    const unique_counter = document.getElementById("visit-count");
+    const total_counter = document.getElementById("total-count");
 
     const getUniqueCount = async () => {
         const docSnap = await getDoc(websiteDocRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-            // if (data) {
-            //     setValue(data.uniqueCount);
-            // }
+            if (data) {
+                setValue(data.uniqueCount);
+            }
         }
     };
 
@@ -849,9 +909,9 @@ export function tracking() {
         const docSnap = await getDoc(websiteDocRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-            // if (data) {
-            //     setTotal(data.totalCount);
-            // }
+            if (data) {
+                setTotal(data.totalCount);
+            }
         }
     };
 
@@ -869,35 +929,35 @@ export function tracking() {
         await getTotalCount();
     };
 
-    // const setValue = (num: number) => {
-    //     if (unique_counter) {
-    //         unique_counter.innerText = `Unique visitors: ${num}`;
-    //     }
-    // };
+    const setValue = (num: number) => {
+        if (unique_counter) {
+            unique_counter.innerText = `Unique visitors: ${num}`;
+        }
+    };
 
-    // const setTotal = (num: number) => {
-    //     if (total_counter) {
-    //         total_counter.innerText = `Total visits: ${num}`;
-    //     }
-    // };
+    const setTotal = (num: number) => {
+        if (total_counter) {
+            total_counter.innerText = `Total visits: ${num}`;
+        }
+    };
 
-    if (localStorage.getItem("hasVisited") == null) {
+    if (localStorage.getItem(page) == null) {
         incrementCountUnique()
             .then(() => {
-                localStorage.setItem("hasVisited", "true");
+                localStorage.setItem(page, "true");
             })
             .catch((err) => console.log(err));
     } else {
         getUniqueCount().catch((err) => console.log(err));
     }
 
-    if (localStorage.getItem("expiry") == null) {
+    if (localStorage.getItem(expiry) == null) {
         incrementCountTotal().then(() => {
-            localStorage.setItem("expiry", (Date.now() + 60000 * 120).toString());
+            localStorage.setItem(expiry, (Date.now() + 60000 * 120).toString());
         });
-    } else if (new Date().getTime() > Number(localStorage.getItem("expiry"))) {
+    } else if (new Date().getTime() > Number(localStorage.getItem(expiry))) {
         incrementCountTotal().then(() => {
-            localStorage.setItem("expiry", (Date.now() + 60000 * 120).toString());
+            localStorage.setItem(expiry, (Date.now() + 60000 * 120).toString());
         });
     } else {
         getTotalCount().catch((err) => console.log(err));

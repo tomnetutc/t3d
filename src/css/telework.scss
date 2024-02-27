@@ -1,0 +1,59 @@
+.home {
+
+    .telework,
+    .betweenYearTelework {
+        padding: 20px;
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: minmax(130px, auto);
+
+        .box {
+            padding: 20px;
+            border-radius: 10px;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+            background-color: white;
+        }
+
+        .SegmentSize,
+        .SegmentShare {
+            grid-row: span 1;
+            grid-column: span 1;
+        }
+
+        .WorkArrangementPie {
+            grid-row: span 2;
+            grid-column: span 2;
+        }
+
+        .WorkDurationChart {
+            grid-row: span 1;
+            grid-column: span 2;
+        }
+
+        .box5 {
+            grid-row: span 1;
+            grid-column: span 2;
+        }
+
+
+        .WorkArrangementChart {
+            grid-row: span 1;
+            grid-column: span 2;
+        }
+
+        .PercentageChangeProgress {
+            grid-row: span 4;
+            grid-column: span 1;
+        }
+
+        .WorkArrangementBtwYearChart {
+            grid-row: span 4;
+            grid-column: span 3;
+        }
+
+
+    }
+
+}

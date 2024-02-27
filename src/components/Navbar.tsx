@@ -22,7 +22,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange }) => {
                     <NavLink to="/travel" className="nav-link">
                         Travel
                     </NavLink>
-                    {/* Additional NavLinks go here */}
+                    <NavLink to="/telework" className="nav-link">
+                        Telework
+                    </NavLink>
                 </div>
             </Nav>
             <div className='hr-content'>

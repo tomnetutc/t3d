@@ -113,8 +113,8 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
         datasets: [{
             label: optionValue.label,
             data: tripData,
-            borderColor: '#AC77EF',
-            backgroundColor: '#AC77EF',
+            borderColor: '#9D83A7',
+            backgroundColor: '#9D83A7',
             barThickness: 'flex'
         }]
     };
@@ -124,8 +124,8 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
         datasets: [{
             label: optionValue.label,
             data: durationData,
-            borderColor: '#5088D3',
-            backgroundColor: '#5088D3',
+            borderColor: '#6DAFA0',
+            backgroundColor: '#6DAFA0',
             barThickness: 'flex'
         }]
     };

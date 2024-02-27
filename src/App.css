@@ -14,7 +14,6 @@
     margin-left: 20px;
   }
 
-
 }
 
 .loading-overlay {
@@ -32,6 +31,16 @@
 
 .custom-container {
   padding: 0px !important;
+}
+
+.bg-tl_green {
+  background-color: #5CB28A !important;
+  border: 0px solid black;
+}
+
+.bg-tl_red {
+  background-color: #C7767A !important;
+  border: 0px solid black;
 }
 
 html,

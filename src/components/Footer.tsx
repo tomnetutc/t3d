@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import "../App.css";
 import { hideFlagCounter, tracking } from "../utils/Helpers";
+import { FooterProps } from './Types';
 
-export default function Footer(): JSX.Element {
+export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page, expiry }: FooterProps): JSX.Element {
     useEffect(() => {
         hideFlagCounter();
-        tracking();
-    });
+        tracking(docRefID, page, expiry);
+    }, []);
 
     return (
         <div style={{ padding: '10px 20px', textAlign: 'center' }}>
@@ -29,8 +30,8 @@ export default function Footer(): JSX.Element {
             </span>
 
             {/* Flag Counter */}
-            <a href="https://www.flagcounter.me/details/ei0">
-                <img src="https://www.flagcounter.me/ei0/" alt="Flag Counter" id="flag-counter-img" />
+            <a href={flagCounterHref}>
+                <img src={flagCounterSrc} alt="Flag Counter" id="flag-counter-img" />
             </a>
 
         </div>

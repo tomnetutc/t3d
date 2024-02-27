@@ -3,6 +3,24 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { ChartDataProps } from '../Types';
 
+const calculateMaxYAxis = (data: ChartDataProps, isTelework: boolean = false) => {
+    if (data.datasets && data.datasets.length >= 2) {
+        const summedValues = data.datasets[0].data.map((value, index) =>
+            value + (data.datasets[1].data[index] || 0)  // Fallback to 0 if data is undefined
+        );
+
+        const maxSumValue = Math.max(...summedValues);
+
+        if (!isTelework) {
+            return maxSumValue > 1400 ? 1440 : undefined;
+        }
+
+        let sum = summedValues.reduce((a, b) => a + b, 0);
+        return sum >= 100 ? 100 : undefined;
+    }
+    return undefined;
+};
+
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -12,8 +30,7 @@ ChartJS.register(
     Legend
 );
 
-
-const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string, isStacked: boolean, showLegend: boolean }> = ({ chartData, title, isStacked, showLegend }) => {
+const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string, isStacked: boolean, showLegend: boolean, isTelework?: boolean }> = ({ chartData, title, isStacked, showLegend, isTelework }) => {
 
     const options = {
         indexAxis: 'y' as const,
@@ -44,6 +61,7 @@ const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string, isSta
         scales: {
             x: {
                 stacked: isStacked,
+                max: calculateMaxYAxis(chartData, isTelework),
             },
             y: {
                 stacked: isStacked,

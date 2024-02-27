@@ -2,7 +2,7 @@
   "name": "t3_dashboard",
   "homepage": "https://tomnetutc.github.io/t3d",
   "private": true,
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.14",
     "@mui/material": "^5.14.14",
@@ -36,13 +36,13 @@
     "octokit": "^2.0.10",
     "plotly.js": "^2.14.0",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.9.1",
+    "react-bootstrap": "^2.10.0",
     "react-bootstrap-range-slider": "^3.0.8",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
     "react-plotly.js": "^2.6.0",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^6.21.3",
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "^5.0.1",
     "react-scrollbars-custom": "^4.1.1",

@@ -52,16 +52,16 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
             {
                 label: 'In-home',
                 data: inHomeData,
-                backgroundColor: '#8164E2',
-                borderColor: '#8164E2',
+                backgroundColor: '#9D83A7',
+                borderColor: '#9D83A7',
                 borderWidth: 1,
                 barThickness: barThickness
             },
             {
                 label: 'Out-of-home',
                 data: outHomeData,
-                backgroundColor: '#AD88F1',
-                borderColor: '#AD88F1',
+                backgroundColor: '#6DAFA0',
+                borderColor: '#6DAFA0',
                 borderWidth: 1,
                 barThickness: barThickness
             }

@@ -37,6 +37,8 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
             return;
         }
 
+        setIsBtwYearLoading(true);
+
         Promise.all([
             fetchAndFilterDataForBtwYearAnalysis(DataProvider.getInstance(), menuSelectedOptions, btwYearSelections.week) //filtering for activity type is done in prepareVerticalChartData function
         ]).then(([btwYearFilteredData]) => {

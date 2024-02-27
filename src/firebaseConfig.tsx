@@ -4,8 +4,8 @@ const firebaseConfig = {
     projectId: "tomnet-counter",
     storageBucket: "tomnet-counter.appspot.com",
     messagingSenderId: "955399981396",
-    appId: "1:955399981396:web:da262703565d8bb9a060c1",
-    measurementId: "G-03ZSYS61MK"
+    appId: "1:955399981396:web:c3bcbf3083ade43da060c1",
+    measurementId: "G-HKD7B5JS2B"
 };
 
 export default firebaseConfig;

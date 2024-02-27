@@ -18,7 +18,7 @@ export const prepareChartData = (
 
     // Adjust the dataset label based on dataType
     const datasetLabel = dataType === 'numberTrip' ? 'Number of trips' : 'Travel duration';
-    const color = calculationType === 'trip' ? '#AC77EF' : '#5088D3';
+    const color = calculationType === 'trip' ? '#9D83A7' : '#6DAFA0';
 
     return {
         labels: labels,

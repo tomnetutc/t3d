@@ -1,0 +1,48 @@
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    height: 95%; //Some space for the title
+
+    .title {
+        font-size: 16px;
+        font-weight: 500;
+        border-bottom: 1px solid #6e6a6a;
+        padding-bottom: 2px;
+        margin-bottom: 20px;
+    }
+
+    .progress-grid {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .progress-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .label {
+                margin-bottom: 10px;
+            }
+
+            .progress-bar-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 95%;
+
+                .progress-bar {
+                    width: 100%;
+                    height: 25px;
+                }
+            }
+
+            .value {
+                position: relative;
+                left: 10px;
+                min-width: 30px;
+            }
+        }
+    }
+}

@@ -8,12 +8,19 @@ import '../App.css';
 
 
 
-const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange }) => {
+const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange, callingComponent }) => {
 
     const [weekValue, setWeekValue] = useState<weekOption>(WeekOptions[0]);
     const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
     const [selectedYear, setSelectedYear] = useState<YearOption>({ label: "", value: "" });
     const [isMaxYearLoaded, setIsMaxYearLoaded] = useState(false);
+
+    //This is done to set the default value of week to "Weekday" when the calling component is "Telework"
+    useEffect(() => {
+        if (callingComponent === "Telework") {
+            setWeekValue(WeekOptions[1]);
+        }
+    }, [callingComponent]);
 
     useEffect(() => {
         const cacheKey = "YearDataCache";

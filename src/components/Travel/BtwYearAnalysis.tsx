@@ -7,6 +7,7 @@ import { prepareVerticalChartData } from "./BtwYearDataCalculations";
 import LineChart from "../LineChart/LineChart";
 import MaterialsTable from "../Table/Table";
 import RechartsAreaChart from "../AreaChart/AreaChart";
+import { set } from "lodash";
 
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
@@ -32,6 +33,8 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
         if (btwYearSelections.startYear === '' || btwYearSelections.endYear === '' || btwYearSelections.activeOption === '') {
             return;
         }
+
+        setIsBtwYearLoading(true);
 
         Promise.all([
             fetchAndFilterDataForBtwYearAnalysis(TravelDataProvider.getInstance(), menuSelectedOptions, btwYearSelections.week)
@@ -67,7 +70,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                     <div className="box NumberTripsBtwYearChartComponent"><LineChart
                         chartData={tripChartData}
                         title="Average number of trips per person"
-                        showLegend={false}
+                        showLegend={true}
                     /></div>
                     <div className="box TravelModeChangesComponent"><MaterialsTable
                         title={`Change from ${minYear} to ${maxYear}`}
@@ -78,7 +81,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                     <div className="box DurationTripsBtwYearChartComponent"><RechartsAreaChart
                         chartData={durationChartData}
                         title="Average travel duration per person (min)"
-                        showLegend={false}
+                        showLegend={true}
                     /></div>
                 </div>
 

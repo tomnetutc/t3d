@@ -39,6 +39,8 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
             return;
         }
 
+        setIsWithinYearLoading(true);
+
         Promise.all([
             fetchAndFilterData(DataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption),
             getTotalRowsForYear(DataProvider.getInstance(), selectedYear)
@@ -58,30 +60,26 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
             const averageTimeSpent = filteredData.length > 0 ? totalOutTime / filteredData.length : 0;
             const averageActivities = filteredData.length > 0 ? totalActivities / filteredData.length : 0;
 
-            setFilteredData(filteredData);
             updateSegmentSize(filteredData.length);
             updateSegmentShare(filteredData.length, totalRowsForYear);
             updateSegmentTimeSpent(averageTimeSpent);
             updateSegmentActivities(averageActivities);
+            setFilteredData(filteredData);
 
             // Donut chart data
             const timePoorPercentage = parseFloat(((timePoorCount / filteredData.length) * 100).toFixed(1));
             const nonTimePoorPercentage = parseFloat((100 - timePoorPercentage).toFixed(1));
 
-            const averageNecessary = (totalNecessary / filteredData.length) / 2400 * 100;
-            const averageCommitted = (totalCommitted / filteredData.length) / 2400 * 100;
-            const discretionary = 100 - averageNecessary - averageCommitted;
-
-            const necessaryPercentage = parseFloat(averageNecessary.toFixed(1));
-            const committedPercentage = parseFloat(averageCommitted.toFixed(1));
-            const discretionaryPercentage = parseFloat(discretionary.toFixed(1));
+            const necessaryPercentage = parseFloat(((totalNecessary / filteredData.length) / 2400 * 100).toFixed(1));
+            const committedPercentage = parseFloat(((totalCommitted / filteredData.length) / 2400 * 100).toFixed(1));
+            const discretionaryPercentage = parseFloat((100 - necessaryPercentage - committedPercentage).toFixed(1));
 
             setTimePovertyData({
                 labels: ['Time poor', 'Non-time poor'],
                 datasets: [{
                     data: [timePoorPercentage, nonTimePoorPercentage],
-                    backgroundColor: ['#594DA3', '#AD88F1'],
-                    borderColor: ['#594DA3', '#AD88F1'],
+                    backgroundColor: ['#8E9B97', '#EAD97C'],
+                    borderColor: ['#8E9B97', '#EAD97C'],
                     borderWidth: 1
                 }]
             });
@@ -90,8 +88,8 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
                 labels: ['Necessary', 'Discretionary', 'Committed'],
                 datasets: [{
                     data: [necessaryPercentage, discretionaryPercentage, committedPercentage],
-                    backgroundColor: ['#AD88F1', '#8164E2', '#594DA3'],
-                    borderColor: ['#AD88F1', '#8164E2', '#594DA3'],
+                    backgroundColor: ['#8E9B97', '#F9A875', '#657383'],
+                    borderColor: ['#8E9B97', '#F9A875', '#657383'],
                     borderWidth: 1
                 }]
             });

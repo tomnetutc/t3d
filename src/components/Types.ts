@@ -36,6 +36,7 @@ export interface YearOption {
 
 export interface YearMenuProps {
     onSelectionChange: (selections: { week: weekOption, year: string }) => void;
+    callingComponent?: string;
 };
 
 export type ActivityOption = {
@@ -57,6 +58,14 @@ export type TravelModeOption = {
     value: string;
     numberTrip: string;
     durationTrips: string;
+};
+
+export type DayofWeekOption = {
+    label: string;
+    value: string;
+    id: string;
+    val: string;
+    groupId: string;
 };
 
 export type DataRow = {
@@ -91,7 +100,7 @@ export interface MenuSelectedProps {
 }
 
 export interface ChartDataProps {
-    labels: string[];
+    labels: (string | string[])[];
     datasets: {
         label: string;
         data: number[];
@@ -108,11 +117,24 @@ export interface BubbleComponentProps {
     color: string;
     minData: number;
     maxData: number;
+    minSize: number;
+    maxSize: number;
 };
 
 export interface BubbleChartProps {
     inHomeValue: number;
     outHomeValue: number;
+    chartTitle: string;
+};
+
+export interface BubbleDataProps {
+    value: number;
+    label: string;
+    color: string;
+};
+
+export interface FourBubbleChartProps {
+    bubbleData: BubbleDataProps[];
     chartTitle: string;
 };
 
@@ -122,4 +144,23 @@ export interface DualValueSegmentProps {
     outOfHomeValue: number | string;
     inHomeChangeValue: number | null;
     outOfHomeChangeValue: number | null;
+};
+
+export interface ProgressBarData {
+    label: string;
+    percentChange: number;
+    color: string;
+}
+
+export interface ProgressComponentProps {
+    title: string;
+    data: ProgressBarData[];
+}
+
+export interface FooterProps {
+    flagCounterHref: string;
+    flagCounterSrc: string;
+    docRefID: string;
+    page: string;
+    expiry: string;
 };

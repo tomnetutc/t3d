@@ -4,14 +4,20 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { ChartDataProps } from '../Types';
 
-const calculateMaxYAxis = (data: ChartDataProps) => {
+const calculateMaxYAxis = (data: ChartDataProps, isTelework: boolean = false) => {
     if (data.datasets && data.datasets.length >= 2) {
         const summedValues = data.datasets[0].data.map((value, index) =>
-            value + (data.datasets[1].data[index] || 0)  // fallback to 0 | undefined + number = NaN | Sleeping data doesn't have out of home data
+            value + (data.datasets[1].data[index] || 0)  // Fallback to 0 if data is undefined
         );
 
         const maxSumValue = Math.max(...summedValues);
-        return maxSumValue > 1400 ? 1440 : undefined;
+
+        if (!isTelework) {
+            return maxSumValue > 1400 ? 1440 : undefined;
+        }
+
+        let sum = summedValues.reduce((a, b) => a + b, 0);
+        return sum >= 100 ? 100 : undefined;
     }
     return undefined;
 };
@@ -25,7 +31,7 @@ ChartJS.register(
     Legend
 );
 
-const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: string, isStacked: boolean, showLegend: boolean }> = ({ chartData, title, isStacked, showLegend }) => {
+const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: string, isStacked: boolean, showLegend: boolean, isTelework?: boolean }> = ({ chartData, title, isStacked, showLegend, isTelework }) => {
 
     const verticalOptions = {
         indexAxis: 'x' as const,
@@ -37,6 +43,16 @@ const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: stri
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
+            tooltip: {
+                // This is a workaround to display the correct label for the tooltip only when the labels are split into two lines for better readability (Telework Dashboard)
+                callbacks: {
+                    title: function (tootltipItems: any) {
+                        const tooltipItem = tootltipItems[0];
+                        const labelArray = chartData.labels[tooltipItem.dataIndex];
+                        return Array.isArray(labelArray) ? labelArray.join(' ') : labelArray;
+                    }
+                }
+            },
             datalabels: {
                 display: false,
             },
@@ -63,9 +79,10 @@ const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: stri
             },
             y: {
                 stacked: isStacked,
-                max: calculateMaxYAxis(chartData),
+                max: calculateMaxYAxis(chartData, isTelework),
             },
         }
+
     };
 
     return (

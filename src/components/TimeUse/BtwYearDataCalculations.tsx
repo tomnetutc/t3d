@@ -1,6 +1,6 @@
 import { ActivityOption, ChartDataProps, DataRow } from '../Types';
 import { calculateYearlyActivityAverages } from '../../utils/Helpers';
-
+import Colors from '../../Colors'
 
 export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption, startYear: string, endYear: string): {
     chartData: ChartDataProps, averages: { inHomeAvg: number, outHomeAvg: number }, minYear: string, maxYear: string,
@@ -52,16 +52,16 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
             {
                 label: 'In-home',
                 data: inHomeData,
-                backgroundColor: '#9D83A7',
-                borderColor: '#9D83A7',
+                backgroundColor: Colors.inHomeBetweenBackground,
+                borderColor: Colors.inHomeBetweenBorder,
                 borderWidth: 1,
                 barThickness: barThickness
             },
             {
                 label: 'Out-of-home',
                 data: outHomeData,
-                backgroundColor: '#6DAFA0',
-                borderColor: '#6DAFA0',
+                backgroundColor: Colors.outOfHomeBetweenBackground,
+                borderColor: Colors.outOfHomeBetweenBorder,
                 borderWidth: 1,
                 barThickness: barThickness
             }

@@ -1,7 +1,7 @@
 import React from 'react';
 import './DualValueSegment.scss';
 import { DualValueSegmentProps } from '../Types';
-
+import Colors from '../../Colors'
 
 
 const DualValueSegment: React.FC<DualValueSegmentProps> = ({ title, inHomeValue, outOfHomeValue, inHomeChangeValue, outOfHomeChangeValue }) => {
@@ -33,11 +33,11 @@ const DualValueSegment: React.FC<DualValueSegmentProps> = ({ title, inHomeValue,
             </div>
             <div className="values-container">
                 <div className="value-entry">
-                    <span className="value-label" style={{ backgroundColor: '#9D83A7', color: 'white' }}>In-home</span>
+                    <span className="value-label" style={{ backgroundColor: Colors.inHomeDualValueSegmentBackground, color: Colors.inHomeDualValueSegmentText }}>In-home</span>
                     <div className="counter-box" style={{ color: getColorBasedOnValue(inHomeValue) }}>{formatChangeValue(inHomeChangeValue)} ({formatPercentChangeValue(inHomeValue)})</div>
                 </div>
                 <div className="value-entry">
-                    <span className="value-label" style={{ backgroundColor: '#6DAFA0', color: 'white' }}>Out-of-home</span>
+                    <span className="value-label" style={{ backgroundColor: Colors.outOfHomeDualValueSegmentBackground, color: Colors.outOfHomeDualValueSegmentText }}>Out-of-home</span>
                     <div className="counter-box" style={{ color: getColorBasedOnValue(outOfHomeValue) }}>{formatChangeValue(outOfHomeChangeValue)} ({formatPercentChangeValue(outOfHomeValue)})</div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import { Option } from './Types';
 import { groupedOptions } from '../utils/Helpers';
 import '../css/menu.scss';
 import Select from 'react-select';
+import Infobox from './InfoBox/InfoBox';
 
 const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOptionChange }) => {
     const [selectedOptions, setSelectedOptions] = useState<Array<Option | null>>([null, null, null]);
@@ -101,39 +102,45 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOp
 
     return (
         <div className="menu-container">
-            <div className="menu-header">
-                <label className="segment-label">Select segment:</label>
-                <div className="all-select-checkbox">
-                    <input
-                        type="checkbox"
-                        checked={isAllSelected}
-                        onChange={handleAllSelectChange}
-                    />
-                    <span className="all-select-label">All</span>
-                </div>
-                <div className="dropdowns-container">
-                    {selectedOptions.map((_, index) => (
-                        <div key={index} className="dropdown-wrapper">
-                            {renderDropdown(index)}
-                        </div>
-                    ))}
-                </div>
-                <div className="button-container">
-                    <Button
-                        size="sm"
-                        variant='success'
-                        onClick={handleSubmit}
-                        className="submit-button"
-                        disabled={!isAllSelected && !selectedOptions.some(option => option !== null)}
-                    >
-                        Apply
-                    </Button>
-                    <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px' }}>
-                        Reset
-                    </Button>
-                </div>
-            </div>
+    <div className="menu-header" style={{ position: 'relative' }}> {/* Ensure the parent is positioned relatively */}
+        <label className="segment-label">Select segment:</label>
+        <div className="all-select-checkbox">
+            <input
+                type="checkbox"
+                checked={isAllSelected}
+                onChange={handleAllSelectChange}
+            />
+            <span className="all-select-label">All</span>
         </div>
+        <div className="dropdowns-container">
+            {selectedOptions.map((_, index) => (
+                <div key={index} className="dropdown-wrapper">
+                    {renderDropdown(index)}
+                </div>
+            ))}
+        </div>
+        <div className="button-container">
+            <Button
+                size="sm"
+                variant='success'
+                onClick={handleSubmit}
+                className="submit-button"
+                disabled={!isAllSelected && !selectedOptions.some(option => option !== null)}
+            >
+                Apply
+            </Button>
+            <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px' }}>
+                Reset
+            </Button>
+        </div>
+    </div>
+    <div style={{ position: 'absolute', top: '0%', right: '44.5%' }}>
+            <Infobox>
+                <p>Select up to three attributes to define a specific population segment. The default view shows data for ‘all’ individuals aged 15 and older.</p>
+            </Infobox>
+        </div>
+</div>
+
     );
 
 };

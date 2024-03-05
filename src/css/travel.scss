@@ -22,57 +22,68 @@
         .SegmentTravelDuration {
             grid-row: span 1;
             grid-column: span 2;
+            position: relative;
         }
 
         .DonutTrip {
             grid-row: span 2;
             grid-column: span 2;
+            position: relative;
         }
 
         .NumberTripsChartComponent {
             grid-row: span 2;
             grid-column: span 3;
+            position: relative;
 
         }
 
         .ModeTripChartAverage {
             grid-row: span 2;
             grid-column: span 3;
+            position: relative;
         }
 
         .DonutModeShare {
             grid-row: span 2;
             grid-column: span 2;
+            position: relative;
         }
 
         .DurationTripsChartComponent {
             grid-row: span 2;
             grid-column: span 3;
+            position: relative;
         }
 
         .ModeDurationChartAverage {
             grid-row: span 2;
             grid-column: span 3;
+            position: relative;
         }
 
         .TripModeChangesComponent {
             grid-row: span 3;
             grid-column: span 2;
+            position: relative;
         }
 
         .TravelModeChangesComponent {
             grid-row: span 3;
             grid-column: span 2;
+            position: relative;
         }
 
         .NumberTripsBtwYearChartComponent {
             grid-row: span 3;
             grid-column: span 6;
+            position: relative;
         }
 
         .DurationTripsBtwYearChartComponent {
             grid-row: span 3;
             grid-column: span 6;
+            position: relative;
         }
 
     }

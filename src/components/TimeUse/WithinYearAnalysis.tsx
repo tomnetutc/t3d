@@ -15,6 +15,7 @@ import {
     fetchAndFilterData,
     getTotalRowsForYear
 } from "../../utils/Helpers";
+import Infobox from '../InfoBox/InfoBox';
 
 export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsWithinYearLoading }) => {
 
@@ -108,25 +109,46 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
 
                 <YearMenu onSelectionChange={handleYearMenuChange} />
                 <div className="timeUse">
-                    <div className="box SegmentSize"><Segment {...segmentSize} /></div>
-                    <div className="box SegmentShare"><Segment {...segmentShare} /></div>
-                    <div className="box SegmentTimeSpent"><Segment {...segmentTimeSpent} /></div>
-                    <div className="box SegmentActivities"><Segment {...segmentActivites} /></div>
+                    <div className="box SegmentSize"><Segment {...segmentSize} />
+                        <Infobox>
+                            <p>The total number of respondents in the selected segment within the year.</p>
+                        </Infobox></div>
+                    <div className="box SegmentShare"><Segment {...segmentShare} />
+                        <Infobox>
+                            <p>The proportion of the selected segment within the total sample for the year.</p>
+                        </Infobox></div>
+                    <div className="box SegmentTimeSpent"><Segment {...segmentTimeSpent} />
+                        <Infobox>
+                            <p>Total time spent away from home per person per day.</p>
+                        </Infobox></div>
+                    <div className="box SegmentActivities"><Segment {...segmentActivites} />
+                        <Infobox>
+                            <p>Average number of activities per person per day.</p>
+                        </Infobox></div>
                     <div className="box DonutAllocation"><Donut
                         title="Time allocation by activity type"
                         data={allocationData}
-                        aspectRatio={1.2} /></div>
+                        aspectRatio={1.2} />
+                        <Infobox>
+                            <p>The percentage distribution of daily time spent on necessary, committed, and discretionary activities. For more details on the definitions of these activity types, see the About page.</p>
+                        </Infobox></div>
                     <div className="box ChartComponent"><ChartComponent
                         chartData={processedChartData}
                         title='Average time spent per person per day (min)'
                         isStacked={true}
-                        showLegend={true} /></div>
+                        showLegend={true} />
+                        <Infobox>
+                            <p>Average time spent on each type of activity per person per day, categorized by where the activity takes place: in-home vs. out-of-home.</p>
+                        </Infobox></div>
+
                     <div className="box DonutPoverty"><Donut
                         title="Time poverty"
                         data={timePovertyData}
-                        aspectRatio={1.2} /></div>
+                        aspectRatio={1.2} />
+                        <Infobox>
+                            <p>Percentage of time-poor and non-time-poor individuals in the selected segment. For more details on time poverty, see the About page.</p>
+                        </Infobox></div>
                 </div>
-
             </div>
         </>
     )

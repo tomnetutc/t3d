@@ -8,7 +8,7 @@ import LineChart from "../LineChart/LineChart";
 import MaterialsTable from "../Table/Table";
 import RechartsAreaChart from "../AreaChart/AreaChart";
 import { set } from "lodash";
-
+import Infobox from '../InfoBox/InfoBox';
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
 
@@ -66,23 +66,35 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                         optionChanges={optionChanges}
                         activeOption={btwYearSelections.activeOption}
                         displayType="Trips"
-                    /></div>
+                    />
+                        <Infobox>
+                            <p>Change in the number of trips per person from the start year to the end year, expressed in both absolute and percentage terms.</p>
+                        </Infobox></div>
                     <div className="box NumberTripsBtwYearChartComponent"><LineChart
                         chartData={tripChartData}
                         title="Average number of trips per person"
-                        showLegend={true}
-                    /></div>
+                        showLegend={false}
+                    />
+                        <Infobox>
+                            <p>The average number of trips per person per day, calculated over the years from the start year to the end year.</p>
+                        </Infobox></div>
                     <div className="box TravelModeChangesComponent"><MaterialsTable
                         title={`Change from ${minYear} to ${maxYear}`}
                         optionChanges={optionChanges}
                         activeOption={btwYearSelections.activeOption}
                         displayType="Duration"
-                    /></div>
+                    />
+                        <Infobox>
+                            <p>Change in daily travel duration per person from the start year to the end year, expressed in both absolute and percentage terms.</p>
+                        </Infobox></div>
                     <div className="box DurationTripsBtwYearChartComponent"><RechartsAreaChart
                         chartData={durationChartData}
                         title="Average travel duration per person (min)"
-                        showLegend={true}
-                    /></div>
+                        showLegend={false}
+                    />
+                        <Infobox>
+                            <p>The average daily travel duration per person, calculated over the years from the start year to the end year.</p>
+                        </Infobox></div>
                 </div>
 
             </div>

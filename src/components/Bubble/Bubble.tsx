@@ -1,7 +1,7 @@
 import React from 'react';
 import './Bubble.scss';
 import { BubbleChartProps, BubbleComponentProps, FourBubbleChartProps } from '../Types';
-
+import Colors from '../../Colors'
 
 const BubbleComponent = ({ value, label, color, minData, maxData, minSize, maxSize }: BubbleComponentProps): JSX.Element => {
 
@@ -44,8 +44,8 @@ const BubbleChart = ({ inHomeValue, outHomeValue, chartTitle }: BubbleChartProps
                 <span className="title">{chartTitle}</span>
             </div>
             <div className="bubble-chart">
-                <BubbleComponent value={inHomeValue} label="In-home" color="#BDABE6" minData={minDataValue} maxData={maxDataValue} minSize={30} maxSize={100} />
-                <BubbleComponent value={outHomeValue} label="Out-of-home" color="#8FD1BF" minData={minDataValue} maxData={maxDataValue} minSize={30} maxSize={100} />
+                <BubbleComponent value={inHomeValue} label="In-home" color={Colors.inHomeBubbleColor} minData={minDataValue} maxData={maxDataValue} />
+                <BubbleComponent value={outHomeValue} label="Out-of-home" color={Colors.outofHomeBubbleColor} minData={minDataValue} maxData={maxDataValue} />
             </div>
         </div>
     );

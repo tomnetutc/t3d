@@ -44,8 +44,8 @@ const BubbleChart = ({ inHomeValue, outHomeValue, chartTitle }: BubbleChartProps
                 <span className="title">{chartTitle}</span>
             </div>
             <div className="bubble-chart">
-                <BubbleComponent value={inHomeValue} label="In-home" color={Colors.inHomeBubbleColor} minData={minDataValue} maxData={maxDataValue} />
-                <BubbleComponent value={outHomeValue} label="Out-of-home" color={Colors.outofHomeBubbleColor} minData={minDataValue} maxData={maxDataValue} />
+                <BubbleComponent value={inHomeValue} label="In-home" color={Colors.inHomeBubbleColor} minData={minDataValue} maxData={maxDataValue} minSize={30} maxSize={100} />
+                <BubbleComponent value={outHomeValue} label="Out-of-home" color={Colors.outofHomeBubbleColor} minData={minDataValue} maxData={maxDataValue} minSize={30} maxSize={100} />
             </div>
         </div>
     );

@@ -2,6 +2,15 @@ import { useEffect } from "react";
 import "../../App.css";
 import { Col, Row } from "react-bootstrap";
 import { DataProvider, TravelDataProvider } from "../../utils/Helpers";
+import ibatur from '../../images/Head Shots/ibatur.jpeg';
+import abhat from '../../images/Head Shots/abhat.jpeg';
+import rvarghese from '../../images/Head Shots/rvarghese.jpeg';
+import rpendyala from '../../images/Head Shots/rpendyala.png';
+import cbhat from '../../images/Head Shots/cbhat.jpeg';
+import plmokhtarian from '../../images/Head Shots/plmokhtarian.webp';
+import spolzin from '../../images/Head Shots/spolzin.png';
+import cchen from '../../images/Head Shots/cchen.jpeg';
+
 
 export function Content(): JSX.Element {
 
@@ -149,7 +158,7 @@ export function Content(): JSX.Element {
             <div className="col">
               <a href="https://search.asu.edu/profile/3243599" target="_blank" className="text-decoration-none">
                 <figure className="figure">
-                  <img src="src/images/Head Shots/ibatur.jpeg" className="figure-img img-fluid rounded-circle" alt="Irfan Batur, PhD" style={{ width: '150px', height: '150px' }} />
+                  <img src={ibatur} className="figure-img img-fluid rounded-circle" alt="Irfan Batur, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Irfan Batur, PhD</figcaption>
                   <figcaption className="figure-caption">Principal Investigator</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
@@ -159,7 +168,7 @@ export function Content(): JSX.Element {
             <div className="col">
               <a href="https://www.linkedin.com/in/ashwathbhat98/" target="_blank" className="text-decoration-none">
                 <figure className="figure">
-                  <img src="src/images/Head Shots/abhat.jpeg" className="figure-img img-fluid rounded-circle" alt="Ashwath Bhat L" style={{ width: '150px', height: '150px' }} />
+                  <img src={abhat} className="figure-img img-fluid rounded-circle" alt="Ashwath Bhat L" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }} >Ashwath Bhat L</figcaption>
                   <figcaption className="figure-caption">Lead Developer</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
@@ -169,7 +178,7 @@ export function Content(): JSX.Element {
             <div className="col">
               <a href="https://www.linkedin.com/in/roshan--varghese/" target="_blank" className="text-decoration-none">
                 <figure className="figure">
-                  <img src="src/images/Head Shots/rvarghese.jpeg" className="figure-img img-fluid rounded-circle" alt="Roshan Varghese" style={{ width: '150px', height: '150px' }} />
+                  <img src={rvarghese} className="figure-img img-fluid rounded-circle" alt="Roshan Varghese" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Roshan Varghese</figcaption>
                   <figcaption className="figure-caption">Developer</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
@@ -179,7 +188,7 @@ export function Content(): JSX.Element {
             <div className="col">
               <a href="https://search.asu.edu/profile/980477" target="_blank" className="text-decoration-none">
                 <figure className="figure">
-                  <img src="src/images/Head Shots/rpendyala.png" className="figure-img img-fluid rounded-circle" alt="Ram M. Pendyala, PhD" style={{ width: '150px', height: '150px' }} />
+                  <img src={rpendyala} className="figure-img img-fluid rounded-circle" alt="Ram M. Pendyala, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Ram M. Pendyala, PhD</figcaption>
                   <figcaption className="figure-caption">Chief Science Officer</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
@@ -191,7 +200,7 @@ export function Content(): JSX.Element {
             <div className="col">
               <a href="https://www.caee.utexas.edu/prof/bhat/home.html" target="_blank" className="text-decoration-none">
                 <figure className="figure">
-                  <img src="src/images/Head Shots/cbhat.jpeg" className="figure-img img-fluid rounded-circle" alt="Chandra R. Bhat, PhD" style={{ width: '150px', height: '150px' }} />
+                  <img src={cbhat} className="figure-img img-fluid rounded-circle" alt="Chandra R. Bhat, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Chandra R. Bhat, PhD</figcaption>
                   <figcaption className="figure-caption">Co-Principal Investigator</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >The University of Texas at Austin</figcaption>
@@ -201,7 +210,7 @@ export function Content(): JSX.Element {
             <div className="col">
               <a href="https://ce.gatech.edu/directory/person/patricia-l-mokhtarian" target="_blank" className="text-decoration-none">
                 <figure className="figure">
-                  <img src="src/images/Head Shots/plmokhtarian.webp" className="figure-img img-fluid rounded-circle" alt="Patricia L. Mokhtarian, PhD" style={{ width: '150px', height: '150px' }} />
+                  <img src={plmokhtarian} className="figure-img img-fluid rounded-circle" alt="Patricia L. Mokhtarian, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Patricia L. Mokhtarian, PhD</figcaption>
                   <figcaption className="figure-caption">Senior Advisor</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Georgia Institute of Technology</figcaption>
@@ -211,7 +220,7 @@ export function Content(): JSX.Element {
             <div className="col">
               <a href="https://search.asu.edu/profile/3993044" target="_blank" className="text-decoration-none">
                 <figure className="figure">
-                  <img src="src/images/Head Shots/spolzin.png" className="figure-img img-fluid rounded-circle" alt="Steven E. Polzin, PhD" style={{ width: '150px', height: '150px' }} />
+                  <img src={spolzin} className="figure-img img-fluid rounded-circle" alt="Steven E. Polzin, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Steven E. Polzin, PhD</figcaption>
                   <figcaption className="figure-caption">Senior Advisor</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
@@ -221,7 +230,7 @@ export function Content(): JSX.Element {
             <div className="col">
               <a href="https://www.ce.washington.edu/facultyfinder/cynthia-chen" target="_blank" className="text-decoration-none">
                 <figure className="figure">
-                  <img src="src/images/Head Shots/cchen.jpeg" className="figure-img img-fluid rounded-circle" alt="Cynthia Chen, PhD" style={{ width: '150px', height: '150px' }} />
+                  <img src={cchen} className="figure-img img-fluid rounded-circle" alt="Cynthia Chen, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Cynthia Chen, PhD</figcaption>
                   <figcaption className="figure-caption">Senior Advisor</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >University of Washington</figcaption>

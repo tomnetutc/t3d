@@ -2,6 +2,11 @@ import React, { useEffect } from 'react';
 import "../App.css";
 import { hideFlagCounter, tracking } from "../utils/Helpers";
 import { FooterProps } from './Types';
+import asuLogo from '../images/Logo/asu.png';
+import tbdLogo from '../images/Logo/tbd.png';
+import utAustinLogo from '../images/Logo/utaustin.png';
+import usDotLogo from '../images/Logo/us-dot.png';
+import tomnetLogo from '../images/Logo/tomnet.png';
 
 export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page, expiry }: FooterProps): JSX.Element {
     useEffect(() => {
@@ -20,23 +25,23 @@ export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page
             <div className='d-block mt-2'>
                 <span style={{ marginRight: "15px" }}>Sponsored by</span>
                 <a href='https://www.transportation.gov/' target='_blank' rel='noreferrer'>
-                    <img src="src/images/Logo/us-dot.png" alt="USDOT Logo" style={{ width: "110px", marginRight: "15px" }} />
+                    <img src={usDotLogo} alt="USDOT Logo" style={{ width: "110px", marginRight: "15px" }} />
                 </a>
             </div>
             <span className='d-block mt-2'>
                 <a href="https://www.utexas.edu/" target='_blank' rel="noreferrer">
-                    <img src="src/images/Logo/utaustin.png" alt="UT Austin Logo" style={{ width: "170px", marginRight: "15px" }} />
+                    <img src={utAustinLogo} alt="UT Austin Logo" style={{ width: "170px", marginRight: "15px" }} />
                 </a>
 
                 <a href="https://tbd.ctr.utexas.edu/" target='_blank' rel="noreferrer">
-                    <img src="src/images/Logo/tbd.png" alt="UT CTR Logo" style={{ width: "210px", marginRight: "15px" }} />
+                    <img src={tbdLogo} alt="UT CTR Logo" style={{ width: "210px", marginRight: "15px" }} />
                 </a>
 
                 <a href='https://tomnet-utc.engineering.asu.edu/' target='_blank' rel='noreferrer'>
-                    <img src="src/images/Logo/tomnet.png" alt="TOMNET Logo" style={{ width: "280px", marginRight: "15px" }} />
+                    <img src={tomnetLogo} alt="TOMNET Logo" style={{ width: "280px", marginRight: "15px" }} />
                 </a>
                 <a href="https://www.asu.edu/" target="_blank" rel="noreferrer">
-                    <img src="src/images/Logo/asu.png" alt="ASU Logo" style={{ width: "200px" }} />
+                    <img src={asuLogo} alt="ASU Logo" style={{ width: "200px" }} />
                 </a>
 
             </span>

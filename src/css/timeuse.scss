@@ -15,31 +15,67 @@
             box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
             background-color: white;
         }
+        .SegmentSize {
+            grid-column: span 1;
+            grid-row: span 1;
+            position: relative;
+        }
+
+        .SegmentShare {
+            grid-column: span 1;
+            grid-row: span 1;
+            position: relative;
+        }
+
+        .SegmentTimeSpent {
+            grid-column: span 1;
+            grid-row: span 1;
+            position: relative;
+        }
+
+        .SegmentActivities {
+            grid-column: span 1;
+            grid-row: span 1;
+            position: relative;
+        }
 
         .DonutAllocation {
             grid-column: span 1;
             grid-row: span 2;
+            position: relative;
+
         }
 
         .DonutPoverty {
             grid-column: span 1;
             grid-row: span 2;
+            position: relative;
+
         }
 
         .ChartComponent {
             grid-column: span 3;
             grid-row: span 4;
+            position: relative;
+
         }
 
-        .SegmentAverage,
+        .SegmentAverage{
+            grid-column: span 1;
+            grid-row: span 2;
+            position: relative;
+        }
+
         .SegmentChanges {
             grid-column: span 1;
             grid-row: span 2;
+            position: relative;
         }
 
         .ChartAverage {
             grid-column: span 3;
             grid-row: span 4;
+            position: relative;
         }
     }
 }

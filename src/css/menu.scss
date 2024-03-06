@@ -1,12 +1,14 @@
 .menu-container {
     padding: 5px 40px 0;
     display: block;
+    position: relative;
 }
 
 .menu-header {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    position: relative;
 }
 
 .btw-menu-header {
@@ -28,6 +30,7 @@
 }
 
 .buttons-container {
+    position: relative;
     display: flex;
     gap: 10px;
     /* Adjust the space between buttons */

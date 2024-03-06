@@ -10,6 +10,8 @@ import Donut from "../Donut/Donut";
 import { prepareChartData } from "./ChartDataCalculations";
 import ChartComponent from "../Chart/Chart";
 import VerticalStackedBarChart from "../VerticalChart/VerticalChart";
+import Infobox from '../InfoBox/InfoBox';
+import Colors from '../../Colors'
 
 
 export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsWithinYearLoading }) => {
@@ -91,8 +93,8 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
                 labels: ['Trip-maker', 'Zero trip-maker'],
                 datasets: [{
                     data: [tripMakerPercentage, zeroTripMakerPercentage],
-                    backgroundColor: ['#EAD97C', '#8E9B97'],
-                    borderColor: ['#EAD97C', '#8E9B97'],
+                    backgroundColor: [Colors.tripMakerDonoutBackground, Colors.zeroTripMakerDonutBackground],
+                    borderColor: [Colors.tripMakerDonutBorder, Colors.zeroTripMakerDonutBorder],
                     borderWidth: 1
                 }]
             });
@@ -101,8 +103,20 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
                 labels: ['Car', 'Transit', 'Walk', 'Bike', 'Other'],
                 datasets: [{
                     data: [carPercentage, transitPercentage, walkPercentage, bikePercentage, otherPercentage],
-                    backgroundColor: ['#507DBC', '#67CBA0', '#F9A875', '#FBCB9D', '#8E9B97'],
-                    borderColor: ['#507DBC', '#67CBA0', '#F9A875', '#FBCB9D', '#8E9B97'],
+                    backgroundColor: [
+                        Colors.carModeShareBackground,
+                        Colors.transitModeShareBackground,
+                        Colors.walkModeShareBackground,
+                        Colors.bikeModeShareBackground,
+                        Colors.otherModeShareBackground,
+                    ],
+                    borderColor: [
+                        Colors.carModeShareBorder,
+                        Colors.transitModeShareBorder,
+                        Colors.walkModeShareBorder,
+                        Colors.bikeModeShareBorder,
+                        Colors.otherModeShareBorder,
+                    ],
                     borderWidth: 1
                 }]
             });
@@ -128,37 +142,68 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
             <div className='home'>
                 <YearMenu onSelectionChange={handleYearMenuChange} />
                 <div className="travel">
-                    <div className="box SegmentSize"><Segment {...segmentSize} /></div>
-                    <div className="box SegmentShare"><Segment {...segmentShare} /></div>
-                    <div className="box SegmentTrips"><Segment {...segmentTrips} /></div>
-                    <div className="box SegmentTravelDuration"><Segment {...segmentTravel} /></div>
+                    <div className="box SegmentSize"><Segment {...segmentSize} />
+                        <Infobox>
+                            <p>The total number of respondents in the selected segment within the year.</p>
+                        </Infobox></div>
+                    <div className="box SegmentShare"><Segment {...segmentShare} />
+                        <Infobox>
+                            <p>The proportion of the selected segment within the total sample for the year.</p>
+                        </Infobox></div>
+                    <div className="box SegmentTrips"><Segment {...segmentTrips} />
+                        <Infobox>
+                            <p>Number of trips undertaken per day per person.</p>
+                        </Infobox></div>
+                    <div className="box SegmentTravelDuration"><Segment {...segmentTravel} />
+                        <Infobox>
+                            <p>Total time spent on traveling per person per day.</p>
+                        </Infobox></div>
                     <div className="box DonutTrip"><Donut
                         title="Trip-making"
-                        data={tripMakingData} /></div>
+                        data={tripMakingData} />
+                        <Infobox>
+                            <p>The disribution of people who make zero trips in a day vs. those who make trips.</p>
+                        </Infobox>
+                        </div>
                     <div className="box NumberTripsChartComponent"><ChartComponent
                         chartData={tripChartData}
                         title='Number of trips per person per day by trip purpose'
                         isStacked={false}
-                        showLegend={false} /></div>
+                        showLegend={false} />
+                        <Infobox>
+                            <p>Number of daily trips per person, categorized by trip purpose. Refer to the About page for more details on trip purpose taxonomy.</p>
+                        </Infobox></div>
                     <div className="box ModeTripChartAverage"><VerticalStackedBarChart
                         chartData={modeTripChartData}
                         title="Number of trips per person per day by travel mode"
                         isStacked={false}
                         showLegend={false} />
+                        <Infobox>
+                            <p>Number of daily trips per person, categorized by travel mode. Refer to the About page for more details on travel mode classifications.</p>
+                        </Infobox>
                     </div>
                     <div className="box DonutModeShare"><Donut
                         title="Mode share (%)"
-                        data={modeShareData} /></div>
+                        data={modeShareData} />
+                        <Infobox>
+                            <p>Mode share distribution. See the About page for more details about mode classifications.</p>
+                        </Infobox></div>
                     <div className="box DurationTripsChartComponent"><ChartComponent
                         chartData={durationChartData}
                         title='Daily travel duration per person by trip purpose (min)'
                         isStacked={false}
-                        showLegend={false} /></div>
+                        showLegend={false} />
+                        <Infobox>
+                            <p>Daily travel duration per person, categorized by trip purpose. Refer to the About page for more details on trip purpose taxonomy.</p>
+                        </Infobox></div>
                     <div className="box ModeDurationChartAverage"><VerticalStackedBarChart
                         chartData={modeDurationChartData}
                         title="Daily travel duration by person by travel mode (min)"
                         isStacked={false}
                         showLegend={false} />
+                        <Infobox>
+                            <p>Daily travel duration per person, categorized by travel mode. Refer to the About page for more details on travel mode classifications.</p>
+                        </Infobox>
                     </div>
 
                 </div>

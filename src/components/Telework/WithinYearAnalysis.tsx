@@ -13,6 +13,7 @@ import { set } from 'lodash';
 import ChartComponent from '../Chart/Chart';
 import RechartsAreaChart from '../AreaChart/AreaChart';
 import BubbleChart, { GridBubbleChart } from '../Bubble/Bubble';
+import Infobox from '../InfoBox/InfoBox';
 
 export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsWithinYearLoading }) => {
 
@@ -67,28 +68,45 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
                     <div className="box WorkArrangementPie"><PieChart
                         title="Workers by work arrangement (%)"
                         data={workArrangementData}
-                    /></div>
-                    <div className="box SegmentSize"><Segment {...segmentSize} /></div>
-                    <div className="box SegmentShare"><Segment {...segmentShare} /></div>
+                    />
+                        <Infobox>
+                            <p>The distribution of workers by work arrangement. For definitions of work arrangement groups, refer to the About page.</p>
+                        </Infobox></div>
+                    <div className="box SegmentSize"><Segment {...segmentSize} />
+                        <Infobox>
+                            <p>The total number of respondents in the selected segment within the year.</p>
+                        </Infobox></div>
+                    <div className="box SegmentShare"><Segment {...segmentShare} />
+                        <Infobox>
+                            <p>The proportion of the selected segment within the total sample for the year.</p>
+                        </Infobox></div>
                     <div className="box WorkDurationChart"><ChartComponent
                         chartData={workDurationChartData}
                         title="Work duration by work arrangement (min)"
                         isStacked={true}
                         showLegend={true}
-                    /></div>
+                    />
+                        <Infobox>
+                            <p>Average time spent on working per person per day across work arrangement groups, categorized by where the activity takes place: in-home vs. out-of-home.</p>
+                        </Infobox></div>
 
                     <div className="box box5"><GridBubbleChart
                         bubbleData={timePoorWorkArrangementData}
                         chartTitle="Percent of time poor by work arrangement"
-
-                    /></div>
+                    />
+                        <Infobox>
+                            <p>Percent of time poor workers in each work arrangement group. For more details on time poverty, see the About page.</p>
+                        </Infobox></div>
                     <div className="box WorkArrangementChart"><ChartComponent
                         title='Workers by work arrangement (%) by day of week'
                         chartData={workArrangmentByDayOfWeek}
                         isStacked={true}
                         showLegend={true}
                         isTelework={true}
-                    /></div>
+                    />
+                        <Infobox>
+                            <p>The distribution of workers by work arrangement across different days.</p>
+                        </Infobox></div>
 
 
                 </div>

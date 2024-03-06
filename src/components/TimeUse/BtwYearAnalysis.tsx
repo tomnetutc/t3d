@@ -7,6 +7,7 @@ import DualValueSegment from '../DualValueSegment/DualValueSegment';
 import { prepareVerticalChartData } from './BtwYearDataCalculations';
 import { ActivityOption, ChartDataProps, Option, weekOption } from "../Types";
 import { DataProvider, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
+import Infobox from '../InfoBox/InfoBox';
 
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
@@ -76,6 +77,9 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                                 outHomeValue={outHomeAverage}
                                 chartTitle='Average over the years (min)' />
                         )}
+                        <Infobox>
+                            <p>Average time spent in-home vs. out-of-home per person per day within the selected period.</p>
+                        </Infobox>
                     </div>
 
                     <div className="box ChartAverage"><VerticalStackedBarChart
@@ -83,6 +87,9 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                         title="Average time spent per person per day (min)"
                         isStacked={true}
                         showLegend={true} />
+                        <Infobox>
+                            <p>Average daily time spent in-home vs. out-of-home per person per year during the selected period.</p>
+                        </Infobox>
                     </div>
 
                     <div className="box SegmentChanges">
@@ -95,6 +102,9 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                                 outOfHomeChangeValue={outHomeChangeValue}
                             />
                         )}
+                        <Infobox>
+                            <p>Change in time allocations for in-home and out-of-home activities from the start year to the end year, expressed in both absolute and percentage terms.</p>
+                        </Infobox>
                     </div>
                 </div>
 

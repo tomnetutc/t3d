@@ -1,5 +1,6 @@
 import { ChartDataProps, DataRow } from '../Types';
 import { calculateActivityAverages } from '../../utils/Helpers';
+import Colors from '../../Colors'
 
 export const prepareChartData = (filteredData: DataRow[]): ChartDataProps => {
     const activityAverages = calculateActivityAverages(filteredData);
@@ -13,16 +14,16 @@ export const prepareChartData = (filteredData: DataRow[]): ChartDataProps => {
             {
                 label: 'In-home',
                 data: inHomeData,
-                backgroundColor: '#9D83A7',
-                borderColor: '#9D83A7',
+                backgroundColor: Colors.inHomeWithinBackground,
+                borderColor: Colors.inHomeWithinBorder,
                 borderWidth: 1,
                 barThickness: 'flex' as 'flex'
             },
             {
                 label: 'Out-of-home',
                 data: outHomeData,
-                backgroundColor: '#6DAFA0',
-                borderColor: '#6DAFA0',
+                backgroundColor: Colors.outOfHomeWithinBackground,
+                borderColor: Colors.outOfHomeWithinBorder,
                 borderWidth: 1,
                 barThickness: 'flex' as 'flex'
             }

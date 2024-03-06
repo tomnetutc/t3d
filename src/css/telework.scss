@@ -16,41 +16,53 @@
             background-color: white;
         }
 
-        .SegmentSize,
+        .SegmentSize {
+            grid-row: span 1;
+            grid-column: span 1;
+            position: relative;
+        }
+
         .SegmentShare {
             grid-row: span 1;
             grid-column: span 1;
+            position: relative;
         }
 
         .WorkArrangementPie {
             grid-row: span 2;
             grid-column: span 2;
+            position: relative;
         }
 
         .WorkDurationChart {
             grid-row: span 1;
             grid-column: span 2;
+            position: relative;
         }
 
         .box5 {
             grid-row: span 1;
             grid-column: span 2;
+            position: relative;
         }
 
 
         .WorkArrangementChart {
             grid-row: span 1;
             grid-column: span 2;
+            position: relative;
         }
 
         .PercentageChangeProgress {
             grid-row: span 4;
             grid-column: span 1;
+            position: relative;
         }
 
         .WorkArrangementBtwYearChart {
             grid-row: span 4;
             grid-column: span 3;
+            position: relative;
         }
 
 

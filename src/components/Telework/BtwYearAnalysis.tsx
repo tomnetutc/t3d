@@ -5,6 +5,7 @@ import BtwYearMenu from "./BtwYearMenu";
 import VerticalStackedBarChart from "../VerticalChart/VerticalChart";
 import { calculateYearlyWorkArrangementShares } from "./BtwYearDataCalculations";
 import Progress from "../ProgressBar/ProgressBar";
+import Infobox from '../InfoBox/InfoBox';
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
 
@@ -57,14 +58,20 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                     <div className="box PercentageChangeProgress"><Progress
                         title={`Percent change from ${minYear} to ${maxYear}`}
                         data={percentageChange}
-                    /></div>
+                    />
+                        <Infobox>
+                            <p>Change in the percentage of work arrangement groups from the start year to the end year.</p>
+                        </Infobox></div>
                     <div className="box WorkArrangementBtwYearChart"><VerticalStackedBarChart
                         chartData={workersShare}
                         title="Share of workers by work arrangement (%)"
                         isStacked={true}
                         showLegend={true}
                         isTelework={true}
-                    /></div>
+                    />
+                        <Infobox>
+                            <p>The distribution of workers by work arrangement over the selected period.</p>
+                        </Infobox></div>
                 </div>
             </div>
         </>

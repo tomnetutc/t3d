@@ -12,6 +12,10 @@ import {
 import "../LineChart/LineChart.scss";
 import { ChartDataProps } from '../Types';
 
+const tooltipFormatter = (value: number) => {
+    return Number(value) % 1 === 0 ? `${value}.0` : value.toString();
+};
+
 const RechartsLineChart: React.FC<{ chartData: ChartDataProps, title: string, showLegend: boolean }> = ({ chartData, title, showLegend }) => {
 
     const transformedData = chartData.labels.map((label, index) => {
@@ -35,7 +39,7 @@ const RechartsLineChart: React.FC<{ chartData: ChartDataProps, title: string, sh
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" padding={{ left: 20, right: 20 }} tick={{ fontSize: 13, fontFamily: 'sans-serif' }} />
                     <YAxis domain={[0, 'auto']} tick={{ fontSize: 13, fontFamily: 'sans-serif' }} />
-                    <Tooltip />
+                    <Tooltip formatter={tooltipFormatter} />
                     {showLegend && <Legend verticalAlign='top' align='right' />}
                     {chartData.datasets.map((dataset, idx) => (
                         <Line

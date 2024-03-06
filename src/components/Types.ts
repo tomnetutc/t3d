@@ -1,4 +1,5 @@
 import { ChartData } from 'chart.js';
+import { DSVRowString } from 'd3-dsv';
 
 export interface Option {
     value: string;
@@ -156,6 +157,16 @@ export interface ProgressComponentProps {
     title: string;
     data: ProgressBarData[];
 }
+
+export interface CountObj {
+    data: DSVRowString<string>[]
+    count: [string | undefined, number][];
+};
+
+export interface SampleSizeTableProps {
+    years: (string | undefined)[];
+    counts: CountObj[];
+};
 
 export interface FooterProps {
     flagCounterHref: string;

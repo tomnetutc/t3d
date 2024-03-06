@@ -72,8 +72,8 @@ export const GridBubbleChart = ({ bubbleData, chartTitle }: FourBubbleChartProps
                         color={data.color}
                         minData={minDataValue}
                         maxData={maxDataValue}
-                        minSize={2}
-                        maxSize={30}
+                        minSize={15}
+                        maxSize={40}
                     />
                 ))}
             </div>

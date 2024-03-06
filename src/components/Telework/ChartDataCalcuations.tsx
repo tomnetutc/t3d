@@ -32,7 +32,8 @@ export const calculateWorkArrangementData = (filteredData: any[]): ChartData<"pi
             data: averages,
             backgroundColor: ['#C4C4C4', '#F9A875', '#F9D423', '#657383'],
             borderColor: ['#C4C4C4', '#F9A875', '#F9D423', '#657383'],
-            borderWidth: 1
+            borderWidth: 1,
+            rotation: -90
         }]
     };
 };

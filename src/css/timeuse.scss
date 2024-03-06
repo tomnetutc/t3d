@@ -15,6 +15,7 @@
             box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
             background-color: white;
         }
+
         .SegmentSize {
             grid-column: span 1;
             grid-row: span 1;
@@ -60,7 +61,7 @@
 
         }
 
-        .SegmentAverage{
+        .SegmentAverage {
             grid-column: span 1;
             grid-row: span 2;
             position: relative;

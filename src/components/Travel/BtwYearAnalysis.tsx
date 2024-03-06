@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import BtwYearMenu from "./BtwYearMenu";
-import { ChartDataProps, MenuSelectedProps, TravelModeOption, TripPurposeOption, weekOption, Option } from "../Types";
+import { ChartDataProps, MenuSelectedProps, TravelModeOption, TripPurposeOption, weekOption, Option, SampleSizeTableProps } from "../Types";
 import { TravelDataProvider, TripPurposeOptions, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 import "../../css/travel.scss";
 import { prepareVerticalChartData } from "./BtwYearDataCalculations";
@@ -9,6 +9,8 @@ import MaterialsTable from "../Table/Table";
 import RechartsAreaChart from "../AreaChart/AreaChart";
 import { set } from "lodash";
 import Infobox from '../InfoBox/InfoBox';
+import SampleSizeTable from "../SampleSizeTable";
+
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
 
@@ -17,6 +19,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
     const [tripChartData, setTripChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [durationChartData, setDurationChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [optionChanges, setOptionChanges] = useState<any>({});
+    const [sampleSizeTableData, setSampleSizeTableData] = useState<SampleSizeTableProps>({ years: [], counts: [] });
     const [minYear, setMinYear] = useState('');
     const [maxYear, setMaxYear] = useState('');
 
@@ -41,13 +44,14 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
         ]).then(([btwYearFilteredData]) => {
             setBtwYearFilteredData(btwYearFilteredData);
 
-            const { tripsChartData, durationChartData, minYear, maxYear, optionChanges } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.optionValue, btwYearSelections.activeOption, btwYearSelections.startYear, btwYearSelections.endYear);
+            const { tripsChartData, durationChartData, minYear, maxYear, optionChanges, sampleSizeTableData } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.optionValue, btwYearSelections.activeOption, btwYearSelections.startYear, btwYearSelections.endYear);
 
             setTripChartData(tripsChartData);
             setDurationChartData(durationChartData);
             setMinYear(minYear);
             setMaxYear(maxYear);
             setOptionChanges(optionChanges);
+            setSampleSizeTableData(sampleSizeTableData);
 
         }).finally(() => {
             setIsBtwYearLoading(false);
@@ -96,7 +100,9 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                             <p>The average daily travel duration per person, calculated over the years from the start year to the end year.</p>
                         </Infobox></div>
                 </div>
-
+                <div className="sampeSizeTable">
+                    <SampleSizeTable years={sampleSizeTableData.years} counts={sampleSizeTableData.counts} />
+                </div>
             </div>
         </>
     )

@@ -44,12 +44,22 @@ const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: stri
         maintainAspectRatio: false,
         plugins: {
             tooltip: {
-                // This is a workaround to display the correct label for the tooltip only when the labels are split into two lines for better readability (Telework Dashboard)
                 callbacks: {
-                    title: function (tootltipItems: any) {
-                        const tooltipItem = tootltipItems[0];
-                        const labelArray = chartData.labels[tooltipItem.dataIndex];
-                        return Array.isArray(labelArray) ? labelArray.join(' ') : labelArray;
+                    label: function (context: any) {
+                        let label = context.dataset.label || '';
+                        let value = context.raw !== undefined ? context.raw : (context.parsed.y !== undefined ? context.parsed.y : context.parsed.x);
+                        if (label) {
+                            label += ': ';
+                        }
+
+                        if (Number(value) % 1 === 0) {
+                            // It's a whole number, so add ".0" to make it display as a decimal
+                            label += `${value}.0`;
+                        } else {
+                            label += value.toString();
+                        }
+
+                        return label;
                     }
                 }
             },

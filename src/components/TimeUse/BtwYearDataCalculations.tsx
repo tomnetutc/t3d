@@ -1,4 +1,4 @@
-import { ActivityOption, ChartDataProps, DataRow } from '../Types';
+import { ActivityOption, ChartDataProps, CountObj, DataRow, SampleSizeTableProps } from '../Types';
 import { calculateYearlyActivityAverages } from '../../utils/Helpers';
 import Colors from '../../Colors'
 
@@ -7,8 +7,29 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
     inHomeChangePercent: number,
     outHomeChangePercent: number,
     inHomeChangeValue: number,
-    outHomeChangeValue: number
+    outHomeChangeValue: number,
+    sampleSizeTableData: SampleSizeTableProps
 } => {
+
+    // Calculation for Sample Size Table
+    const filteredByYearData = filteredData.filter(dataRow => {
+        const year = dataRow['year'];
+        return year >= startYear && year <= endYear;
+    });
+
+    const uniqueYears = Array.from(new Set(filteredByYearData.map(item => item.year)))
+        .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+    let countObj: CountObj = {
+        data: filteredByYearData,
+        count: []
+    };
+
+    // Count the number of rows for each year for the sample size table
+    uniqueYears.forEach(year => {
+        countObj.count.push([year.toString(), countObj.data.filter(row => row.year === year).length]);
+    });
+
     const yearlyAverages = calculateYearlyActivityAverages(filteredData, selectedActivity, startYear, endYear);
     const labels = yearlyAverages.map(item => item.year);
 
@@ -68,6 +89,11 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
         ]
     };
 
+    const sampleSizeTableData: SampleSizeTableProps = {
+        years: labels,
+        counts: [countObj],
+    };
+
     return {
         chartData,
         averages: { inHomeAvg, outHomeAvg },
@@ -76,6 +102,7 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
         inHomeChangePercent,
         outHomeChangePercent,
         inHomeChangeValue,
-        outHomeChangeValue
+        outHomeChangeValue,
+        sampleSizeTableData
     };
 };

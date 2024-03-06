@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
+import React, { ReactNode } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
-import CloseIcon from '@mui/icons-material/Close';
 import './InfoBox.scss';
+interface InfoBoxProps {
+  children: ReactNode;
+  style?: any;
+}
 
-const InfoBox = ({ children, style }) => {
+const InfoBox: React.FC<InfoBoxProps> = ({ children, style }) => {
   return (
     <>
       <div className="info-box-position" style={style}>

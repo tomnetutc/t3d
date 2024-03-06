@@ -56,11 +56,11 @@ export const updateSegmentTimeSpent = (newAverage: number) => {
         segmentTimeSpent = { ...segmentTimeSpent, counter: `${(newAverage).toFixed(1)} mins` };
         return;
     }
-    segmentTimeSpent = { ...segmentTimeSpent, counter: `${newAverage.toFixed(0)} mins` };
+    segmentTimeSpent = { ...segmentTimeSpent, counter: `${newAverage.toFixed(1)} mins` };
 };
 
 export const updateSegmentActivities = (newAverage: number) => {
-    segmentActivites = { ...segmentActivites, counter: `${newAverage.toFixed(0)}` };
+    segmentActivites = { ...segmentActivites, counter: `${newAverage.toFixed(1)}` };
 };
 
 export const updateSegmentTrips = (newAverage: number) => {

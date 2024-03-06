@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { ChartDataProps, weekOption, Option, ProgressBarData } from "../Types";
+import { ChartDataProps, weekOption, Option, ProgressBarData, SampleSizeTableProps } from "../Types";
 import { DataProvider, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 import BtwYearMenu from "./BtwYearMenu";
 import VerticalStackedBarChart from "../VerticalChart/VerticalChart";
 import { calculateYearlyWorkArrangementShares } from "./BtwYearDataCalculations";
 import Progress from "../ProgressBar/ProgressBar";
 import Infobox from '../InfoBox/InfoBox';
+import SampleSizeTable from "../SampleSizeTable";
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
 
@@ -13,6 +14,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
     const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, employment: Option, startYear: string, endYear: string }>({ week: WeekOptions[0], employment: { label: "All", value: "All", id: "All", val: "All", groupId: "All" }, startYear: "", endYear: "" });
     const [workersShare, setworkersShareChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [percentageChange, setPercentageChange] = useState<ProgressBarData[]>([]);
+    const [sampleSizeTableData, setSampleSizeTableData] = useState<SampleSizeTableProps>({ years: [], counts: [] });
     const [minYear, setMinYear] = useState('');
     const [maxYear, setMaxYear] = useState('');
 
@@ -36,12 +38,14 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
         ]).then(([btwYearFilteredData]) => {
             setBtwYearFilteredData(btwYearFilteredData);
 
-            const { chartData, percentChangedata, minYear, maxYear } = calculateYearlyWorkArrangementShares(btwYearFilteredData, btwYearSelections.startYear, btwYearSelections.endYear, btwYearSelections.employment);
+            const { chartData, percentChangedata, minYear, maxYear, sampleSizeTableData } = calculateYearlyWorkArrangementShares(btwYearFilteredData, btwYearSelections.startYear, btwYearSelections.endYear, btwYearSelections.employment);
 
             setworkersShareChartData(chartData);
             setPercentageChange(percentChangedata);
             setMinYear(minYear);
             setMaxYear(maxYear);
+            setSampleSizeTableData(sampleSizeTableData);
+
 
         }).finally(() => {
             setIsBtwYearLoading(false);
@@ -72,6 +76,10 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                         <Infobox>
                             <p>The distribution of workers by work arrangement over the selected period.</p>
                         </Infobox></div>
+                </div>
+
+                <div className="sampeSizeTable">
+                    <SampleSizeTable years={sampleSizeTableData.years} counts={sampleSizeTableData.counts} />
                 </div>
             </div>
         </>

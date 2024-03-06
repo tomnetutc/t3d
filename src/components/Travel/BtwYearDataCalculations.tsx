@@ -1,5 +1,5 @@
 import { active } from "d3";
-import { ChartDataProps, DataRow, TravelModeOption, TripPurposeOption } from "../Types"
+import { ChartDataProps, CountObj, DataRow, SampleSizeTableProps, TravelModeOption, TripPurposeOption } from "../Types"
 import { TravelModeOptions, TripPurposeOptions } from "../../utils/Helpers";
 import { Travel } from "../../pages/Travel";
 
@@ -9,13 +9,27 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
     durationChartData: ChartDataProps,
     minYear: string,
     maxYear: string,
-    optionChanges: any
+    optionChanges: any,
+    sampleSizeTableData: SampleSizeTableProps
 } => {
 
     // Filter data by startYear and endYear
     const filteredByYearData = filteredData.filter(dataRow => {
         const year = dataRow['year'];
         return year >= startYear && year <= endYear;
+    });
+
+    const uniqueYears = Array.from(new Set(filteredByYearData.map(item => item.year)))
+        .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+    let countObj: CountObj = {
+        data: filteredByYearData,
+        count: []
+    };
+
+    // Count the number of rows for each year for the sample size table
+    uniqueYears.forEach(year => {
+        countObj.count.push([year.toString(), countObj.data.filter(row => row.year === year).length]);
     });
 
     let yearlyData: any = {};
@@ -130,6 +144,11 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
         }]
     };
 
+    const sampleSizeTableData: SampleSizeTableProps = {
+        years: labels,
+        counts: [countObj],
+    };
+
     // Compute minYear and maxYear
     const minYear = labels[0];
     const maxYear = labels[labels.length - 1];
@@ -139,7 +158,8 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
         durationChartData,
         minYear,
         maxYear,
-        optionChanges
+        optionChanges,
+        sampleSizeTableData
     };
 
 };

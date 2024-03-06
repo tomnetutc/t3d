@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { weekOption, ActivityOption, YearOption, Option } from '../Types';
-import { WeekOptions, ActivityOptions, DataProvider, WorkArrangementOptions } from '../../utils/Helpers';
+import { WeekOptions, ActivityOptions, DataProvider, WorkArrangementOptions, EmploymentStatusOptions } from '../../utils/Helpers';
 import '../../css/menu.scss'
 import '../../App.css';
 import { max } from 'd3';
@@ -107,7 +107,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
     };
 
 
-    const sortedEmploymentOptions = [...WorkArrangementOptions].filter(option => option.id != "unemployed") // Creating a copy to prevent mutating the original array as it is imported from a different file
+    const sortedEmploymentOptions = [...EmploymentStatusOptions].filter(option => option.id != "unemployed") // Creating a copy to prevent mutating the original array as it is imported from a different file
         .sort((a, b) => {
             return a.label.localeCompare(b.label);
         });
@@ -160,22 +160,6 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
             fontSize: '13.5px' // Smaller font size for options
         })
     };
-
-    const customStylesForActivityDropdown = {
-        control: (provided: any) => ({
-            ...provided,
-            border: '1px solid #ced4da',
-            borderRadius: '0.29rem',
-            minHeight: '36px',
-            minWidth: '220px',
-            fontSize: '14px',
-        }),
-        option: (provided: any) => ({
-            ...provided,
-            fontSize: '13.5px' // Smaller font size for options
-        })
-    };
-
 
     return (
         <div className="year-menu-container" style={{ padding: '0 20px' }}>
@@ -235,7 +219,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         onChange={handleEmploymentChange}
                         options={employmentDropdownOptions}
                         isSearchable={false}
-                        styles={customStylesForActivityDropdown}
+                        styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
                         maxMenuHeight={200}

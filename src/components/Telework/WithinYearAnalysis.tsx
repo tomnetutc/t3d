@@ -90,9 +90,9 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
                             <p>Average time spent on working per person per day across work arrangement groups, categorized by where the activity takes place: in-home vs. out-of-home.</p>
                         </Infobox></div>
 
-                    <div className="box box5"><GridBubbleChart
+                    <div className="box TimePoorArrangment"><GridBubbleChart
                         bubbleData={timePoorWorkArrangementData}
-                        chartTitle="Percent of time poor by work arrangement"
+                        chartTitle="Percent of time poor by work arrangement (%)"
                     />
                         <Infobox>
                             <p>Percent of time poor workers in each work arrangement group. For more details on time poverty, see the About page.</p>

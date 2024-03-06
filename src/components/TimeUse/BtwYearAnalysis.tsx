@@ -5,9 +5,10 @@ import BubbleChart from '../Bubble/Bubble';
 import VerticalStackedBarChart from '../VerticalChart/VerticalChart';
 import DualValueSegment from '../DualValueSegment/DualValueSegment';
 import { prepareVerticalChartData } from './BtwYearDataCalculations';
-import { ActivityOption, ChartDataProps, Option, weekOption } from "../Types";
+import { ActivityOption, ChartDataProps, Option, SampleSizeTableProps, weekOption } from "../Types";
 import { DataProvider, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 import Infobox from '../InfoBox/InfoBox';
+import SampleSizeTable from '../SampleSizeTable';
 
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
@@ -23,6 +24,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
     const [outHomeChangePercent, setOutHomeChangePercent] = useState<number | null>(null);
     const [inHomeChangeValue, setInHomeChangeValue] = useState<number | null>(null);
     const [outHomeChangeValue, setOutHomeChangeValue] = useState<number | null>(null);
+    const [sampleSizeTableData, setSampleSizeTableData] = useState<SampleSizeTableProps>({ years: [], counts: [] });
 
 
     const handleBtwYearMenuChange = useCallback((selections: { week: weekOption, activity: ActivityOption, startYear: string, endYear: string }) => {
@@ -45,7 +47,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
         ]).then(([btwYearFilteredData]) => {
             setBtwYearFilteredData(btwYearFilteredData);
 
-            const { chartData: verticalData, averages, minYear, maxYear, inHomeChangePercent, outHomeChangePercent, inHomeChangeValue, outHomeChangeValue } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.activity, btwYearSelections.startYear, btwYearSelections.endYear);
+            const { chartData: verticalData, averages, minYear, maxYear, inHomeChangePercent, outHomeChangePercent, inHomeChangeValue, outHomeChangeValue, sampleSizeTableData } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.activity, btwYearSelections.startYear, btwYearSelections.endYear);
             setProcessedVerticalChartData(verticalData);
 
             setInHomeAverage(averages.inHomeAvg);
@@ -56,6 +58,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
             setOutHomeChangePercent(outHomeChangePercent);
             setInHomeChangeValue(inHomeChangeValue);
             setOutHomeChangeValue(outHomeChangeValue);
+            setSampleSizeTableData(sampleSizeTableData);
 
         }).finally(() => {
             setIsBtwYearLoading(false);
@@ -106,6 +109,10 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                             <p>Change in time allocations for in-home and out-of-home activities from the start year to the end year, expressed in both absolute and percentage terms.</p>
                         </Infobox>
                     </div>
+                </div>
+
+                <div className="sampeSizeTable">
+                    <SampleSizeTable years={sampleSizeTableData.years} counts={sampleSizeTableData.counts} />
                 </div>
 
             </div>

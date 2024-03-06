@@ -1,5 +1,6 @@
+import { DSVRowString } from "d3-dsv";
 import { WorkArrangementOptions } from "../../utils/Helpers";
-import { ChartDataProps, Option, ProgressBarData } from "../Types";
+import { ChartDataProps, CountObj, Option, ProgressBarData, SampleSizeTableProps } from "../Types";
 
 const workArrangementColors: { [key: string]: string } = {
     "zero_work": '#C4C4C4',
@@ -17,7 +18,8 @@ export const calculateYearlyWorkArrangementShares = (
     chartData: ChartDataProps,
     percentChangedata: ProgressBarData[],
     minYear: string,
-    maxYear: string
+    maxYear: string,
+    sampleSizeTableData: SampleSizeTableProps
 } => {
     const start = parseInt(startYear, 10);
     const end = parseInt(endYear, 10);
@@ -50,9 +52,27 @@ export const calculateYearlyWorkArrangementShares = (
         });
     });
 
+    if (employment.id != "All") {
+        filteredData = filteredData.filter(row => row[employment.id] === employment.val);
+    }
+
+    let allYearData: DSVRowString<string>[] = filteredData.filter(row => {
+        const year = parseInt(row.year, 10);
+        return year >= start && year <= end;
+    });
+
+    let countObj: CountObj = {
+        data: allYearData,
+        count: []
+    };
+
     uniqueYears.forEach(year => {
         labels.push(year.toString());
         const yearData = filteredData.filter(row => row.year === year);
+
+        const countForYear = allYearData.filter(row => row.year === year).length;
+        countObj.count.push([year.toString(), countForYear]);
+
 
         let sumOfPercentages = 0;
 
@@ -65,7 +85,7 @@ export const calculateYearlyWorkArrangementShares = (
 
             datasets[index].data.push(parseFloat(percentage.toFixed(1)));
 
-            if (employment.id === "All" && index === validOptions.length - 1) {
+            if (index === validOptions.length - 1) {
                 let adjustedPercentage = 100 - sumOfPercentages + parseFloat(percentage.toFixed(1));
                 adjustedPercentage = adjustedPercentage < 0 ? 0 : adjustedPercentage;
                 adjustedPercentage = adjustedPercentage > 100 ? 100 : adjustedPercentage;
@@ -85,21 +105,22 @@ export const calculateYearlyWorkArrangementShares = (
         });
     });
 
-
-    if (employment.id !== "All") {
-        datasets = datasets.filter(dataset => dataset.label === employment.label);
-    }
-
     const chartData: ChartDataProps = {
         labels,
         datasets
+    };
+
+    const sampleSizeTableData: SampleSizeTableProps = {
+        years: labels,
+        counts: [countObj],
     };
 
     return {
         chartData,
         percentChangedata,
         minYear: labels[0],
-        maxYear: labels[labels.length - 1]
+        maxYear: labels[labels.length - 1],
+        sampleSizeTableData,
     };
 };
 

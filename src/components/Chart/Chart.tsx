@@ -57,6 +57,27 @@ const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string, isSta
             title: {
                 display: false
             },
+            tooltip: {
+                callbacks: {
+                    label: function (context: any) {
+                        let label = context.dataset.label || '';
+                        let value = context.raw !== undefined ? context.raw : (context.parsed.y !== undefined ? context.parsed.y : context.parsed.x);
+                        if (label) {
+                            label += ': ';
+                        }
+
+                        if (Number(value) % 1 === 0) {
+                            // It's a whole number, so add ".0" to make it display as a decimal
+                            label += `${value}.0`;
+                        } else {
+                            label += value.toString();
+                        }
+
+                        return label;
+                    }
+                }
+            },
+
         },
         scales: {
             x: {
@@ -74,14 +95,14 @@ const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string, isSta
     };
 
     return (
-        <div className="chart-container">
+        <div className="chart-container" >
             <div className="title-container">
                 <span className="title">{title}</span>
             </div>
             <div className="chart">
                 <Bar data={chartData} options={options} />
             </div>
-        </div>
+        </div >
     );
 };
 

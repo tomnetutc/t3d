@@ -16,9 +16,11 @@ export const useDocumentTitle = (pageTitle: string) => {
 };
 
 // Singleton class for data management
+
 export class DataProvider {
     private static instance: DataProvider;
     private data: DSVRowString<string>[] | null = null;
+    private loadingPromise: Promise<DSVRowString<string>[]> | null = null; // Async lock
 
     private constructor() { }
 
@@ -30,17 +32,29 @@ export class DataProvider {
     }
 
     public async loadData(): Promise<DSVRowString<string>[]> {
-        if (this.data === null) {
-            try {
-                this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3d/main/public/df_time_use.csv');
-            } catch (error) {
-                console.error('Error loading data:', error);
-                throw error;
-            }
+        if (this.data !== null) {
+            return this.data; // Return the data if it's already loaded
+        }
+        if (this.loadingPromise) {
+            return this.loadingPromise; // Return the existing loading promise if it's already loading
+        }
+        this.loadingPromise = this.loadFromSource().finally(() => {
+            this.loadingPromise = null; // Clear the loading promise after it's done
+        });
+        return this.loadingPromise;
+    }
+
+    private async loadFromSource(): Promise<DSVRowString<string>[]> {
+        try {
+            this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3d/main/public/df_time_use.csv');
+        } catch (error) {
+            console.error('Error loading data:', error);
+            throw error;
         }
         return this.data;
     }
 }
+
 
 export const getTotalRowsForYear = async (dataProvider: { loadData: () => Promise<any[]> }, year: string, filterUnemployed: boolean = false) => {
     try {
@@ -341,7 +355,7 @@ export const RaceOptions: Option[] = [
     },
 ];
 
-const EmploymentStatusOptions: Option[] = [
+export const EmploymentStatusOptions: Option[] = [
     {
         value: "Full-time worker",
         label: "Full-time worker",

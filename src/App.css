@@ -16,6 +16,10 @@
 
 }
 
+.fw-bold {
+  font-weight: bold;
+}
+
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -43,8 +47,38 @@
   border: 0px solid black;
 }
 
-html,
-body {
-  min-width: 320px;
-  overflow-x: hidden;
+.sidediv {
+  height: 100vh;
+  /* width: 10.6vw; */
+  /* background-color: #060b26; */
+  background-color: #F8F2FE;
+  position: fixed;
+}
+
+.sidenavbarlist {
+  position: relative;
+  top: 200px;
+  padding: 0;
+}
+
+.sidenavbarlistitem {
+  list-style: none;
+  height: 50px;
+  padding: 8px 16px 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.contenthead::before {
+  display: block;
+  content: " ";
+  margin-top: -80px;
+  height: 80px;
+  visibility: hidden;
+  pointer-events: none;
 }

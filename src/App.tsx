@@ -4,6 +4,7 @@ import { Telework } from "./pages/Telework";
 import { Routes, Route, useLocation } from "react-router-dom";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
+import { About } from "./pages/About";
 
 ReactGA.initialize('G-TXP1R3BQ6J');
 
@@ -18,7 +19,8 @@ function App(): JSX.Element {
   return (
     <>
       <Routes>
-        <Route path="/" element={<TimeUse />} />
+        <Route path="/" element={<About />} />
+        <Route path="/timeuse" element={<TimeUse />} />
         <Route path="/travel" element={<Travel />} />
         <Route path="/telework" element={<Telework />} />
       </Routes>

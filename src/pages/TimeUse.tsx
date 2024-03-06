@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import "../css/timeuse.scss";
 import { Navbar } from "../components/Navbar";
 import { WithinYearAnalysis } from "../components/TimeUse/WithinYearAnalysis";
 import { BtwYearAnalysis } from '../components/TimeUse/BtwYearAnalysis';
 import { Option } from "../components/Types";
 import Footer from '../components/Footer';
-import { useDocumentTitle } from '../utils/Helpers';
+import { TravelDataProvider, useDocumentTitle } from '../utils/Helpers';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 export function TimeUse(): JSX.Element {
@@ -22,11 +22,19 @@ export function TimeUse(): JSX.Element {
         }
     }, [menuSelectedOptions]);
 
+    useEffect(() => {
+        if (!isBtwYearLoading && !isWithinYearLoading) {
+            Promise.all([
+                TravelDataProvider.getInstance().loadData()
+            ]).catch(console.error);
+        }
+    }, [isBtwYearLoading, isWithinYearLoading]);
+
     return (
         <>
             <Navbar onMenuOptionChange={handleMenuOptionChange} />
             {(isWithinYearLoading || isBtwYearLoading) && <LoadingOverlay />}
-            <div className="home" style={{ backgroundColor: '#f5f5f5', padding: '130px 20px 20px' }}>
+            <div className="home" style={{ backgroundColor: '#f5f5f5', padding: '30px 20px 20px' }}>
                 <WithinYearAnalysis menuSelectedOptions={menuSelectedOptions} setIsWithinYearLoading={setIsWithinYearLoading} />
                 <BtwYearAnalysis menuSelectedOptions={menuSelectedOptions} setIsBtwYearLoading={setIsBtwYearLoading} />
                 <Footer

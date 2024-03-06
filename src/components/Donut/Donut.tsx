@@ -1,6 +1,7 @@
 import "./Donut.scss";
+import React, { useState, useEffect, useRef } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement, CategoryScale, Tooltip, Legend } from 'chart.js';
+import { Chart, ArcElement, CategoryScale, Tooltip, Legend, LegendItem, ChartEvent, TooltipItem, LegendElement } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { DonutProps } from "../Types";
 import { ChartOptions } from 'chart.js';
@@ -11,10 +12,26 @@ Chart.register(ArcElement, CategoryScale, ChartDataLabels, Tooltip, Legend);
 
 const Donut = (props: DonutProps): JSX.Element => {
 
+    const [aspectRatio, setAspectRatio] = useState(props.aspectRatio || (window.innerWidth <= 1800 ? 1 : 1.2));
+
+    useEffect(() => {
+        if (!props.aspectRatio) {
+            const handleResize = () => {
+                setAspectRatio(window.innerWidth <= 1800 ? 1 : 1.2);
+            };
+            window.addEventListener('resize', handleResize);
+
+            // Cleanup function
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
+        }
+    }, [props.aspectRatio]);
+
     const options: ChartOptions<"doughnut"> = {
         responsive: true,
         maintainAspectRatio: true,
-        aspectRatio: 1.48,
+        aspectRatio: aspectRatio,
         plugins: {
             datalabels: {
                 color: '#FFF',
@@ -22,7 +39,7 @@ const Donut = (props: DonutProps): JSX.Element => {
                     weight: 'bold'
                 },
                 formatter: (value, context) => {
-                    return value + '%';
+                    return value > 5 ? `${value}%` : null;
                 },
                 anchor: 'center',
                 align: 'center'
@@ -32,8 +49,8 @@ const Donut = (props: DonutProps): JSX.Element => {
                 align: 'end',
                 labels: {
                     boxWidth: 10,
-                    boxHeight: 10
-                }
+                    boxHeight: 10,
+                },
             },
             tooltip: {
                 callbacks: {

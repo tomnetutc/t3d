@@ -4,15 +4,23 @@ import { max } from 'd3';
 import { weekOption, YearOption, YearMenuProps } from './Types';
 import { WeekOptions, DataProvider } from '../utils/Helpers';
 import '../css/menu.scss';
+import '../App.css';
 
 
 
-const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange }) => {
+const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange, callingComponent }) => {
 
     const [weekValue, setWeekValue] = useState<weekOption>(WeekOptions[0]);
     const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
     const [selectedYear, setSelectedYear] = useState<YearOption>({ label: "", value: "" });
     const [isMaxYearLoaded, setIsMaxYearLoaded] = useState(false);
+
+    //This is done to set the default value of week to "Weekday" when the calling component is "Telework"
+    useEffect(() => {
+        if (callingComponent === "Telework") {
+            setWeekValue(WeekOptions[1]);
+        }
+    }, [callingComponent]);
 
     useEffect(() => {
         const cacheKey = "YearDataCache";
@@ -26,7 +34,7 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange }) => {
             }
         }
 
-        const loadDataAndCache = async () => {
+        async function loadDataAndCache() {
             try {
                 const data = await DataProvider.getInstance().loadData();
                 const maxYear = max(data, (d) => d.year);
@@ -38,14 +46,14 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange }) => {
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-        };
+        }
 
         loadDataAndCache();
 
 
     }, []);
 
-    const setYearDropdownOptions = (maxYear: any) => {
+    function setYearDropdownOptions(maxYear: any) {
         const years = Array.from({ length: maxYear - 2002 }, (v, i) => {
             const year = (2003 + i).toString();
             return { label: year, value: year };
@@ -53,7 +61,31 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange }) => {
         setYearOptions(years);
         setSelectedYear({ label: maxYear.toString(), value: maxYear.toString() }); // Set default to maxYear
         setIsMaxYearLoaded(true);
+    }
+
+    // Scroll to the selected option when the dropdown is opened
+    const scrollToSelectedOption = () => {
+        setTimeout(() => {
+            const selectedEl = document.querySelector(".dropdown-select__option--is-selected");
+            if (selectedEl) {
+                selectedEl.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
+            }
+        }, 15);
     };
+
+    // Set the width of the dotted line dynamically
+    useEffect(() => {
+        const menuHeader = document.querySelector('#timeuse-wtn-year-menu-header') as HTMLElement;
+        const dropdownsContainer = document.querySelector('#timeuse-wtn-year-dropdowns-container') as HTMLElement;
+
+        if (menuHeader && dropdownsContainer) {
+            const menuHeaderRight = menuHeader.getBoundingClientRect().left;
+            const dropdownsLeft = dropdownsContainer.getBoundingClientRect().left;
+            const width = dropdownsLeft - menuHeaderRight - 270; //Slight offset to account for the title text and character diffences between the two headers
+
+            menuHeader.style.setProperty('--dotted-line-width', `${width}px`);
+        }
+    }, []);
 
     useEffect(() => {
         if (isMaxYearLoaded) {
@@ -93,12 +125,14 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange }) => {
 
     return (
         <div className="year-menu-container" style={{ padding: '5px 20px' }}>
-            <div className='menu-header'>
+            <div className='menu-header' id='timeuse-wtn-year-menu-header'>
                 <h4 className="fw-bold-menu">Within Year Analysis</h4>
-                <div className="dropdowns-container">
+                <div className="dropdowns-container" id='timeuse-wtn-year-dropdowns-container'>
                     <label className="segment-label">Day:</label>
                     <Select
                         className="dropdown-select"
+                        classNamePrefix="dropdown-select"
+                        onMenuOpen={scrollToSelectedOption}
                         value={weekValue}
                         onChange={handleWeekChange}
                         options={WeekOptions}
@@ -111,6 +145,8 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange }) => {
                     <label className="segment-label">Year:</label>
                     <Select
                         className="dropdown-select"
+                        classNamePrefix="dropdown-select"
+                        onMenuOpen={scrollToSelectedOption}
                         value={selectedYear}
                         onChange={handleYearChange}
                         options={yearOptions}

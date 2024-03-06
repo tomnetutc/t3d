@@ -1,18 +1,39 @@
 .menu-container {
     padding: 5px 40px 0;
     display: block;
+    position: relative;
 }
 
 .menu-header {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    position: relative;
+}
 
+.btw-menu-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.title-and-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .segment-label {
     font-size: 13.5px;
     font-weight: 500;
+}
+
+.buttons-container {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    /* Adjust the space between buttons */
 }
 
 .dropdowns-container {
@@ -64,7 +85,6 @@
 
     .submit-button {
         margin-left: 1rem;
-        background-color: #594DA3;
-        border-color: #594DA3;
     }
+
 }

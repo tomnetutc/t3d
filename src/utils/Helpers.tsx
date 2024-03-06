@@ -1,16 +1,26 @@
-import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData } from "../components/Types";
+import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption, DayofWeekOption } from "../components/Types";
 import { csv } from "d3";
 import { DSVRowString } from "d3-dsv";
 import firebase, { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, doc, updateDoc, getDoc, increment } from 'firebase/firestore';
 import firebaseConfig from "../firebaseConfig";
+import { useEffect } from "react";
 
+
+export const useDocumentTitle = (pageTitle: string) => {
+    useEffect(() => {
+        const initialTitle = 'T3 Data Dashboard';
+        document.title = `${initialTitle} | ${pageTitle}`;
+    }, [pageTitle]);
+};
 
 // Singleton class for data management
+
 export class DataProvider {
     private static instance: DataProvider;
     private data: DSVRowString<string>[] | null = null;
+    private loadingPromise: Promise<DSVRowString<string>[]> | null = null; // Async lock
 
     private constructor() { }
 
@@ -22,35 +32,54 @@ export class DataProvider {
     }
 
     public async loadData(): Promise<DSVRowString<string>[]> {
-        if (this.data === null) {
-            try {
-                this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3_datahub/main/public/df_time_use.csv');
-            } catch (error) {
-                console.error('Error loading data:', error);
-                throw error;
-            }
+        if (this.data !== null) {
+            return this.data; // Return the data if it's already loaded
+        }
+        if (this.loadingPromise) {
+            return this.loadingPromise; // Return the existing loading promise if it's already loading
+        }
+        this.loadingPromise = this.loadFromSource().finally(() => {
+            this.loadingPromise = null; // Clear the loading promise after it's done
+        });
+        return this.loadingPromise;
+    }
+
+    private async loadFromSource(): Promise<DSVRowString<string>[]> {
+        try {
+            this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3d/main/public/df_time_use.csv');
+        } catch (error) {
+            console.error('Error loading data:', error);
+            throw error;
         }
         return this.data;
     }
 }
 
-export const getTotalRowsForYear = async (year: string) => {
+
+export const getTotalRowsForYear = async (dataProvider: { loadData: () => Promise<any[]> }, year: string, filterUnemployed: boolean = false) => {
     try {
-        const data = await DataProvider.getInstance().loadData();
+        const data = await dataProvider.loadData();
+        if (filterUnemployed) //Filter the data without the unemployed data for Telework dashboard. This is a conditional argument hence by default it is false and doesn't expect a value
+            return data.filter(row => row.year === year && row.unemployed == '0.0').length;
+
         return data.filter(row => row.year === year).length;
+
     } catch (error) {
         console.error('Error fetching data:', error);
         return 0;
     }
 };
 
-export function filterCriteria(selectedOptions: Option[], year: string, weekOption: weekOption) {
+export function filterCriteria(selectedOptions: Option[], year: string, weekOption: weekOption, filterUnemployed: boolean = false) {
     return function (row: DSVRowString<string>) {
         if (year && row['year'] !== year) return false;
 
         if (weekOption.value !== "All") {
             if (row[weekOption.id] !== weekOption.val) return false;
         }
+
+        //Filter the data without the unemployed data for Telework dashboard. This is a conditional argument hence by default it is false and doesn't expect a value
+        if (filterUnemployed && row['unemployed'] === "1.0") return false;
 
         const groupedOptions = selectedOptions.reduce((acc: GroupedOptions, option) => {
             const groupId = option.groupId;
@@ -69,22 +98,21 @@ export function filterCriteria(selectedOptions: Option[], year: string, weekOpti
     };
 }
 
-
-
-export const fetchAndFilterData = async (selectedOptions: Option[], year: string, weekOption: weekOption) => {
+export const fetchAndFilterData = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], year: string, weekOption: weekOption, filterUnemployed: boolean = false) => {
     try {
-        const data = await DataProvider.getInstance().loadData();
-        return data.filter(filterCriteria(selectedOptions, year, weekOption));
+        const data = await dataProvider.loadData();
+        return data.filter(filterCriteria(selectedOptions, year, weekOption, filterUnemployed));
     } catch (error) {
         console.error('Error fetching and filtering data:', error);
         return [];
     }
+    //Added a conditional argument filterunemployed to filter the data without the unemployed data for Telework dashboard. This is a conditional argument hence by default it is false and doesn't expect a value
 };
 
-export const fetchAndFilterDataForBtwYearAnalysis = async (selectedOptions: Option[], weekOption: weekOption) => {
+export const fetchAndFilterDataForBtwYearAnalysis = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], weekOption: weekOption, filterUnemployed: boolean = false) => {
     try {
-        const data = await DataProvider.getInstance().loadData();
-        return data.filter(filterCriteria(selectedOptions, "", weekOption));
+        const data = await dataProvider.loadData();
+        return data.filter(filterCriteria(selectedOptions, "", weekOption, filterUnemployed));
     } catch (error) {
         console.error('Error fetching and filtering data for between year analysis:', error);
         return [];
@@ -106,26 +134,35 @@ export const calculateActivityAverages = (data: DataRow[]) => {
     });
 };
 
-export const calculateYearlyActivityAverages = (data: DataRow[], selectedActivity: ActivityOption): any[] => {
+export const calculateYearlyActivityAverages = (data: DataRow[], selectedActivity: ActivityOption, startYear: string, endYear: string): any[] => {
     const yearlyData: Record<string, YearlyActivityData> = {};
+
+    const startYearNum = parseInt(startYear, 10);
+    const endYearNum = parseInt(endYear, 10);
 
     data.forEach(row => {
         const year = row.year;
-        if (!yearlyData[year]) {
-            yearlyData[year] = { inHome: 0, outHome: 0, count: 0 };
+        const yearNum = parseInt(year, 10);
+
+        if (yearNum >= startYearNum && yearNum <= endYearNum) {
+
+            if (!yearlyData[year]) {
+                yearlyData[year] = { inHome: 0, outHome: 0, count: 0 };
+            }
+
+            if (selectedActivity.label === "All") {
+                ActivityOptions.forEach(activity => {
+                    yearlyData[year].inHome += parseFloat(row[activity.inHome] || '0');
+                    yearlyData[year].outHome += parseFloat(row[activity.outHome] || '0');
+                });
+            } else {
+                yearlyData[year].inHome += parseFloat(row[selectedActivity.inHome] || '0');
+                yearlyData[year].outHome += parseFloat(row[selectedActivity.outHome] || '0');
+            }
+
+            yearlyData[year].count += 1;
         }
 
-        if (selectedActivity.label === "All") {
-            ActivityOptions.forEach(activity => {
-                yearlyData[year].inHome += parseFloat(row[activity.inHome] || '0');
-                yearlyData[year].outHome += parseFloat(row[activity.outHome] || '0');
-            });
-        } else {
-            yearlyData[year].inHome += parseFloat(row[selectedActivity.inHome] || '0');
-            yearlyData[year].outHome += parseFloat(row[selectedActivity.outHome] || '0');
-        }
-
-        yearlyData[year].count += 1;
     });
 
     return Object.entries(yearlyData).map(([year, { inHome, outHome, count }]) => ({
@@ -135,6 +172,63 @@ export const calculateYearlyActivityAverages = (data: DataRow[], selectedActivit
     }));
 };
 
+
+// Singleton class for Traveldata management
+export class TravelDataProvider {
+    private static instance: TravelDataProvider;
+    private data: DSVRowString<string>[] | null = null;
+
+    private constructor() { }
+
+    public static getInstance(): TravelDataProvider {
+        if (!TravelDataProvider.instance) {
+            TravelDataProvider.instance = new TravelDataProvider();
+        }
+        return TravelDataProvider.instance;
+    }
+
+    public async loadData(): Promise<DSVRowString<string>[]> {
+        if (this.data === null) {
+            try {
+                this.data = await csv('https://raw.githubusercontent.com/tomnetutc/t3d/main/public/df_travel.csv');
+            } catch (error) {
+                console.error('Error loading data:', error);
+                throw error;
+            }
+        }
+        return this.data;
+    }
+}
+
+export const calculateTripAverages = (data: DataRow[]) => {
+    return TripPurposeOptions.map((tripPurpose) => {
+        const totalNumberTrip = data.reduce((sum, row) => sum + parseFloat(row[tripPurpose.numberTrip] || '0'), 0);
+        const totalDurationTrips = data.reduce((sum, row) => sum + parseFloat(row[tripPurpose.durationTrips] || '0'), 0);
+        const averageNumberTrip = totalNumberTrip / (data.length == 0 ? 1 : data.length);
+        const averageDurationTrips = totalDurationTrips / (data.length == 0 ? 1 : data.length);
+
+        return {
+            label: tripPurpose.label,
+            numberTrip: averageNumberTrip.toFixed(2), // Rounded to 2 decimal place
+            durationTrips: averageDurationTrips.toFixed(1) // Rounded to 1 decimal place
+        };
+    });
+};
+
+export const calculateTravelModeAverages = (data: DataRow[]) => {
+    return TravelModeOptions.map((travelMode) => {
+        const totalNumberTrip = data.reduce((sum, row) => sum + parseFloat(row[travelMode.numberTrip] || '0'), 0);
+        const totalDurationTrips = data.reduce((sum, row) => sum + parseFloat(row[travelMode.durationTrips] || '0'), 0);
+        const averageNumberTrip = totalNumberTrip / (data.length == 0 ? 1 : data.length);
+        const averageDurationTrips = totalDurationTrips / (data.length == 0 ? 1 : data.length);
+
+        return {
+            label: travelMode.label,
+            numberTrip: averageNumberTrip.toFixed(2), // Rounded to 2 decimal places
+            durationTrips: averageDurationTrips.toFixed(1) // Rounded to 1 decimal place
+        };
+    });
+};
 
 export const GenderOptions: Option[] = [
     {
@@ -261,7 +355,7 @@ export const RaceOptions: Option[] = [
     },
 ];
 
-const EmploymentStatusOptions: Option[] = [
+export const EmploymentStatusOptions: Option[] = [
     {
         value: "Full-time worker",
         label: "Full-time worker",
@@ -364,7 +458,7 @@ const LocationOptions: Option[] = [
     },
 ];
 
-const WorkArrangementOptions: Option[] = [
+export const WorkArrangementOptions: Option[] = [
     {
         value: "Workers with zero work",
         label: "Workers with zero work",
@@ -373,15 +467,8 @@ const WorkArrangementOptions: Option[] = [
         groupId: "Work Arrangement",
     },
     {
-        value: "Commuters only",
-        label: "Commuters only",
-        id: "commuter_only",
-        val: "1.0",
-        groupId: "Work Arrangement",
-    },
-    {
-        value: "Work at home only",
-        label: "Work at home only",
+        value: "In-home only workers",
+        label: "In-home only workers",
         id: "only_inhome_worker",
         val: "1.0",
         groupId: "Work Arrangement",
@@ -390,6 +477,13 @@ const WorkArrangementOptions: Option[] = [
         value: "Multi-site workers",
         label: "Multi-site workers",
         id: "multisite_worker",
+        val: "1.0",
+        groupId: "Work Arrangement",
+    },
+    {
+        value: "Commuters only",
+        label: "Commuters only",
+        id: "commuter_only",
         val: "1.0",
         groupId: "Work Arrangement",
     },
@@ -552,14 +646,14 @@ export const WeekOptions: weekOption[] = [
         label: "Weekday",
         id: "weekday",
         val: "1.0",
-        groupId: "Week",
+        groupId: "Weekday",
     },
     {
         value: "Weekend",
         label: "Weekend",
         id: "weekday",
         val: "0.0",
-        groupId: "Week",
+        groupId: "Weekend",
     },
 ];
 
@@ -642,6 +736,162 @@ export const ActivityOptions: ActivityOption[] = [
     },
 ];
 
+export const TripPurposeOptions: TripPurposeOption[] = [
+    {
+        label: "Work",
+        value: "Work",
+        numberTrip: "tr_work",
+        durationTrips: "tr_work_dur",
+    },
+    {
+        label: "Education",
+        value: "Education",
+        numberTrip: "tr_educ",
+        durationTrips: "tr_educ_dur",
+    },
+    {
+        label: "Shopping",
+        value: "Shopping",
+        numberTrip: "tr_shop",
+        durationTrips: "tr_shop_dur",
+    },
+    {
+        label: "Recreational",
+        value: "Recreational",
+        numberTrip: "tr_rec",
+        durationTrips: "tr_rec_dur",
+    },
+    {
+        label: "Social",
+        value: "Social",
+        numberTrip: "tr_soc",
+        durationTrips: "tr_soc_dur",
+    },
+    {
+        label: "Eating/Drinking",
+        value: "Eating/Drinking",
+        numberTrip: "tr_eat",
+        durationTrips: "tr_eat_dur",
+    },
+    {
+        label: "Adult or Child care",
+        value: "Adult or Child care",
+        numberTrip: "tr_ccare",
+        durationTrips: "tr_ccare_dur",
+    },
+    {
+        label: "Other",
+        value: "Other",
+        numberTrip: "tr_other",
+        durationTrips: "tr_other_dur",
+    },
+    {
+        label: "Return to home",
+        value: "Return to home",
+        numberTrip: "tr_home",
+        durationTrips: "tr_home_dur",
+    },
+    {
+        label: "All",
+        value: "All",
+        numberTrip: "tr_all",
+        durationTrips: "tr_all_dur",
+    },
+
+];
+
+export const TravelModeOptions: TravelModeOption[] = [
+    {
+        label: "Car",
+        value: "Car",
+        numberTrip: "mode_car",
+        durationTrips: "mode_car_dur",
+    },
+    {
+        label: "Transit",
+        value: "Transit",
+        numberTrip: "mode_pt",
+        durationTrips: "mode_pt_dur",
+    },
+    {
+        label: "Walk",
+        value: "Walk",
+        numberTrip: "mode_walk",
+        durationTrips: "mode_walk_dur",
+    },
+    {
+        label: "Bike",
+        value: "Bike",
+        numberTrip: "mode_bike",
+        durationTrips: "mode_bike_dur",
+    },
+    {
+        label: "Other",
+        value: "Other",
+        numberTrip: "mode_other",
+        durationTrips: "mode_other_dur",
+    },
+    {
+        label: "All",
+        value: "All",
+        numberTrip: "mode_all",
+        durationTrips: "mode_all_dur",
+    },
+];
+
+export const DayofWeek: DayofWeekOption[] = [
+    {
+        label: "Monday",
+        value: "Monday",
+        id: "day",
+        val: "2.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Tuesday",
+        value: "Tuesday",
+        id: "day",
+        val: "3.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Wednesday",
+        value: "Wednesday",
+        id: "day",
+        val: "4.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Thursday",
+        value: "Thursday",
+        id: "day",
+        val: "5.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Friday",
+        value: "Friday",
+        id: "day",
+        val: "6.0",
+        groupId: "Weekday",
+    },
+    {
+        label: "Saturday",
+        value: "Saturday",
+        id: "day",
+        val: "7.0",
+        groupId: "Weekend",
+    },
+    {
+        label: "Sunday",
+        value: "Sunday",
+        id: "day",
+        val: "1.0",
+        groupId: "Weekend",
+    },
+];
+
+
 export function hideFlagCounter() {
     const flagCounterImage = document.querySelector('#flag-counter-img') as HTMLImageElement;
     if (flagCounterImage) {
@@ -653,19 +903,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);
 
-export function tracking() {
-    const websiteDocRef = doc(db, "websites", "FV2dPUi6VGoHSjRtDCLB");
+export function tracking(docRefID: string, page: string, expiry: string) {
+    const websiteDocRef = doc(db, "t3dashboard", docRefID);
 
-    //   const unique_counter = document.getElementById("visit-count");
-    //   const total_counter = document.getElementById("total-count");
+    const unique_counter = document.getElementById("visit-count");
+    const total_counter = document.getElementById("total-count");
 
     const getUniqueCount = async () => {
         const docSnap = await getDoc(websiteDocRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-            //   if (data) {
-            //     setValue(data.uniqueCount);
-            //   }
+            if (data) {
+                setValue(data.uniqueCount);
+            }
         }
     };
 
@@ -673,9 +923,9 @@ export function tracking() {
         const docSnap = await getDoc(websiteDocRef);
         if (docSnap.exists()) {
             const data = docSnap.data();
-            //   if (data) {
-            //     setTotal(data.totalCount);
-            //   }
+            if (data) {
+                setTotal(data.totalCount);
+            }
         }
     };
 
@@ -693,40 +943,37 @@ export function tracking() {
         await getTotalCount();
     };
 
-    //   const setValue = (num: number) => {
-    //     if (unique_counter) {
-    //       unique_counter.innerText = `Unique visitors: ${num}`;
-    //     }
-    //   };
+    const setValue = (num: number) => {
+        if (unique_counter) {
+            unique_counter.innerText = `Unique visitors: ${num}`;
+        }
+    };
 
-    //   const setTotal = (num: number) => {
-    //     if (total_counter) {
-    //       total_counter.innerText = `Total visits: ${num}`;
-    //     }
-    //   };
+    const setTotal = (num: number) => {
+        if (total_counter) {
+            total_counter.innerText = `Total visits: ${num}`;
+        }
+    };
 
-    if (localStorage.getItem("hasVisited") == null) {
+    if (localStorage.getItem(page) == null) {
         incrementCountUnique()
             .then(() => {
-                localStorage.setItem("hasVisited", "true");
+                localStorage.setItem(page, "true");
             })
             .catch((err) => console.log(err));
     } else {
         getUniqueCount().catch((err) => console.log(err));
     }
 
-    if (localStorage.getItem("expiry") == null) {
+    if (localStorage.getItem(expiry) == null) {
         incrementCountTotal().then(() => {
-            localStorage.setItem("expiry", (Date.now() + 60000 * 120).toString());
+            localStorage.setItem(expiry, (Date.now() + 60000 * 120).toString());
         });
-    } else if (new Date().getTime() > Number(localStorage.getItem("expiry"))) {
+    } else if (new Date().getTime() > Number(localStorage.getItem(expiry))) {
         incrementCountTotal().then(() => {
-            localStorage.setItem("expiry", (Date.now() + 60000 * 120).toString());
+            localStorage.setItem(expiry, (Date.now() + 60000 * 120).toString());
         });
     } else {
         getTotalCount().catch((err) => console.log(err));
     }
 }
-
-
-

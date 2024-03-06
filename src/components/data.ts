@@ -2,6 +2,7 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import SignalCellularAltOutlinedIcon from '@mui/icons-material/SignalCellularAltOutlined';
 import RestoreOutlinedIcon from '@mui/icons-material/RestoreOutlined';
 import EventAvailableOutlinedIcon from '@mui/icons-material/EventAvailableOutlined';
+import CommuteIcon from '@mui/icons-material/Commute';
 
 export let segmentSize = {
     title: "Segment size",
@@ -20,14 +21,24 @@ export let segmentTimeSpent = {
     title: "Time spent out of home per day",
     counter: "",
     icon: RestoreOutlinedIcon
+}
 
+export let segmentTrips = {
+    title: "Number of trips per person per day",
+    counter: "",
+    icon: CommuteIcon
 }
 
 export let segmentActivites = {
     title: "Number of activites per day",
     counter: "",
     icon: EventAvailableOutlinedIcon
+}
 
+export let segmentTravel = {
+    title: "Daily travel duration per person",
+    counter: "",
+    icon: RestoreOutlinedIcon
 }
 
 export const updateSegmentSize = (newCounter: number) => {
@@ -45,9 +56,17 @@ export const updateSegmentTimeSpent = (newAverage: number) => {
         segmentTimeSpent = { ...segmentTimeSpent, counter: `${(newAverage).toFixed(1)} mins` };
         return;
     }
-    segmentTimeSpent = { ...segmentTimeSpent, counter: `${newAverage.toFixed(0)} mins` };
+    segmentTimeSpent = { ...segmentTimeSpent, counter: `${newAverage.toFixed(1)} mins` };
 };
 
 export const updateSegmentActivities = (newAverage: number) => {
-    segmentActivites = { ...segmentActivites, counter: `${newAverage.toFixed(0)}` };
+    segmentActivites = { ...segmentActivites, counter: `${newAverage.toFixed(1)}` };
 };
+
+export const updateSegmentTrips = (newAverage: number) => {
+    segmentTrips = { ...segmentTrips, counter: `${newAverage.toFixed(2)}` };
+}
+
+export const updateSegmentTravel = (newAverage: number) => {
+    segmentTravel = { ...segmentTravel, counter: `${newAverage.toFixed(1)} mins` };
+}

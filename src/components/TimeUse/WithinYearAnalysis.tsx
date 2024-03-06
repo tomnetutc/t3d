@@ -5,21 +5,20 @@ import Donut from '../Donut/Donut';
 import Segment from '../Segment/Segment';
 import YearMenu from '../WithinYearMenu';
 import ChartComponent from '../Chart/Chart';
-import LoadingOverlay from '../LoadingOverlay';
-import { ChartDataProps, MenuSelectedProps, weekOption } from "../Types";
+import { ChartDataProps, Option, weekOption } from "../Types";
 import { prepareChartData } from '../../components/TimeUse/ChartDataCalculations';
 import { segmentActivites, segmentShare, segmentSize, segmentTimeSpent } from "../../components/data";
 import { updateSegmentSize, updateSegmentShare, updateSegmentActivities, updateSegmentTimeSpent } from "../../components/data";
 import {
+    DataProvider,
     WeekOptions,
     fetchAndFilterData,
     getTotalRowsForYear
 } from "../../utils/Helpers";
+import Infobox from '../InfoBox/InfoBox';
 
+export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsWithinYearLoading }) => {
 
-export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOptions }) => {
-
-    const [isLoading, setIsWithinLoading] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [yearMenuSelections, setYearMenuSelections] = useState<{ week: weekOption, year: string }>({ week: WeekOptions[0], year: "" });
     const [timePovertyData, setTimePovertyData] = useState<ChartData<"doughnut", number[], unknown>>({ labels: [], datasets: [] });
@@ -37,16 +36,15 @@ export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOp
         const selectedYear = yearMenuSelections.year;
         const weekOption = yearMenuSelections.week;
 
-
         if (!yearMenuSelections.year) {
             return;
         }
 
-        setIsWithinLoading(true);
+        setIsWithinYearLoading(true);
 
         Promise.all([
-            fetchAndFilterData(menuSelectedOptions, selectedYear, weekOption),
-            getTotalRowsForYear(selectedYear)
+            fetchAndFilterData(DataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption),
+            getTotalRowsForYear(DataProvider.getInstance(), selectedYear)
         ]).then(([filteredData, totalRowsForYear]) => {
             let totalOutTime = 0, totalActivities = 0, totalNecessary = 0, totalCommitted = 0;
             let timePoorCount = 0;
@@ -63,30 +61,26 @@ export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOp
             const averageTimeSpent = filteredData.length > 0 ? totalOutTime / filteredData.length : 0;
             const averageActivities = filteredData.length > 0 ? totalActivities / filteredData.length : 0;
 
-            setFilteredData(filteredData);
             updateSegmentSize(filteredData.length);
             updateSegmentShare(filteredData.length, totalRowsForYear);
             updateSegmentTimeSpent(averageTimeSpent);
             updateSegmentActivities(averageActivities);
+            setFilteredData(filteredData);
 
             // Donut chart data
             const timePoorPercentage = parseFloat(((timePoorCount / filteredData.length) * 100).toFixed(1));
             const nonTimePoorPercentage = parseFloat((100 - timePoorPercentage).toFixed(1));
 
-            const averageNecessary = (totalNecessary / filteredData.length) / 2400 * 100;
-            const averageCommitted = (totalCommitted / filteredData.length) / 2400 * 100;
-            const discretionary = 100 - averageNecessary - averageCommitted;
-
-            const necessaryPercentage = parseFloat(averageNecessary.toFixed(1));
-            const committedPercentage = parseFloat(averageCommitted.toFixed(1));
-            const discretionaryPercentage = parseFloat(discretionary.toFixed(1));
+            const necessaryPercentage = parseFloat(((totalNecessary / filteredData.length) / 2400 * 100).toFixed(1));
+            const committedPercentage = parseFloat(((totalCommitted / filteredData.length) / 2400 * 100).toFixed(1));
+            const discretionaryPercentage = parseFloat((100 - necessaryPercentage - committedPercentage).toFixed(1));
 
             setTimePovertyData({
                 labels: ['Time poor', 'Non-time poor'],
                 datasets: [{
                     data: [timePoorPercentage, nonTimePoorPercentage],
-                    backgroundColor: ['#594DA3', '#AD88F1'],
-                    borderColor: ['#594DA3', '#AD88F1'],
+                    backgroundColor: ['#8E9B97', '#EAD97C'],
+                    borderColor: ['#8E9B97', '#EAD97C'],
                     borderWidth: 1
                 }]
             });
@@ -95,8 +89,8 @@ export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOp
                 labels: ['Necessary', 'Discretionary', 'Committed'],
                 datasets: [{
                     data: [necessaryPercentage, discretionaryPercentage, committedPercentage],
-                    backgroundColor: ['#AD88F1', '#8164E2', '#594DA3'],
-                    borderColor: ['#AD88F1', '#8164E2', '#594DA3'],
+                    backgroundColor: ['#8E9B97', '#F9A875', '#657383'],
+                    borderColor: ['#8E9B97', '#F9A875', '#657383'],
                     borderWidth: 1
                 }]
             });
@@ -104,33 +98,57 @@ export const WithinYearAnalysis: React.FC<MenuSelectedProps> = ({ menuSelectedOp
             // Horizontal Chart data
             const chartData = prepareChartData(filteredData);
             setProcessedChartData(chartData);
-
-            setIsWithinLoading(false);
+        }).finally(() => {
+            setIsWithinYearLoading(false);
         });
     }, [menuSelectedOptions, yearMenuSelections]);
 
     return (
         <>
-            {isLoading && <LoadingOverlay />}
             <div className='home'>
 
                 <YearMenu onSelectionChange={handleYearMenuChange} />
                 <div className="timeUse">
-                    <div className="box SegmentSize"><Segment {...segmentSize} /></div>
-                    <div className="box SegmentShare"><Segment {...segmentShare} /></div>
-                    <div className="box SegmentTimeSpent"><Segment {...segmentTimeSpent} /></div>
-                    <div className="box SegmentActivities"><Segment {...segmentActivites} /></div>
+                    <div className="box SegmentSize"><Segment {...segmentSize} />
+                        <Infobox>
+                            <p>The total number of respondents in the selected segment within the year.</p>
+                        </Infobox></div>
+                    <div className="box SegmentShare"><Segment {...segmentShare} />
+                        <Infobox>
+                            <p>The proportion of the selected segment within the total sample for the year.</p>
+                        </Infobox></div>
+                    <div className="box SegmentTimeSpent"><Segment {...segmentTimeSpent} />
+                        <Infobox>
+                            <p>Total time spent away from home per person per day.</p>
+                        </Infobox></div>
+                    <div className="box SegmentActivities"><Segment {...segmentActivites} />
+                        <Infobox>
+                            <p>Average number of activities per person per day.</p>
+                        </Infobox></div>
                     <div className="box DonutAllocation"><Donut
                         title="Time allocation by activity type"
-                        data={allocationData} /></div>
+                        data={allocationData}
+                        aspectRatio={1.2} />
+                        <Infobox>
+                            <p>The percentage distribution of daily time spent on necessary, committed, and discretionary activities. For more details on the definitions of these activity types, see the About page.</p>
+                        </Infobox></div>
                     <div className="box ChartComponent"><ChartComponent
                         chartData={processedChartData}
-                        title='Average time spent per person per day (min)' /></div>
+                        title='Average time spent per person per day (min)'
+                        isStacked={true}
+                        showLegend={true} />
+                        <Infobox>
+                            <p>Average time spent on each type of activity per person per day, categorized by where the activity takes place: in-home vs. out-of-home.</p>
+                        </Infobox></div>
+
                     <div className="box DonutPoverty"><Donut
                         title="Time poverty"
-                        data={timePovertyData} /></div>
+                        data={timePovertyData}
+                        aspectRatio={1.2} />
+                        <Infobox>
+                            <p>Percentage of time-poor and non-time-poor individuals in the selected segment. For more details on time poverty, see the About page.</p>
+                        </Infobox></div>
                 </div>
-
             </div>
         </>
     )

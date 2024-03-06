@@ -1,16 +1,36 @@
-import { ActivityOption, ChartDataProps, DataRow } from '../Types';
+import { ActivityOption, ChartDataProps, CountObj, DataRow, SampleSizeTableProps } from '../Types';
 import { calculateYearlyActivityAverages } from '../../utils/Helpers';
-import { min } from 'lodash';
+import Colors from '../../Colors'
 
-
-export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption): {
+export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption, startYear: string, endYear: string): {
     chartData: ChartDataProps, averages: { inHomeAvg: number, outHomeAvg: number }, minYear: string, maxYear: string,
     inHomeChangePercent: number,
     outHomeChangePercent: number,
     inHomeChangeValue: number,
-    outHomeChangeValue: number
+    outHomeChangeValue: number,
+    sampleSizeTableData: SampleSizeTableProps
 } => {
-    const yearlyAverages = calculateYearlyActivityAverages(filteredData, selectedActivity);
+
+    // Calculation for Sample Size Table
+    const filteredByYearData = filteredData.filter(dataRow => {
+        const year = dataRow['year'];
+        return year >= startYear && year <= endYear;
+    });
+
+    const uniqueYears = Array.from(new Set(filteredByYearData.map(item => item.year)))
+        .sort((a, b) => parseInt(a, 10) - parseInt(b, 10));
+
+    let countObj: CountObj = {
+        data: filteredByYearData,
+        count: []
+    };
+
+    // Count the number of rows for each year for the sample size table
+    uniqueYears.forEach(year => {
+        countObj.count.push([year.toString(), countObj.data.filter(row => row.year === year).length]);
+    });
+
+    const yearlyAverages = calculateYearlyActivityAverages(filteredData, selectedActivity, startYear, endYear);
     const labels = yearlyAverages.map(item => item.year);
 
     // Convert string averages to numbers
@@ -30,10 +50,6 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
         if (data.length > 1) {
             const firstValue = data[0];
             const lastValue = data[data.length - 1];
-
-            if (firstValue === 0) {
-                return 0;
-            }
 
             return ((lastValue - firstValue) / firstValue) * 100;
         }
@@ -57,20 +73,25 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
             {
                 label: 'In-home',
                 data: inHomeData,
-                backgroundColor: '#8164E2',
-                borderColor: '#8164E2',
+                backgroundColor: Colors.inHomeBetweenBackground,
+                borderColor: Colors.inHomeBetweenBorder,
                 borderWidth: 1,
                 barThickness: barThickness
             },
             {
                 label: 'Out-of-home',
                 data: outHomeData,
-                backgroundColor: '#AD88F1',
-                borderColor: '#AD88F1',
+                backgroundColor: Colors.outOfHomeBetweenBackground,
+                borderColor: Colors.outOfHomeBetweenBorder,
                 borderWidth: 1,
                 barThickness: barThickness
             }
         ]
+    };
+
+    const sampleSizeTableData: SampleSizeTableProps = {
+        years: labels,
+        counts: [countObj],
     };
 
     return {
@@ -81,6 +102,7 @@ export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivi
         inHomeChangePercent,
         outHomeChangePercent,
         inHomeChangeValue,
-        outHomeChangeValue
+        outHomeChangeValue,
+        sampleSizeTableData
     };
 };

@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import "../VerticalChart/VerticalChart.scss";
+import "./VerticalChart.scss";
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { ChartDataProps } from '../Types';
 
-const calculateMaxYAxis = (data: ChartDataProps) => {
+const calculateMaxYAxis = (data: ChartDataProps, isTelework: boolean = false) => {
     if (data.datasets && data.datasets.length >= 2) {
         const summedValues = data.datasets[0].data.map((value, index) =>
-            value + (data.datasets[1].data[index] || 0)  // fallback to 0 | undefined + number = NaN | Sleeping data doesn't have out of home data
+            value + (data.datasets[1].data[index] || 0)  // Fallback to 0 if data is undefined
         );
 
         const maxSumValue = Math.max(...summedValues);
-        return maxSumValue > 1400 ? 1440 : undefined;
+
+        if (!isTelework) {
+            return maxSumValue > 1400 ? 1440 : undefined;
+        }
+
+        let sum = summedValues.reduce((a, b) => a + b, 0);
+        return sum >= 100 ? 100 : undefined;
     }
     return undefined;
 };
@@ -25,7 +31,7 @@ ChartJS.register(
     Legend
 );
 
-const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: string }> = ({ chartData, title }) => {
+const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: string, isStacked: boolean, showLegend: boolean, isTelework?: boolean }> = ({ chartData, title, isStacked, showLegend, isTelework }) => {
 
     const verticalOptions = {
         indexAxis: 'x' as const,
@@ -37,10 +43,31 @@ const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: stri
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function (context: any) {
+                        let label = context.dataset.label || '';
+                        let value = context.raw !== undefined ? context.raw : (context.parsed.y !== undefined ? context.parsed.y : context.parsed.x);
+                        if (label) {
+                            label += ': ';
+                        }
+
+                        if (Number(value) % 1 === 0) {
+                            // It's a whole number, so add ".0" to make it display as a decimal
+                            label += `${value}.0`;
+                        } else {
+                            label += value.toString();
+                        }
+
+                        return label;
+                    }
+                }
+            },
             datalabels: {
                 display: false,
             },
             legend: {
+                display: showLegend,
                 position: 'top' as const,
                 align: 'end' as 'end',
                 labels: {
@@ -54,17 +81,18 @@ const VerticalStackedBarChart: React.FC<{ chartData: ChartDataProps, title: stri
         },
         scales: {
             x: {
-                stacked: true,
+                stacked: isStacked,
                 grid: {
                     display: false,
                     drawBorder: false,
                 },
             },
             y: {
-                stacked: true,
-                max: calculateMaxYAxis(chartData),
+                stacked: isStacked,
+                max: calculateMaxYAxis(chartData, isTelework),
             },
         }
+
     };
 
     return (

@@ -1,31 +1,28 @@
 import { TimeUse } from "./pages/TimeUse";
-// import { Travel } from "./pages/Travel";
-// import { Telework } from "./pages/Telework";
-import { Routes, Route } from "react-router-dom";
+import { Travel } from "./pages/Travel";
+import { Telework } from "./pages/Telework";
+import { Routes, Route, useLocation } from "react-router-dom";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
-import { hideFlagCounter, tracking } from "./utils/Helpers";
+import { About } from "./pages/About";
 
-ReactGA.initialize('G-03ZSYS61MK');
+ReactGA.initialize('G-TXP1R3BQ6J');
 
 function App(): JSX.Element {
+
+  const location = useLocation();
+
   useEffect(() => {
-    tracking();
-    hideFlagCounter();
-  });
+    ReactGA.send({ hitType: 'pageview', page: location.pathname });
+  }, [location]);
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<TimeUse />} />
-        {/* <Route path="/travel" element={<Travel />} />
-  <Route path="/telework" element={<Telework />} /> */}
-
-        {/* <Route path='/'>
-          <Route index element={<TimeUse />} />
-          <Route path='travel' element={<Travel />} />
-          <Route path='telework' element={<Telework />} />
-        </Route> */}
+        <Route path="/" element={<About />} />
+        <Route path="/timeuse" element={<TimeUse />} />
+        <Route path="/travel" element={<Travel />} />
+        <Route path="/telework" element={<Telework />} />
       </Routes>
     </>
   );

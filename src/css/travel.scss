@@ -1,0 +1,94 @@
+.home {
+
+    .travel,
+    .betweenYearTravel {
+        padding: 20px;
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(8, 1fr);
+        grid-auto-rows: minmax(130px, auto);
+
+        .box {
+            padding: 20px;
+            border-radius: 10px;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+            background-color: white;
+        }
+
+        .SegmentSize,
+        .SegmentShare,
+        .SegmentTrips,
+        .SegmentTravelDuration {
+            grid-row: span 1;
+            grid-column: span 2;
+            position: relative;
+        }
+
+        .DonutTrip {
+            grid-row: span 2;
+            grid-column: span 2;
+            position: relative;
+        }
+
+        .NumberTripsChartComponent {
+            grid-row: span 2;
+            grid-column: span 3;
+            position: relative;
+
+        }
+
+        .ModeTripChartAverage {
+            grid-row: span 2;
+            grid-column: span 3;
+            position: relative;
+        }
+
+        .DonutModeShare {
+            grid-row: span 2;
+            grid-column: span 2;
+            position: relative;
+        }
+
+        .DurationTripsChartComponent {
+            grid-row: span 2;
+            grid-column: span 3;
+            position: relative;
+        }
+
+        .ModeDurationChartAverage {
+            grid-row: span 2;
+            grid-column: span 3;
+            position: relative;
+        }
+
+        .TripModeChangesComponent {
+            grid-row: span 3;
+            grid-column: span 2;
+            position: relative;
+        }
+
+        .TravelModeChangesComponent {
+            grid-row: span 3;
+            grid-column: span 2;
+            position: relative;
+        }
+
+        .NumberTripsBtwYearChartComponent {
+            grid-row: span 3;
+            grid-column: span 6;
+            position: relative;
+        }
+
+        .DurationTripsBtwYearChartComponent {
+            grid-row: span 3;
+            grid-column: span 6;
+            position: relative;
+        }
+
+    }
+
+    .sampeSizeTable {
+        padding: 20px;
+    }
+}

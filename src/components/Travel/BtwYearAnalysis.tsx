@@ -73,7 +73,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                     <div className="box NumberTripsBtwYearChartComponent"><LineChart
                         chartData={tripChartData}
                         title="Average number of trips per person"
-                        showLegend={false}
+                        showLegend={true}
                     />
                         <Infobox>
                             <p>The average number of trips per person per day, calculated over the years from the start year to the end year.</p>
@@ -90,7 +90,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                     <div className="box DurationTripsBtwYearChartComponent"><RechartsAreaChart
                         chartData={durationChartData}
                         title="Average travel duration per person (min)"
-                        showLegend={false}
+                        showLegend={true}
                     />
                         <Infobox>
                             <p>The average daily travel duration per person, calculated over the years from the start year to the end year.</p>

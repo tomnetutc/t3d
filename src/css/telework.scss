@@ -17,6 +17,8 @@
         }
 
         .SegmentSize {
+            grid-row: span 1;
+            grid-column: span 1;
             position: relative;
         }
 

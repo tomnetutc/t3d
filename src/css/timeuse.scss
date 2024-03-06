@@ -16,18 +16,26 @@
             background-color: white;
         }
         .SegmentSize {
+            grid-column: span 1;
+            grid-row: span 1;
             position: relative;
         }
 
         .SegmentShare {
+            grid-column: span 1;
+            grid-row: span 1;
             position: relative;
         }
 
         .SegmentTimeSpent {
+            grid-column: span 1;
+            grid-row: span 1;
             position: relative;
         }
 
         .SegmentActivities {
+            grid-column: span 1;
+            grid-row: span 1;
             position: relative;
         }
 
@@ -53,6 +61,8 @@
         }
 
         .SegmentAverage{
+            grid-column: span 1;
+            grid-row: span 2;
             position: relative;
         }
 

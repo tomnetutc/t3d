@@ -129,17 +129,17 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOp
             >
                 Apply
             </Button>
+            </div>
+            <div className="button-container">
             <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px' }}>
                 Reset
             </Button>
         </div>
+        <Infobox style={{ display: 'flex', position: 'relative', padding:12}}>
+            <p>Select up to three attributes to define a specific population segment. The default view shows data for ‘all’ individuals aged 15 and older.</p>
+          </Infobox>
+      </div>
     </div>
-    <div style={{ position: 'absolute', top: '0%', right: '44.5%' }}>
-            <Infobox>
-                <p>Select up to three attributes to define a specific population segment. The default view shows data for ‘all’ individuals aged 15 and older.</p>
-            </Infobox>
-        </div>
-</div>
 
     );
 

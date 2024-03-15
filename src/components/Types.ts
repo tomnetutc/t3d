@@ -174,4 +174,5 @@ export interface FooterProps {
     docRefID: string;
     page: string;
     expiry: string;
+    hideFlagAndTracking: boolean;
 };

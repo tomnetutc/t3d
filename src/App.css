@@ -59,6 +59,7 @@
   position: relative;
   top: 200px;
   padding: 0;
+  z-index: 1;
 }
 
 .sidenavbarlistitem {

@@ -12,10 +12,10 @@ export function LandingNavbar(): JSX.Element {
                         <h4 className="fw-bold mb-0 ml-2">Time Use, Travel, and Telework Dashboard</h4>
                     </NavLink>
                     <div className="d-flex flex-row align-items-center">
-                        {/* <NavLink to="/#" className="nav-link">
+                        { <NavLink to="/" className="nav-link">
                             Home
-                        </NavLink> */}
-                        <NavLink to="/#" className="nav-link">
+                        </NavLink> }
+                        <NavLink to="/about" className="nav-link">
                             About
                         </NavLink>
                         <span className="nav-link disabled" style={{ cursor: 'default' }}>|</span>

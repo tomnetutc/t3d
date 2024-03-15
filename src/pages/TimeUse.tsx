@@ -44,6 +44,7 @@ export function TimeUse(): JSX.Element {
                     docRefID="8KJIyEzI8atItLmnwiou_timeuse"
                     page="hasVistedTimeUsePage"
                     expiry='timeUseExpiry'
+                    hideFlagAndTracking={false}
                 />
             </div>
         </>

@@ -44,6 +44,7 @@ export function Telework(): JSX.Element {
                     docRefID="IdHegFzmqUaWsHomHVMe_telework"
                     page="hasVistedTeleworkPage"
                     expiry='teleworkExpiry'
+                    hideFlagAndTracking={false}
                 />
             </div>
         </>

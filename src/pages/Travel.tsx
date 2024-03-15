@@ -44,6 +44,7 @@ export function Travel(): JSX.Element {
                     docRefID="YUVbvahGYJyzJNon5CGl_travel"
                     page="hasVistedTravelPage"
                     expiry='travelExpiry'
+                    hideFlagAndTracking={false}
                 />
             </div>
         </>

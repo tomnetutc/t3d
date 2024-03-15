@@ -8,19 +8,31 @@ import utAustinLogo from '../images/Logo/utaustin.png';
 import usDotLogo from '../images/Logo/us-dot.png';
 import tomnetLogo from '../images/Logo/tomnet.png';
 
-export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page, expiry }: FooterProps): JSX.Element {
+export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page, expiry, hideFlagAndTracking}: FooterProps): JSX.Element {
     useEffect(() => {
-        hideFlagCounter();
-        tracking(docRefID, page, expiry);
+
+        if(hideFlagAndTracking){
+            hideFlagCounter();
+        }
+        else{
+            hideFlagCounter();
+            tracking(docRefID, page, expiry);    
+        }
     }, []);
 
     return (
-        <div style={{ padding: '0 20px', textAlign: 'center' }}>
+        <div style={{ zIndex: 1000, position:'relative', backgroundColor:'white'}}>
+        <div style={{ padding: '0 20px', textAlign: 'center'}}>
             <hr className="hr-spec" />
             <div className="d-flex justify-content-between">
                 <span id="visit-count"></span>
                 <span id="total-count"></span>
             </div>
+
+            <span className="d-block mb-3 mt-3 fst-italic">
+                For any inquiries or feedback, please contact Dr. Irfan Batur at
+                <a href="mailto:ibatur@asu.edu" className="ms-1">ibatur@asu.edu</a>
+            </span>
 
             <div className='d-block mt-2'>
                 <span style={{ marginRight: "15px" }}>Sponsored by</span>
@@ -46,24 +58,22 @@ export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page
 
             </span>
 
-            <span className="d-block mb-3 mt-3 fst-italic">
-                For any inquiries or feedback, please contact Dr. Irfan Batur at
-                <a href="mailto:ibatur@asu.edu" className="ms-1">ibatur@asu.edu</a>
-            </span>
             <span
                 style={{
                     fontSize: "15px",
                     padding: "30px",
+                    display: "block",
+                    width: "100vw", 
                 }}
             >
                 &copy; 2024 TOMNET UTC
             </span>
-
-            {/* Flag Counter */}
-            <a href={flagCounterHref}>
-                <img src={flagCounterSrc} alt="Flag Counter" id="flag-counter-img" />
-            </a>
-
+            {!hideFlagAndTracking && (
+                <a href={flagCounterHref}>
+                    <img src={flagCounterSrc} alt="Flag Counter" id="flag-counter-img" />
+                </a>
+            )}
+        </div>
         </div>
     );
 }

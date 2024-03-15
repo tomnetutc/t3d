@@ -18,23 +18,23 @@ export function Sidebar(): JSX.Element {
         <nav className="sidenavbar">
           <ul className="sidenavbarlist">
             <li className="sidenavbarlistitem">
-              <Link style={LinkStyle} to="/#section1">
+              <Link style={LinkStyle} to="/about#section1">
                 About
               </Link>
             </li>
 
             <li className="sidenavbarlistitem">
-              <Link style={LinkStyle} to="/#section2">
+              <Link style={LinkStyle} to="/about#section2">
                 Data source
               </Link>
             </li>
             <li className="sidenavbarlistitem">
-              <Link style={LinkStyle} to="/#section3">
+              <Link style={LinkStyle} to="/about#section3">
                 Team
               </Link>
             </li>
             <li className="sidenavbarlistitem">
-              <Link style={LinkStyle} to="/#section4">
+              <Link style={LinkStyle} to="/about#section4">
                 Citations
               </Link>
             </li>

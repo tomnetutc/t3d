@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+
+.HeaderContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  align-items: center;
+  background-color: #F8F2FE;
+
+  .contentWrapper {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logoContainer {
+    display: flex;
+    justify-content: center;
+    img.logo {
+      max-width: 200px;
+      height: 100px;
+      padding: 10;
+      margin-top: 40px;
+    }
+  }
+
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .title {
+      font-family: 'Roboto', sans-serif;
+      color: #595959;
+      font-size: 18.5px;
+      text-align: center;
+    }
+    .subtitle {
+      font-family: 'Roboto', sans-serif;
+      color: #595959;
+      font-size: 13.5px;
+      text-align: center;
+    }
+  }
+
+  .demoButtonContainer {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    .demoButton {
+      background-color: #994DFE;
+      font-family: 'Roboto', sans-serif;
+      border: none;
+      color: white;
+      padding: 5px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 30px;
+    }
+  }
+
+  .graphImageContainer {
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 100px;
+    img.graphImage {
+      max-width: 90%;
+      height: 90%;
+      padding: 10%;
+      transform: rotate(-15deg);
+    }
+  }
+}

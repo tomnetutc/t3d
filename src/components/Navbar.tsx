@@ -16,10 +16,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange }) => {
                     <h4 className="fw-bold mb-0 ml-2">Time Use, Travel, and Telework Dashboard</h4>
                 </NavLink>
                 <div className="d-flex flex-row align-items-center" style={{ padding: '2px 20px' }}>
-                    {/* <NavLink to="/#" className="nav-link">
+                    {<NavLink to="/" className="nav-link">
                         Home
-                    </NavLink> */}
-                    <NavLink to="/#" className="nav-link">
+                    </NavLink>}
+                    <span className="nav-link disabled" style={{ cursor: 'default' }}>|</span>
+                    <NavLink to="/about" className="nav-link">
                         About
                     </NavLink>
                     <span className="nav-link disabled" style={{ cursor: 'default' }}>|</span>

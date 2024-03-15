@@ -1,15 +1,16 @@
-import { Content } from "../components/About/Content";
-import { Sidebar } from "../components/About/Sidebar";
+import { HeaderContent } from "../components/Home/HeaderContent";
 import "../App.css";
-import { Container, Nav } from "react-bootstrap";
+import { Container} from "react-bootstrap";
 import { LandingNavbar } from "../components/LandingNavbar";
 import { DataProvider, TravelDataProvider, useDocumentTitle } from "../utils/Helpers";
 import { useEffect } from "react";
+import { HomeIcons } from "../components/Home/HomeIcons";
+import {HomeFeatures} from "../components/Home/HomeFeatures";
 import Footer from "../components/Footer"
 
-export function About(): JSX.Element {
+export function Home(): JSX.Element {
 
-    useDocumentTitle('About');
+    useDocumentTitle('Home');
 
     useEffect(() => {
         Promise.all([
@@ -21,9 +22,10 @@ export function About(): JSX.Element {
     return (
         <>
             <LandingNavbar />
+            <HeaderContent />
+            <HomeIcons/>
             <Container>
-                <Sidebar />
-                <Content />
+                <HomeFeatures/>
             </Container>
             <Footer
                     //Unique for each page
@@ -33,7 +35,7 @@ export function About(): JSX.Element {
                     page=""
                     expiry=''
                     hideFlagAndTracking={true}
-            /> 
+            />
         </>
     );
 }

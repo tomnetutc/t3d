@@ -9,8 +9,8 @@ const timeUse_activityType_discretionary = '#F9A875';
 const timeUse_activityType_committed = '#657383';
 const timeUse_dailyTime_inHome = '#9D83A7';
 const timeUse_dailyTime_outOfHome = '#6DAFA0';
-const timeUse_change_inHomeDualValueSegment = '#8FD1BF';
-const timeUse_change_outOfHomeDualValueSegment = '#BDABE6';
+const timeUse_change_inHomeDualValueSegment = '#BDABE6';
+const timeUse_change_outOfHomeDualValueSegment = '#8FD1BF';
 
 // Travel Page Color Variables
 const travel_tripMaking_tripMaker = '#EAD97C';

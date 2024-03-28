@@ -1,12 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
 
-.HeaderContent {
+.mainContainer {
+  display: flex;
+  width: 100%;
+}
+
+.leftColumn,
+.rightColumn {
+  width: 27.5%;
+  display: flex;
+  justify-content: center;
+  background-color: #F8F2FE;
+  align-items: center;
+  position: relative;
+}
+
+.centerColumn {
+  width: 45%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px;
   align-items: center;
   background-color: #F8F2FE;
+  padding: 5px;
+}
+
+.HeaderContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 
   .contentWrapper {
     width: 75%;
@@ -18,8 +42,9 @@
   .logoContainer {
     display: flex;
     justify-content: center;
+
     img.logo {
-      max-width: 200px;
+      max-width: 220px;
       height: 100px;
       padding: 10;
       margin-top: 40px;
@@ -30,16 +55,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .title {
       font-family: 'Roboto', sans-serif;
       color: #595959;
-      font-size: 18.5px;
+      font-size: 24px;
       text-align: center;
     }
+
     .subtitle {
       font-family: 'Roboto', sans-serif;
       color: #595959;
-      font-size: 13.5px;
+      font-size: 16px;
       text-align: center;
     }
   }
@@ -48,6 +75,8 @@
     margin-top: 25px;
     display: flex;
     justify-content: center;
+    margin-bottom: 40px;
+
     .demoButton {
       background-color: #994DFE;
       font-family: 'Roboto', sans-serif;
@@ -62,20 +91,22 @@
       cursor: pointer;
       border-radius: 30px;
     }
-  }
 
-  .graphImageContainer {
-    width: 25%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    right: 100px;
-    img.graphImage {
-      max-width: 90%;
-      height: 90%;
-      padding: 10%;
-      transform: rotate(-15deg);
-    }
   }
+}
+
+.graphImageContainer {
+  position: absolute;
+  top: 50%;
+  left: 35%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+img.graphImage {
+  max-width: 350px;
+  height: auto;
+  padding: 10%;
 }

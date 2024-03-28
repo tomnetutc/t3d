@@ -23,8 +23,8 @@ export function Home(): JSX.Element {
         <>
             <LandingNavbar />
             <HeaderContent />
-            <HomeIcons/>
             <Container>
+                <HomeIcons/>
                 <HomeFeatures/>
             </Container>
             <Footer

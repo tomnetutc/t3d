@@ -63,7 +63,7 @@ export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page
                     fontSize: "15px",
                     padding: "30px",
                     display: "block",
-                    width: "100vw", 
+                    width: "100%", 
                 }}
             >
                 &copy; 2024 TOMNET UTC

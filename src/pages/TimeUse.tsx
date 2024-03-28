@@ -14,13 +14,10 @@ export function TimeUse(): JSX.Element {
 
     const [menuSelectedOptions, setMenuSelectedOptions] = useState<Option[]>([]);
     const [isWithinYearLoading, setIsWithinYearLoading] = useState(true);
-    const [isBtwYearLoading, setIsBtwYearLoading] = useState(true);
+    const [isBtwYearLoading, setIsBtwYearLoading] = useState(false);
+    const [analysisType, setAnalysisType] = useState<'withinYear' | 'betweenYears'>('withinYear');
 
-    const handleMenuOptionChange = useCallback((options: Option[]) => {
-        if (JSON.stringify(options) !== JSON.stringify(menuSelectedOptions)) {
-            setMenuSelectedOptions(options);
-        }
-    }, [menuSelectedOptions]);
+    const analysisKey = analysisType + "-analysis";
 
     useEffect(() => {
         if (!isBtwYearLoading && !isWithinYearLoading) {
@@ -30,13 +27,42 @@ export function TimeUse(): JSX.Element {
         }
     }, [isBtwYearLoading, isWithinYearLoading]);
 
+    const handleMenuOptionChange = useCallback((options: Option[]) => {
+        if (JSON.stringify(options) !== JSON.stringify(menuSelectedOptions)) {
+            setMenuSelectedOptions(options);
+        }
+    }, [menuSelectedOptions]);
+
+    useEffect(() => {
+        setMenuSelectedOptions([]);
+    }, [analysisType]);
+
     return (
         <>
-            <Navbar onMenuOptionChange={handleMenuOptionChange} />
+            <Navbar
+                key={analysisKey}
+                onMenuOptionChange={handleMenuOptionChange}
+                analysisType={analysisType}
+                onAnalysisTypeChange={setAnalysisType}
+            />
+
             {(isWithinYearLoading || isBtwYearLoading) && <LoadingOverlay />}
+
+
             <div className="home" style={{ backgroundColor: '#f5f5f5', padding: '30px 20px 20px' }}>
-                <WithinYearAnalysis menuSelectedOptions={menuSelectedOptions} setIsWithinYearLoading={setIsWithinYearLoading} />
-                <BtwYearAnalysis menuSelectedOptions={menuSelectedOptions} setIsBtwYearLoading={setIsBtwYearLoading} />
+                {analysisType === 'withinYear' ? (
+                    <WithinYearAnalysis
+                        key={analysisKey}
+                        menuSelectedOptions={menuSelectedOptions}
+                        setIsWithinYearLoading={setIsWithinYearLoading}
+                    />
+                ) : (
+                    <BtwYearAnalysis
+                        key={analysisKey}
+                        menuSelectedOptions={menuSelectedOptions}
+                        setIsBtwYearLoading={setIsBtwYearLoading}
+                    />
+                )}
                 <Footer
                     //Unique for each page
                     flagCounterHref='https://www.flagcounter.me/details/ewn'

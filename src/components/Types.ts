@@ -94,6 +94,8 @@ export interface DonutProps {
 
 export interface NavbarProps {
     onMenuOptionChange: (options: Option[]) => void;
+    analysisType: 'withinYear' | 'betweenYears';
+    onAnalysisTypeChange: (type: 'withinYear' | 'betweenYears') => void;  
 };
 
 export interface MenuSelectedProps {

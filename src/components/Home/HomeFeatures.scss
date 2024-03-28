@@ -29,10 +29,11 @@
     position: relative;
     padding: 20px;
     background-color: #F8F2FE;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
+    height: 200px;
 
       .FeatureText{
-        width: 60%;
+        width: 65%;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -52,7 +53,8 @@
       }
 
       .FeatureLogo{
-        width: 20%;
+        width: 150px;
+        height: 150px;
         display: flex;
         justify-content: center;
         align-items: center;

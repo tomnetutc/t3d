@@ -62,7 +62,7 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
 
     return (
         <>
-            <div className='home'>
+            <div className='home' style={{ padding: '20px 0' }}>
                 <YearMenu onSelectionChange={handleYearMenuChange} callingComponent='Telework' />
                 <div className="telework">
                     <div className="box WorkArrangementPie"><PieChart

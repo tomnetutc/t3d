@@ -6,8 +6,23 @@ import TimelapseIcon from '@mui/icons-material/Timelapse';
 import '../css/navbar.css';
 import Menu from './Menu';
 import { NavbarProps } from './Types';
+import { Button } from 'react-bootstrap';
 
-export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, analysisType, onAnalysisTypeChange }) => {
+    const activeButtonStyle = {
+        backgroundColor: '#C4F5B0',
+        color: 'black',
+        borderColor: 'black',
+        marginRight: '10px'
+    };
+
+    const defaultButtonStyle = {
+        backgroundColor: 'white',
+        color: 'black',
+        borderColor: 'black',
+        marginRight: '10px'
+    };
+
     return (
         <NavbarBs sticky="top" className="my-navbar shadow-sm">
             <Nav className="w-100 px-3">
@@ -19,7 +34,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange }) => {
                     {<NavLink to="/" className="nav-link">
                         Home
                     </NavLink>}
-                    <span className="nav-link disabled" style={{ cursor: 'default' }}>|</span>
                     <NavLink to="/about" className="nav-link">
                         About
                     </NavLink>
@@ -35,6 +49,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange }) => {
                     </NavLink>
                 </div>
             </Nav>
+            <div className='hr-content'>
+                <hr className='hr-spec' />
+            </div>
+            <div className="title-and-buttons" style={{ padding: '10px 40px' }}>
+                <div className="analysis-buttons-container" >
+                    <Button
+                        size="sm"
+                        onClick={() => onAnalysisTypeChange('withinYear')}
+                        style={analysisType === "withinYear" ? activeButtonStyle : defaultButtonStyle}>
+                        Within Year Analysis
+                    </Button>
+                    
+                    <Button
+                        size="sm"
+                        onClick={() => onAnalysisTypeChange('betweenYears')}
+                        style={analysisType === "betweenYears" ? activeButtonStyle : defaultButtonStyle}>
+                        Between Year Analysis
+                    </Button>
+                </div>
+            </div>
             <div className='hr-content'>
                 <hr className='hr-spec' />
             </div>

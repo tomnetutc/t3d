@@ -8,7 +8,7 @@ import Menu from './Menu';
 import { NavbarProps } from './Types';
 import { Button } from 'react-bootstrap';
 
-export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, analysisType, onAnalysisTypeChange }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState, analysisType, onAnalysisTypeChange, isTeleworkPage = false }) => {
     const activeButtonStyle = {
         backgroundColor: '#C4F5B0',
         color: 'black',
@@ -24,7 +24,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, analysisType
     };
 
     return (
-        <NavbarBs sticky="top" className="my-navbar shadow-sm">
+        <NavbarBs sticky="top" expand="lg" className="my-navbar shadow-sm">
             <Nav className="w-100 px-3">
                 <NavLink to="/" className="navbar-brand d-flex align-items-center me-auto" style={{ padding: '2px 20px' }}>
                     <img src={timeTravelIcon} alt="Time Use Icon" style={{ width: '34px' }} />
@@ -52,15 +52,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, analysisType
             <div className='hr-content'>
                 <hr className='hr-spec' />
             </div>
-            <div className="title-and-buttons" style={{ padding: '10px 40px' }}>
-                <div className="analysis-buttons-container" >
+            <div className="title-and-buttons" style={{ padding: '10px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+                <div className="analysis-buttons-container" style={{ display: 'flex' }}>
                     <Button
                         size="sm"
                         onClick={() => onAnalysisTypeChange('withinYear')}
                         style={analysisType === "withinYear" ? activeButtonStyle : defaultButtonStyle}>
                         Within Year Analysis
                     </Button>
-                    
+
                     <Button
                         size="sm"
                         onClick={() => onAnalysisTypeChange('betweenYears')}
@@ -72,7 +72,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, analysisType
             <div className='hr-content'>
                 <hr className='hr-spec' />
             </div>
-            <Menu onOptionChange={onMenuOptionChange} />
+            <Menu onOptionChange={onMenuOptionChange} toggleState={toggleState} filterOptionsForTelework={isTeleworkPage} />
         </NavbarBs>
     );
 }

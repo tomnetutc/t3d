@@ -17,7 +17,7 @@ import {
 } from "../../utils/Helpers";
 import Infobox from '../InfoBox/InfoBox';
 
-export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsWithinYearLoading }) => {
+export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsWithinYearLoading }) => {
 
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [yearMenuSelections, setYearMenuSelections] = useState<{ week: weekOption, year: string }>({ week: WeekOptions[0], year: "" });
@@ -43,7 +43,7 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
         setIsWithinYearLoading(true);
 
         Promise.all([
-            fetchAndFilterData(DataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption),
+            fetchAndFilterData(DataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption, toggleState),
             getTotalRowsForYear(DataProvider.getInstance(), selectedYear)
         ]).then(([filteredData, totalRowsForYear]) => {
             let totalOutTime = 0, totalActivities = 0, totalNecessary = 0, totalCommitted = 0;
@@ -101,7 +101,7 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
         }).finally(() => {
             setIsWithinYearLoading(false);
         });
-    }, [menuSelectedOptions, yearMenuSelections]);
+    }, [menuSelectedOptions, yearMenuSelections, toggleState]);
 
     return (
         <>

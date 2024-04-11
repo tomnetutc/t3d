@@ -7,8 +7,10 @@
 .menu-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-wrap: wrap;
     position: relative;
+    width: 100%;
 }
 
 .btw-menu-header {
@@ -24,16 +26,27 @@
     align-items: flex-start;
 }
 
+.title-and-select {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .segment-label {
     font-size: 13.5px;
     font-weight: 500;
 }
 
+.options-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
 .buttons-container {
-    position: relative;
     display: flex;
     gap: 10px;
-    /* Adjust the space between buttons */
 }
 
 .dropdowns-container {

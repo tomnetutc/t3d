@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { max } from 'd3';
-import { weekOption, YearOption, YearMenuProps } from './Types';
-import { WeekOptions, DataProvider } from '../utils/Helpers';
+import { weekOption, YearOption, YearMenuProps, Option } from './Types';
+import { WeekOptions, DataProvider, EmploymentStatusOptions } from '../utils/Helpers';
 import '../css/menu.scss';
 import '../App.css';
 
@@ -13,6 +13,7 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange, callingComponent
     const [weekValue, setWeekValue] = useState<weekOption>(WeekOptions[0]);
     const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
     const [selectedYear, setSelectedYear] = useState<YearOption>({ label: "", value: "" });
+    const [employmentValue, setEmploymentValue] = useState<Option>({ label: "All", value: "All", id: "All", val: "All", groupId: "All" });
     const [isMaxYearLoaded, setIsMaxYearLoaded] = useState(false);
 
     //This is done to set the default value of week to "Weekday" when the calling component is "Telework"
@@ -63,6 +64,19 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange, callingComponent
         setIsMaxYearLoaded(true);
     }
 
+    const constructSelectionObject = (week: weekOption, year: YearOption, employment: Option | null = null) => {
+        const selectionObject: {
+            week: weekOption;
+            year: string;
+            employment?: Option;
+        } = { week: week, year: year.value };
+
+        if (callingComponent === 'Telework' && employment) {
+            selectionObject.employment = employment;
+        }
+        return selectionObject;
+    };
+
     // Scroll to the selected option when the dropdown is opened
     const scrollToSelectedOption = () => {
         setTimeout(() => {
@@ -89,7 +103,8 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange, callingComponent
 
     useEffect(() => {
         if (isMaxYearLoaded) {
-            onSelectionChange({ week: weekValue, year: selectedYear.value });
+            const selectionObject = constructSelectionObject(weekValue, selectedYear, employmentValue);
+            onSelectionChange(selectionObject);
             setIsMaxYearLoaded(false);
         }
     }, [isMaxYearLoaded, weekValue, selectedYear, onSelectionChange]);
@@ -97,16 +112,44 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange, callingComponent
     const handleWeekChange = (selectedOption: SingleValue<weekOption>) => {
         if (selectedOption) {
             setWeekValue(selectedOption);
-            onSelectionChange({ week: selectedOption, year: selectedYear.value });
+            const selectionObject = constructSelectionObject(selectedOption, selectedYear, employmentValue);
+            onSelectionChange(selectionObject);
         }
     };
 
     const handleYearChange = (selectedOption: SingleValue<YearOption>) => {
         if (selectedOption) {
             setSelectedYear(selectedOption);
-            onSelectionChange({ week: weekValue, year: selectedOption.value });
+            const selectionObject = constructSelectionObject(weekValue, selectedOption, employmentValue);
+            onSelectionChange(selectionObject);
         }
     };
+
+    const handleEmploymentChange = (selectedOption: SingleValue<Option>) => {
+        if (selectedOption) {
+            setEmploymentValue(selectedOption);
+            const selectionObject = constructSelectionObject(weekValue, selectedYear, selectedOption);
+            onSelectionChange(selectionObject);
+        }
+    };
+
+    //Only for Telework Emplotment dropdown
+    const sortedEmploymentOptions = [...EmploymentStatusOptions].filter(option => option.id != "unemployed") // Creating a copy to prevent mutating the original array as it is imported from a different file
+        .sort((a, b) => {
+            return a.label.localeCompare(b.label);
+        });
+
+    //Only for Telework Emplotment dropdown
+    const employmentDropdownOptions = [
+        { label: "All", value: "All", id: "All", val: "All", groupId: "All" },
+        ...sortedEmploymentOptions.map(option => ({
+            label: option.label,
+            value: option.label,
+            id: option.id,
+            val: option.val,
+            groupId: option.groupId
+        }))
+    ];
 
     const customStyles = {
         control: (provided: any) => ({
@@ -156,6 +199,24 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange, callingComponent
                         menuPosition={'fixed'}
                         maxMenuHeight={170}
                     />
+                    {callingComponent === 'Telework' && (
+                        <>
+                            <label className="segment-label">Employment:</label>
+                            <Select
+                                className="dropdown-select"
+                                classNamePrefix="dropdown-select"
+                                onMenuOpen={scrollToSelectedOption} // Assuming this is defined elsewhere
+                                value={employmentValue}
+                                onChange={handleEmploymentChange}
+                                options={employmentDropdownOptions}
+                                isSearchable={false}
+                                styles={customStyles} // Assuming customStyles is defined elsewhere
+                                components={{ DropdownIndicator: CustomDropdownIndicator }} // Assuming CustomDropdownIndicator is defined elsewhere
+                                menuPosition={'fixed'}
+                                maxMenuHeight={200}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
         </div>

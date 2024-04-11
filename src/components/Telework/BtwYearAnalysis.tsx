@@ -8,7 +8,7 @@ import Progress from "../ProgressBar/ProgressBar";
 import Infobox from '../InfoBox/InfoBox';
 import SampleSizeTable from "../SampleSizeTable";
 
-export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
+export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsBtwYearLoading }) => {
 
     const [btwYearFilteredData, setBtwYearFilteredData] = useState<any[]>([]);
     const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, employment: Option, startYear: string, endYear: string }>({ week: WeekOptions[0], employment: { label: "All", value: "All", id: "All", val: "All", groupId: "All" }, startYear: "", endYear: "" });
@@ -34,7 +34,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
         setIsBtwYearLoading(true);
 
         Promise.all([
-            fetchAndFilterDataForBtwYearAnalysis(DataProvider.getInstance(), menuSelectedOptions, btwYearSelections.week, true)
+            fetchAndFilterDataForBtwYearAnalysis(DataProvider.getInstance(), menuSelectedOptions, btwYearSelections.week, toggleState, true)
         ]).then(([btwYearFilteredData]) => {
             setBtwYearFilteredData(btwYearFilteredData);
 
@@ -51,11 +51,11 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
             setIsBtwYearLoading(false);
         });
 
-    }, [menuSelectedOptions, btwYearSelections]);
+    }, [menuSelectedOptions, btwYearSelections, toggleState]);
 
     return (
         <>
-            <div className='home' style={{ padding: '20px 0' }}>
+            <div className='home'>
 
                 <BtwYearMenu onSelectionChange={handleBtwYearMenuChange} />
                 <div className="betweenYearTelework">

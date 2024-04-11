@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 import "../../App.css";
 import { Col, Row } from "react-bootstrap";
-import { DataProvider, TravelDataProvider } from "../../utils/Helpers";
 import ibatur from '../../images/Head Shots/ibatur.jpeg';
-import abhat from '../../images/Head Shots/abhat.jpeg';
+import abhat from '../../images/Head Shots/abhat.jpg';
 import rvarghese from '../../images/Head Shots/rvarghese.jpeg';
 import rpendyala from '../../images/Head Shots/rpendyala.png';
-import cbhat from '../../images/Head Shots/cbhat.jpeg';
+import cbhat from '../../images/Head Shots/cbhat.jpg';
 import plmokhtarian from '../../images/Head Shots/plmokhtarian.webp';
 import spolzin from '../../images/Head Shots/spolzin.png';
 import cchen from '../../images/Head Shots/cchen.jpeg';
@@ -41,7 +40,11 @@ export function Content(): JSX.Element {
           </p>
 
           <p>
-            T3D aims to make data from the American Time Use Survey
+            T3D aims to make data from the American Time Use Survey (
+            <a href="https://www.bls.gov/tus/" target="_blank">
+              ATUS
+            </a>
+            )
             accessible to researchers, planners, policymakers, and the public, facilitating the democratization and wider utilization of publicly available datasets. The dashboard features three specific pages focused on Time Use, Travel, and Telework, enabling users to explore patterns and trends. T3D uses preprocessed ATUS data series and offers the ability to conduct both within and between-year as well as cross-segment analyses for a detailed understanding of evolving trends in how Americans spend their time. It also includes tools for tailoring analyses to various population subgroups and market segments.
           </p>
           <p>
@@ -264,6 +267,13 @@ export function Content(): JSX.Element {
             </li>
           </ul>
         </section>
+
+        {/*
+          Spacing for the footer
+        */}
+
+        <div style={{ padding: '15px 0' }} />
+
       </Col>
     </Row>
   );

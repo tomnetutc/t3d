@@ -5,16 +5,26 @@ import { groupedOptions } from '../utils/Helpers';
 import '../css/menu.scss';
 import Select from 'react-select';
 import Infobox from './InfoBox/InfoBox';
+import Switch, { SwitchProps } from '@mui/material/Switch';
+import { styled } from '@mui/material/styles';
+import { Box } from '@mui/material';
 
-const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOptionChange }) => {
+const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState: (includeDecember: boolean) => void; filterOptionsForTelework?: boolean }> = ({ onOptionChange, toggleState, filterOptionsForTelework = false }) => {
     const [selectedOptions, setSelectedOptions] = useState<Array<Option | null>>([null, null, null]);
     const [isAllSelected, setIsAllSelected] = useState(true);
+    const [includeDecember, setIncludeDecember] = useState(true);
+    const [isToggling, setIsToggling] = useState(false); // To track toggle cooldown
 
     const handleChange = (index: number, option: Option | null) => {
         const updatedSelectedOptions = [...selectedOptions];
         updatedSelectedOptions[index] = option;
         setSelectedOptions(updatedSelectedOptions);
     };
+
+    // Filter out the "Work arrangement" and "Employment" options for the Telework Menu component
+    const filteredGroupedOptions = filterOptionsForTelework ?
+        groupedOptions.filter(group => group.label !== "Work arrangement" && group.label !== "Employment") :
+        groupedOptions;
 
     const handleAllSelectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAllSelected(event.target.checked);
@@ -34,6 +44,19 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOp
             onOptionChange(isAllSelected ? [] : selectedOptions.filter(Boolean) as Option[]);
         } else {
             alert("Please select an option or check 'All'");
+        }
+    };
+
+    const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!isToggling) {
+            setIncludeDecember(event.target.checked);
+            toggleState(event.target.checked);
+            setIsToggling(true);
+
+            // Clear the toggle cooldown after a delay
+            setTimeout(() => {
+                setIsToggling(false);
+            }, 500); // 0.5 second delay, adjust as needed
         }
     };
 
@@ -78,7 +101,7 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOp
                 onMenuOpen={scrollToSelectedOption}
                 value={selectedOptions[index]}
                 onChange={(selectedOption) => handleChange(index, selectedOption)}
-                options={groupedOptions.map(group => ({
+                options={filteredGroupedOptions.map(group => ({
                     label: group.label,
                     options: group.options.map(option => ({
                         ...option,
@@ -99,47 +122,107 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; }> = ({ onOp
         </div>
     );
 
+    const IOSSwitch = styled((props: SwitchProps) => (
+        <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+    ))(({ theme }) => ({
+        width: 40,
+        height: 25,
+        padding: 0,
+        '& .MuiSwitch-switchBase': {
+            padding: 0,
+            margin: 2,
+            transitionDuration: '300ms',
+            '&.Mui-checked': {
+                transform: 'translateX(16px)',
+                color: '#fff',
+                '& + .MuiSwitch-track': {
+                    backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#198754',
+                    opacity: 1,
+                    border: 0,
+                },
+                '&.Mui-disabled + .MuiSwitch-track': {
+                    opacity: 0.5,
+                },
+            },
+            '&.Mui-focusVisible .MuiSwitch-thumb': {
+                color: '#33cf4d',
+                border: '6px solid #fff',
+            },
+            '&.Mui-disabled .MuiSwitch-thumb': {
+                color:
+                    theme.palette.mode === 'light'
+                        ? theme.palette.grey[100]
+                        : theme.palette.grey[600],
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+                opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+            },
+        },
+        '& .MuiSwitch-thumb': {
+            boxSizing: 'border-box',
+            width: 20,
+            height: 20,
+        },
+        '& .MuiSwitch-track': {
+            borderRadius: 26 / 2,
+            backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+            opacity: 1,
+            transition: theme.transitions.create(['background-color'], {
+                duration: 500,
+            }),
+        },
+    }));
+
 
     return (
         <div className="menu-container">
-    <div className="menu-header" style={{ position: 'relative' }}> {/* Ensure the parent is positioned relatively */}
-        <label className="segment-label">Select segment:</label>
-        <div className="all-select-checkbox">
-            <input
-                type="checkbox"
-                checked={isAllSelected}
-                onChange={handleAllSelectChange}
-            />
-            <span className="all-select-label">All</span>
-        </div>
-        <div className="dropdowns-container">
-            {selectedOptions.map((_, index) => (
-                <div key={index} className="dropdown-wrapper">
-                    {renderDropdown(index)}
+            <div className="menu-header" style={{ position: 'relative' }}> {/* Ensure the parent is positioned relatively */}
+                <label className="segment-label">Select segment:</label>
+                <div className="all-select-checkbox">
+                    <input
+                        type="checkbox"
+                        checked={isAllSelected}
+                        onChange={handleAllSelectChange}
+                    />
+                    <span className="all-select-label">All</span>
                 </div>
-            ))}
-        </div>
-        <div className="button-container">
-            <Button
-                size="sm"
-                variant='success'
-                onClick={handleSubmit}
-                className="submit-button"
-                disabled={!isAllSelected && !selectedOptions.some(option => option !== null)}
-            >
-                Apply
-            </Button>
+                <div className="dropdowns-container">
+                    {selectedOptions.map((_, index) => (
+                        <div key={index} className="dropdown-wrapper">
+                            {renderDropdown(index)}
+                        </div>
+                    ))}
+                </div>
+                <div className="button-container">
+                    <Button
+                        size="sm"
+                        variant='success'
+                        onClick={handleSubmit}
+                        className="submit-button"
+                        disabled={!isAllSelected && !selectedOptions.some(option => option !== null)}
+                    >
+                        Apply
+                    </Button>
+                </div>
+                <div className="button-container">
+                    <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px' }}>
+                        Reset
+                    </Button>
+                </div>
+                <Infobox style={{ display: 'flex', position: 'relative', padding: 12 }}>
+                    <p>Select up to three attributes to define a specific population segment. The default view shows data for ‘all’ individuals aged 15 and older.</p>
+                </Infobox>
+
+                <Box display="flex" justifyContent="flex-end" alignItems="center" style={{ marginLeft: 'auto' }}>
+                    <Box marginRight={0.2} className="segment-label">Include December:</Box>
+                    <IOSSwitch
+                        sx={{ m: 1 }}
+                        size="small"
+                        checked={includeDecember}
+                        onChange={handleToggleChange} />
+                </Box>
             </div>
-            <div className="button-container">
-            <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px' }}>
-                Reset
-            </Button>
         </div>
-        <Infobox style={{ display: 'flex', position: 'relative', padding:12}}>
-            <p>Select up to three attributes to define a specific population segment. The default view shows data for ‘all’ individuals aged 15 and older.</p>
-          </Infobox>
-      </div>
-    </div>
 
     );
 

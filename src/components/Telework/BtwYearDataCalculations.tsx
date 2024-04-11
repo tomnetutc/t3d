@@ -85,12 +85,12 @@ export const calculateYearlyWorkArrangementShares = (
 
             datasets[index].data.push(parseFloat(percentage.toFixed(1)));
 
-            if (index === validOptions.length - 1) {
-                let adjustedPercentage = 100 - sumOfPercentages + parseFloat(percentage.toFixed(1));
-                adjustedPercentage = adjustedPercentage < 0 ? 0 : adjustedPercentage;
-                adjustedPercentage = adjustedPercentage > 100 ? 100 : adjustedPercentage;
-                datasets[index].data[datasets[index].data.length - 1] = parseFloat(adjustedPercentage.toFixed(1));
-            }
+            // if (index === validOptions.length - 1) {
+            //     let adjustedPercentage = 100 - sumOfPercentages + parseFloat(percentage.toFixed(1));
+            //     adjustedPercentage = adjustedPercentage < 0 ? 0 : adjustedPercentage;
+            //     adjustedPercentage = adjustedPercentage > 100 ? 100 : adjustedPercentage;
+            //     datasets[index].data[datasets[index].data.length - 1] = parseFloat(adjustedPercentage.toFixed(1));
+            // }
         });
     });
 

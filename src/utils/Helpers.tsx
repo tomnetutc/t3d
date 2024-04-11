@@ -1,9 +1,9 @@
-import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption, DayofWeekOption } from "../components/Types";
+import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption, DayofWeekOption, YearOption } from "../components/Types";
 import { csv } from "d3";
 import { DSVRowString } from "d3-dsv";
 import firebase, { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, doc, updateDoc, getDoc, increment } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, getDoc, increment } from 'firebase/firestore';
 import firebaseConfig from "../firebaseConfig";
 import { useEffect } from "react";
 
@@ -70,7 +70,7 @@ export const getTotalRowsForYear = async (dataProvider: { loadData: () => Promis
     }
 };
 
-export function filterCriteria(selectedOptions: Option[], year: string, weekOption: weekOption, filterUnemployed: boolean = false) {
+export function filterCriteria(selectedOptions: Option[], year: string, weekOption: weekOption, toggleState: boolean, filterUnemployed: boolean = false) {
     return function (row: DSVRowString<string>) {
         if (year && row['year'] !== year) return false;
 
@@ -80,6 +80,8 @@ export function filterCriteria(selectedOptions: Option[], year: string, weekOpti
 
         //Filter the data without the unemployed data for Telework dashboard. This is a conditional argument hence by default it is false and doesn't expect a value
         if (filterUnemployed && row['unemployed'] === "1.0") return false;
+
+        if (!toggleState && row['month'] === "12.0") return false;
 
         const groupedOptions = selectedOptions.reduce((acc: GroupedOptions, option) => {
             const groupId = option.groupId;
@@ -98,10 +100,10 @@ export function filterCriteria(selectedOptions: Option[], year: string, weekOpti
     };
 }
 
-export const fetchAndFilterData = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], year: string, weekOption: weekOption, filterUnemployed: boolean = false) => {
+export const fetchAndFilterData = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], year: string, weekOption: weekOption, toggleState: boolean, filterUnemployed: boolean = false) => {
     try {
         const data = await dataProvider.loadData();
-        return data.filter(filterCriteria(selectedOptions, year, weekOption, filterUnemployed));
+        return data.filter(filterCriteria(selectedOptions, year, weekOption, toggleState, filterUnemployed));
     } catch (error) {
         console.error('Error fetching and filtering data:', error);
         return [];
@@ -109,10 +111,10 @@ export const fetchAndFilterData = async (dataProvider: { loadData: () => Promise
     //Added a conditional argument filterunemployed to filter the data without the unemployed data for Telework dashboard. This is a conditional argument hence by default it is false and doesn't expect a value
 };
 
-export const fetchAndFilterDataForBtwYearAnalysis = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], weekOption: weekOption, filterUnemployed: boolean = false) => {
+export const fetchAndFilterDataForBtwYearAnalysis = async (dataProvider: { loadData: () => Promise<any[]> }, selectedOptions: Option[], weekOption: weekOption, toggleState: boolean, filterUnemployed: boolean = false) => {
     try {
         const data = await dataProvider.loadData();
-        return data.filter(filterCriteria(selectedOptions, "", weekOption, filterUnemployed));
+        return data.filter(filterCriteria(selectedOptions, "", weekOption, toggleState, filterUnemployed));
     } catch (error) {
         console.error('Error fetching and filtering data for between year analysis:', error);
         return [];
@@ -213,7 +215,7 @@ export class TravelDataProvider {
 }
 
 export const calculateTripAverages = (data: DataRow[]) => {
-    return TripPurposeOptions.map((tripPurpose) => {
+    return TripPurposeOptions.filter(tripPurpose => tripPurpose.label !== 'All').map((tripPurpose) => {
         const totalNumberTrip = data.reduce((sum, row) => sum + parseFloat(row[tripPurpose.numberTrip] || '0'), 0);
         const totalDurationTrips = data.reduce((sum, row) => sum + parseFloat(row[tripPurpose.durationTrips] || '0'), 0);
         const averageNumberTrip = totalNumberTrip / (data.length == 0 ? 1 : data.length);
@@ -228,7 +230,7 @@ export const calculateTripAverages = (data: DataRow[]) => {
 };
 
 export const calculateTravelModeAverages = (data: DataRow[]) => {
-    return TravelModeOptions.map((travelMode) => {
+    return TravelModeOptions.filter(travelMode => travelMode.label !== 'All').map((travelMode) => {
         const totalNumberTrip = data.reduce((sum, row) => sum + parseFloat(row[travelMode.numberTrip] || '0'), 0);
         const totalDurationTrips = data.reduce((sum, row) => sum + parseFloat(row[travelMode.durationTrips] || '0'), 0);
         const averageNumberTrip = totalNumberTrip / (data.length == 0 ? 1 : data.length);
@@ -527,15 +529,15 @@ const TimePovertyOptions: Option[] = [
 
 const TransportOptions: Option[] = [
     {
-        value: "Car",
-        label: "Car",
+        value: "Auto",
+        label: "Auto",
         id: "car_user",
         val: "1.0",
         groupId: "Transport",
     },
     {
-        value: "Non-car",
-        label: "Non-car",
+        value: "Non-auto",
+        label: "Non-auto",
         id: "car_user",
         val: "0.0",
         groupId: "Transport",
@@ -814,8 +816,8 @@ export const TripPurposeOptions: TripPurposeOption[] = [
 
 export const TravelModeOptions: TravelModeOption[] = [
     {
-        label: "Car",
-        value: "Car",
+        label: "Auto",
+        value: "Auto",
         numberTrip: "mode_car",
         durationTrips: "mode_car_dur",
     },
@@ -844,10 +846,16 @@ export const TravelModeOptions: TravelModeOption[] = [
         durationTrips: "mode_other_dur",
     },
     {
+        label: "Unknown",
+        value: "Unknown",
+        numberTrip: "mode_unknown",
+        durationTrips: "mode_unknown_dur",
+    },
+    {
         label: "All",
         value: "All",
-        numberTrip: "mode_all",
-        durationTrips: "mode_all_dur",
+        numberTrip: "tr_all",
+        durationTrips: "tr_all_dur",
     },
 ];
 

@@ -15,6 +15,7 @@ function App(): JSX.Element {
   const location = useLocation();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     ReactGA.send({ hitType: 'pageview', page: location.pathname });
   }, [location]);
 

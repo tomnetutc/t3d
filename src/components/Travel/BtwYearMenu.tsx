@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Select, { SingleValue } from 'react-select';
+import Select, { MultiValue, SingleValue } from 'react-select';
 import { weekOption, TripPurposeOption, YearOption, TravelModeOption } from '../Types';
 import { WeekOptions, TripPurposeOptions, DataProvider, TravelModeOptions } from '../../utils/Helpers';
 import '../../css/menu.scss';
@@ -8,7 +8,7 @@ import { max } from 'd3';
 import { Button } from 'react-bootstrap';
 
 
-const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption, optionValue: TripPurposeOption | TravelModeOption, activeOption: string, startYear: string, endYear: string }) => void }> = ({ onSelectionChange }) => {
+const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption, optionValue: TripPurposeOption[] | TravelModeOption[], activeOption: string, startYear: string, endYear: string }) => void }> = ({ onSelectionChange }) => {
 
     const [weekValue, setWeekValue] = useState<weekOption>(WeekOptions[0]);
     const [startYear, setStartYear] = useState<YearOption>({ label: '', value: '' });
@@ -19,7 +19,8 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
     const [tripPurposeDropdownOptions, setTripPurposeDropdownOptions] = useState<TripPurposeOption[]>([]);
     const [travelModeDropdownOptions, setTravelModeDropdownOptions] = useState<TravelModeOption[]>([]);
     const [activeOptionType, setActiveOptionType] = useState("Trip purpose");
-    const [optionValue, setOptionValue] = useState<TripPurposeOption | TravelModeOption>(TripPurposeOptions[0]);
+    const [optionValue, setOptionValue] = useState<TripPurposeOption[] | TravelModeOption[]>([TripPurposeOptions[0]]);
+    const [isOptionDisabled, setIsOptionDisabled] = useState(false);
     const [dropdownOptions, setDropdownOptions] = useState<TripPurposeOption[] | TravelModeOption[]>(TripPurposeOptions); // Default to Trip Purpose Options
     const [dropdownLabel, setDropdownLabel] = useState<string>("Trip purpose");
 
@@ -46,7 +47,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
         setTravelModeDropdownOptions(travelModeDropdownOptions);
         setDropdownOptions(tripPurposeDropdownOptions); // Default to Trip Purpose Options
-        setOptionValue(tripPurposeDropdownOptions[0]); // Default to "All" option for Trip Purpose
+        setOptionValue([tripPurposeDropdownOptions[0]]); // Default to "All" option for Trip Purpose
     }, []);
 
     function setYearDropdownOptions(maxYear: any) {
@@ -139,24 +140,42 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         if (selectedType === "Trip purpose") {
             setDropdownOptions(tripPurposeDropdownOptions);
             setDropdownLabel("Trip purpose");
-            setOptionValue(tripPurposeDropdownOptions[0]);
+            setOptionValue([tripPurposeDropdownOptions[0]]);
         } else if (selectedType === "Travel mode") {
             setDropdownOptions(travelModeDropdownOptions);
             setDropdownLabel("Travel mode");
-            setOptionValue(travelModeDropdownOptions[0]);
+            setOptionValue([travelModeDropdownOptions[0]]);
         }
 
         setWeekValue(WeekOptions[0]); // Reset week value
         setStartYear(yearOptions[yearOptions.length - 1]); // Reset start year
         setEndYear(yearOptions[0]); // Reset end year
+        setIsOptionDisabled(false); // Reset option disabled state
     };
 
     // Handle dropdown value change based on active option type
-    const handleDropdownValueChange = (selectedOption: SingleValue<TripPurposeOption | TravelModeOption>) => {
-        if (selectedOption) {
-            setOptionValue(selectedOption);
+    const handleDropdownValueChange = (selectedOption: MultiValue<TripPurposeOption | TravelModeOption>) => {
+        if (selectedOption.length === 0) {
+            setOptionValue([tripPurposeDropdownOptions[0]]);
         }
+        else if (selectedOption) {
+            setOptionValue(selectedOption as TripPurposeOption[] | TravelModeOption[]);
+        }
+
+        setIsOptionDisabled(selectedOption.length >= 5);
     };
+
+    const getOptionDisabledState = (option: TripPurposeOption | TravelModeOption) => {
+        // If option is already selected, it should not be disabled
+        const isSelected = optionValue.some((selectedOption) => selectedOption.value === option.value);
+        return isOptionDisabled && !isSelected;
+    };
+
+    // Modify options to include a `isDisabled` property based on the number of selected options
+    const modifiedDropdownOptions = dropdownOptions.map((option) => ({
+        ...option,
+        isDisabled: getOptionDisabledState(option),
+    }));
 
     const activeButtonStyle = {
         backgroundColor: '#C4F5B0',
@@ -210,40 +229,11 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         })
     };
 
-    const customStylesForTripPurposeDropdown = {
-        control: (provided: any) => ({
-            ...provided,
-            border: '1px solid #ced4da',
-            borderRadius: '0.29rem',
-            minHeight: '36px',
-            minWidth: '220px',
-            fontSize: '14px',
-        }),
-        option: (provided: any) => ({
-            ...provided,
-            fontSize: '13.5px' // Smaller font size for options
-        })
-    };
-
     return (
         <div className="year-menu-container" style={{ padding: '0 20px' }}>
             <div className='btw-menu-header' id='travel-btw-year-menu-header'>
-                <div className="title-and-buttons">
+                <div className="title-and-select">
                     <h4 className="fw-bold-menu">Between Year Analysis</h4>
-                    <div className="buttons-container">
-                        <Button
-                            size="sm"
-                            onClick={() => handleOptionTypeChange("Trip purpose")}
-                            style={activeOptionType === "Trip purpose" ? activeButtonStyle : defaultButtonStyle}>
-                            By trip purpose
-                        </Button>
-                        <Button
-                            size="sm"
-                            onClick={() => handleOptionTypeChange("Travel mode")}
-                            style={activeOptionType === "Travel mode" ? activeButtonStyle : defaultButtonStyle}>
-                            By travel mode
-                        </Button>
-                    </div>
                 </div>
                 <div className="dropdowns-container" id='travel-btw-year-dropdowns-container'>
                     <label className="segment-label">Start year:</label>
@@ -290,22 +280,43 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         menuPosition={'fixed'}
                         maxMenuHeight={120}
                     />
+                </div>
+            </div>
+            <div className="options-container">
+                <div className="buttons-container">
+                    <Button
+                        size="sm"
+                        onClick={() => handleOptionTypeChange("Trip purpose")}
+                        style={activeOptionType === "Trip purpose" ? activeButtonStyle : defaultButtonStyle}>
+                        By trip purpose
+                    </Button>
+                    <Button
+                        size="sm"
+                        onClick={() => handleOptionTypeChange("Travel mode")}
+                        style={activeOptionType === "Travel mode" ? activeButtonStyle : defaultButtonStyle}>
+                        By travel mode
+                    </Button>
+                </div>
+
+                <div className="dropdowns-container" style={{ padding: '5px 0', justifyContent: "flex-end", alignItems: "center" }}>
                     <label className="segment-label">{dropdownLabel}:</label>
                     <Select
                         className="dropdown-select"
                         classNamePrefix="dropdown-select"
-                        onMenuOpen={scrollToSelectedOption}
-                        value={optionValue}
+                        value={optionValue as TripPurposeOption[] | TravelModeOption[]}
                         onChange={handleDropdownValueChange}
-                        options={dropdownOptions}
+                        options={modifiedDropdownOptions}
                         isSearchable={false}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
                         maxMenuHeight={200}
+                        hideSelectedOptions={false}
+                        isMulti
                     />
                 </div>
             </div>
+
         </div>
     );
 };

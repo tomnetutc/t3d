@@ -14,7 +14,7 @@ import Infobox from '../InfoBox/InfoBox';
 import Colors from '../../Colors'
 
 
-export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsWithinYearLoading }) => {
+export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsWithinYearLoading }) => {
 
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [yearMenuSelections, setYearMenuSelections] = useState<{ week: weekOption, year: string }>({ week: WeekOptions[0], year: "" });
@@ -43,16 +43,16 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
         setIsWithinYearLoading(true);
 
         Promise.all([
-            fetchAndFilterData(TravelDataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption),
+            fetchAndFilterData(TravelDataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption, toggleState),
             getTotalRowsForYear(TravelDataProvider.getInstance(), selectedYear)
         ]).then(([filteredData, totalRowsForYear]) => {
-            let trips = 0, travelDuration = 0, zeroTripMaker = 0, car = 0, transit = 0, walk = 0, bike = 0, other = 0;
+            let trips = 0, travelDuration = 0, zeroTripMaker = 0, auto = 0, transit = 0, walk = 0, bike = 0, other = 0;
 
             //Segment data
             filteredData.forEach(row => {
                 trips += parseFloat(row.tr_all || '0');
                 travelDuration += parseFloat(row.tr_all_dur || '0');
-                car += parseFloat(row.mode_car || '0');
+                auto += parseFloat(row.mode_car || '0');
                 transit += parseFloat(row.mode_pt || '0');
                 walk += parseFloat(row.mode_walk || '0');
                 bike += parseFloat(row.mode_bike || '0');
@@ -74,7 +74,7 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
             const zeroTripMakerPercentage = parseFloat(((zeroTripMaker / filteredData.length) * 100).toFixed(1));
             const tripMakerPercentage = parseFloat((100 - zeroTripMakerPercentage).toFixed(1));
 
-            const carAverage = filteredData.length > 0 ? car / filteredData.length : 0;
+            const carAverage = filteredData.length > 0 ? auto / filteredData.length : 0;
             const transitAverage = filteredData.length > 0 ? transit / filteredData.length : 0;
             const walkAverage = filteredData.length > 0 ? walk / filteredData.length : 0;
             const bikeAverage = filteredData.length > 0 ? bike / filteredData.length : 0;
@@ -100,7 +100,7 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
             });
 
             setModeShareData({
-                labels: ['Car', 'Transit', 'Walk', 'Bike', 'Other'],
+                labels: ['Auto', 'Transit', 'Walk', 'Bike', 'Other'],
                 datasets: [{
                     data: [carPercentage, transitPercentage, walkPercentage, bikePercentage, otherPercentage],
                     backgroundColor: [
@@ -135,7 +135,7 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
         }).finally(() => {
             setIsWithinYearLoading(false);
         });
-    }, [menuSelectedOptions, yearMenuSelections]);
+    }, [menuSelectedOptions, yearMenuSelections, toggleState]);
 
     return (
         <>
@@ -164,7 +164,7 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
                         <Infobox>
                             <p>The disribution of people who make zero trips in a day vs. those who make trips.</p>
                         </Infobox>
-                        </div>
+                    </div>
                     <div className="box NumberTripsChartComponent"><ChartComponent
                         chartData={tripChartData}
                         title='Number of trips per person per day by trip purpose'

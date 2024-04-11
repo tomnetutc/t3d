@@ -4,7 +4,7 @@ import { TravelModeOptions, TripPurposeOptions } from "../../utils/Helpers";
 import { Travel } from "../../pages/Travel";
 
 
-export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: TripPurposeOption | TravelModeOption, activeOption: string, startYear: string, endYear: string): {
+export const prepareVerticalChartData = (filteredData: DataRow[], optionValues: (TripPurposeOption | TravelModeOption)[], activeOption: string, startYear: string, endYear: string): {
     tripsChartData: ChartDataProps,
     durationChartData: ChartDataProps,
     minYear: string,
@@ -12,6 +12,8 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
     optionChanges: any,
     sampleSizeTableData: SampleSizeTableProps
 } => {
+
+    const tripsColors = ['#9D83A7', '#6DAFA0', '#f9a875', '#ebc823', '#657383'];
 
     // Filter data by startYear and endYear
     const filteredByYearData = filteredData.filter(dataRow => {
@@ -32,22 +34,67 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
         countObj.count.push([year.toString(), countObj.data.filter(row => row.year === year).length]);
     });
 
-    let yearlyData: any = {};
+    // Assume optionValue is now an array of options
+    let YearDataPerOption: any = {};
 
-    // Compute yearly averages based on activeOption
-    filteredByYearData.forEach(dataRow => {
-        const year = dataRow['year'];
-        if (!yearlyData[year]) {
-            yearlyData[year] = { totalTrips: 0, totalDuration: 0, count: 0 };
-        }
-        yearlyData[year].totalTrips += parseFloat(dataRow[optionValue.numberTrip] || '0');
-        yearlyData[year].totalDuration += parseFloat(dataRow[optionValue.durationTrips] || '0');
-        yearlyData[year].count++;
+    // Initialize data structure for each option
+    optionValues.forEach(option => {
+        YearDataPerOption[option.label] = {};
     });
 
-    const labels = Object.keys(yearlyData).sort();
-    const tripData = labels.map(year => parseFloat((yearlyData[year].totalTrips / (yearlyData[year].count > 0 ? yearlyData[year].count : 1)).toFixed(2)));
-    const durationData = labels.map(year => parseFloat((yearlyData[year].totalDuration / (yearlyData[year].count > 0 ? yearlyData[year].count : 1)).toFixed(1)));
+    // Aggregate data for each option and year
+    filteredByYearData.forEach(dataRow => {
+        const year = dataRow['year'];
+        optionValues.forEach(option => {
+            if (!YearDataPerOption[option.label][year]) {
+                YearDataPerOption[option.label][year] = { totalTrips: 0, totalDuration: 0, count: 0 };
+            }
+            YearDataPerOption[option.label][year].totalTrips += parseFloat(dataRow[option.numberTrip] || '0');
+            YearDataPerOption[option.label][year].totalDuration += parseFloat(dataRow[option.durationTrips] || '0');
+            YearDataPerOption[option.label][year].count++;
+        });
+    });
+
+    // Generate labels from the years available in filtered data
+    const labels = Object.keys(YearDataPerOption[optionValues[0].label]).sort();
+
+    type ChartDataSet = ChartDataProps['datasets'][number];
+    // Prepare chart data for each option
+    let tripsChartDataSets: ChartDataSet[] = [];
+    let durationChartDataSets: ChartDataSet[] = [];
+
+    optionValues.forEach((option, index) => {
+
+        const colorIndex = index % tripsColors.length;
+        const tripBackgroundColor = tripsColors[colorIndex];
+
+        const tripData = labels.map(year => {
+            const data = YearDataPerOption[option.label][year];
+            return parseFloat((data.totalTrips / (data.count > 0 ? data.count : 1)).toFixed(2));
+        });
+
+        const durationData = labels.map(year => {
+            const data = YearDataPerOption[option.label][year];
+            return parseFloat((data.totalDuration / (data.count > 0 ? data.count : 1)).toFixed(1));
+        });
+
+        // Add to datasets for trips and duration charts
+        tripsChartDataSets.push({
+            label: option.label,
+            data: tripData,
+            borderColor: tripBackgroundColor,
+            backgroundColor: tripBackgroundColor,
+            barThickness: 'flex',
+        });
+
+        durationChartDataSets.push({
+            label: option.label,
+            data: durationData,
+            borderColor: tripBackgroundColor,
+            backgroundColor: tripBackgroundColor,
+            barThickness: 'flex',
+        });
+    });
 
 
     const options = activeOption === "Trip purpose" ? TripPurposeOptions : TravelModeOptions;
@@ -121,27 +168,14 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
         }
     });
 
-    // Construct chart data
     const tripsChartData: ChartDataProps = {
         labels,
-        datasets: [{
-            label: optionValue.label,
-            data: tripData,
-            borderColor: '#9D83A7',
-            backgroundColor: '#9D83A7',
-            barThickness: 'flex'
-        }]
+        datasets: tripsChartDataSets,
     };
 
     const durationChartData: ChartDataProps = {
         labels,
-        datasets: [{
-            label: optionValue.label,
-            data: durationData,
-            borderColor: '#6DAFA0',
-            backgroundColor: '#6DAFA0',
-            barThickness: 'flex'
-        }]
+        datasets: durationChartDataSets,
     };
 
     const sampleSizeTableData: SampleSizeTableProps = {
@@ -149,15 +183,12 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValue: T
         counts: [countObj],
     };
 
-    // Compute minYear and maxYear
-    const minYear = labels[0];
-    const maxYear = labels[labels.length - 1];
 
     return {
         tripsChartData,
         durationChartData,
-        minYear,
-        maxYear,
+        minYear: uniqueYears[0],
+        maxYear: uniqueYears[uniqueYears.length - 1],
         optionChanges,
         sampleSizeTableData
     };

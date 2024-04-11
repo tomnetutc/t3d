@@ -53,10 +53,10 @@ export const updateSegmentShare = (row1: number, row2: number) => {
 
 export const updateSegmentTimeSpent = (newAverage: number) => {
     if (newAverage < 1 && newAverage != 0) {
-        segmentTimeSpent = { ...segmentTimeSpent, counter: `${(newAverage).toFixed(1)} mins` };
+        segmentTimeSpent = { ...segmentTimeSpent, counter: `${(newAverage).toFixed(1)} min` };
         return;
     }
-    segmentTimeSpent = { ...segmentTimeSpent, counter: `${newAverage.toFixed(1)} mins` };
+    segmentTimeSpent = { ...segmentTimeSpent, counter: `${newAverage.toFixed(1)} min` };
 };
 
 export const updateSegmentActivities = (newAverage: number) => {
@@ -68,5 +68,5 @@ export const updateSegmentTrips = (newAverage: number) => {
 }
 
 export const updateSegmentTravel = (newAverage: number) => {
-    segmentTravel = { ...segmentTravel, counter: `${newAverage.toFixed(1)} mins` };
+    segmentTravel = { ...segmentTravel, counter: `${newAverage.toFixed(1)} min` };
 }

@@ -1,9 +1,9 @@
 import { ChartData } from "chart.js";
-import { BubbleDataProps, ChartDataProps, weekOption } from "../Types";
+import { BubbleDataProps, ChartDataProps, Option, weekOption } from "../Types";
 import { DayofWeek, WeekOptions, WorkArrangementOptions } from "../../utils/Helpers";
-import { sum } from "lodash";
 
 export const calculateWorkArrangementData = (filteredData: any[]): ChartData<"pie", number[], string | string[]> => {
+
     // Filters out the "Non-worker" option
     const validOptions = WorkArrangementOptions.filter(option => option.id !== 'unemployed');
 
@@ -21,9 +21,9 @@ export const calculateWorkArrangementData = (filteredData: any[]): ChartData<"pi
 
     let sumOfAverages = averages.reduce((acc, curr, index) => index < averages.length - 1 ? acc + curr : acc, 0);
 
-    if (sumOfAverages > 100) sumOfAverages = 0;
-
-    averages[averages.length - 1] = parseFloat((100 - sumOfAverages).toFixed(1));
+    // if (!(sumOfAverages > 100)) {
+    //     averages[averages.length - 1] = parseFloat((100 - sumOfAverages).toFixed(1));
+    // }
 
 
     return {
@@ -46,6 +46,7 @@ const calculateAverage = (data: any, field: string) => {
 
 
 export const generateWorkDurationChartData = (filteredData: any[]): ChartDataProps => {
+
     // Excluding worker types that should not be included in this chart
     const validOptions = WorkArrangementOptions.filter(option => option.id !== 'unemployed' && option.id !== 'zero_work');
 
@@ -86,6 +87,7 @@ export const generateWorkDurationChartData = (filteredData: any[]): ChartDataPro
 };
 
 export const calculateWorkArrangementByDayOfWeek = (filteredData: any[], week: weekOption): ChartDataProps => {
+
     let relevantDays = DayofWeek;
     if (week.value !== "All") {
         relevantDays = DayofWeek.filter(day => day.groupId === week.groupId);
@@ -104,22 +106,23 @@ export const calculateWorkArrangementByDayOfWeek = (filteredData: any[], week: w
             const percentage = (count / (dayData.length || 1)) * 100;
 
             percentages[index] = percentages[index] || [];
+            percentages[index][dayIndex] = parseFloat(percentage.toFixed(1));
 
-            if (index < validOptions.length - 1) {
-                // For all but the last work arrangement option, calculating and storing the percentage normally
-                percentages[index][dayIndex] = parseFloat(percentage.toFixed(1));
-            } else {
-                // For the last work arrangement option, adjusting the percentage so the sum equals 100% 
-                //This is necessary because the percentages are reduced to 1 decimal place and the sum may be less or sometimes more than 100%
-                const sumOfPreviousPercentages = parseFloat((percentages.reduce((acc, curr) => acc + (curr[dayIndex] || 0), 0)).toFixed(1));
-                const adjustedPercentage = parseFloat((100.0 - sumOfPreviousPercentages).toFixed(1));
+            // if (index < validOptions.length - 1) {
+            //     // For all but the last work arrangement option, calculating and storing the percentage normally
+            //     percentages[index][dayIndex] = parseFloat(percentage.toFixed(1));
+            // } else {
+            //     // For the last work arrangement option, adjusting the percentage so the sum equals 100% 
+            //     //This is necessary because the percentages are reduced to 1 decimal place and the sum may be less or sometimes more than 100%
+            //     const sumOfPreviousPercentages = parseFloat((percentages.reduce((acc, curr) => acc + (curr[dayIndex] || 0), 0)).toFixed(1));
+            //     const adjustedPercentage = parseFloat((100.0 - sumOfPreviousPercentages).toFixed(1));
 
-                if (sumOfPreviousPercentages + adjustedPercentage != 100) {
-                    console.log(week);
-                }
+            //     if (sumOfPreviousPercentages + adjustedPercentage != 100) {
+            //         console.log(week);
+            //     }
 
-                percentages[index][dayIndex] = adjustedPercentage;
-            }
+            //     percentages[index][dayIndex] = adjustedPercentage;
+            // }
         });
     });
 
@@ -141,6 +144,7 @@ export const calculateWorkArrangementByDayOfWeek = (filteredData: any[], week: w
 };
 
 export const calculateTimePoorWorkArrangementData = (filteredData: any[]): BubbleDataProps[] => {
+
     const validOptions = WorkArrangementOptions.filter(option => option.id !== 'unemployed');
     const colors = ['#CFCCCC', '#FBC6A0', '#F4DF3B', '#9AAABF'];
 
@@ -161,4 +165,3 @@ export const calculateTimePoorWorkArrangementData = (filteredData: any[]): Bubbl
 
     return bubbleData;
 };
-

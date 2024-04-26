@@ -36,7 +36,7 @@ export interface YearOption {
 };
 
 export interface YearMenuProps {
-    onSelectionChange: (selections: { week: weekOption, year: string }) => void;
+    onSelectionChange: (selections: { week: weekOption, year: string, employment?: Option }) => void;
     callingComponent?: string;
 };
 
@@ -94,8 +94,10 @@ export interface DonutProps {
 
 export interface NavbarProps {
     onMenuOptionChange: (options: Option[]) => void;
+    toggleState: (includeDecember: boolean) => void;
     analysisType: 'withinYear' | 'betweenYears';
-    onAnalysisTypeChange: (type: 'withinYear' | 'betweenYears') => void;  
+    onAnalysisTypeChange: (type: 'withinYear' | 'betweenYears') => void;
+    isTeleworkPage?: boolean;
 };
 
 export interface MenuSelectedProps {
@@ -176,5 +178,5 @@ export interface FooterProps {
     docRefID: string;
     page: string;
     expiry: string;
-    hideFlagAndTracking: boolean;
+    footerBackgroundcolor?: string; // This is for Home and About page (white background)
 };

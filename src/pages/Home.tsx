@@ -34,7 +34,6 @@ export function Home(): JSX.Element {
                     docRefID=""
                     page=""
                     expiry=''
-                    hideFlagAndTracking={true}
             />
         </>
     );

@@ -12,10 +12,10 @@ import Infobox from '../InfoBox/InfoBox';
 import SampleSizeTable from "../SampleSizeTable";
 
 
-export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsBtwYearLoading }) => {
+export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsBtwYearLoading }) => {
 
     const [btwYearFilteredData, setBtwYearFilteredData] = useState<any[]>([]);
-    const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, optionValue: TripPurposeOption | TravelModeOption, activeOption: string, startYear: string, endYear: string }>({ week: WeekOptions[0], optionValue: TripPurposeOptions[9], activeOption: "", startYear: "", endYear: "" });
+    const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, optionValue: TripPurposeOption[] | TravelModeOption[], activeOption: string, startYear: string, endYear: string }>({ week: WeekOptions[0], optionValue: [TripPurposeOptions[9]], activeOption: "", startYear: "", endYear: "" });
     const [tripChartData, setTripChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [durationChartData, setDurationChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [optionChanges, setOptionChanges] = useState<any>({});
@@ -24,7 +24,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
     const [maxYear, setMaxYear] = useState('');
 
 
-    const handleBtwYearMenuChange = useCallback((selections: { week: weekOption, optionValue: TripPurposeOption | TravelModeOption, activeOption: string, startYear: string, endYear: string }) => {
+    const handleBtwYearMenuChange = useCallback((selections: { week: weekOption, optionValue: TripPurposeOption[] | TravelModeOption[], activeOption: string, startYear: string, endYear: string }) => {
         if (selections.optionValue === btwYearSelections.optionValue && selections.activeOption === btwYearSelections.activeOption && selections.week === btwYearSelections.week && selections.startYear === btwYearSelections.startYear && selections.endYear === btwYearSelections.endYear) {
             return;
         };
@@ -40,12 +40,12 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
         setIsBtwYearLoading(true);
 
         Promise.all([
-            fetchAndFilterDataForBtwYearAnalysis(TravelDataProvider.getInstance(), menuSelectedOptions, btwYearSelections.week)
+            fetchAndFilterDataForBtwYearAnalysis(TravelDataProvider.getInstance(), menuSelectedOptions, btwYearSelections.week, toggleState)
         ]).then(([btwYearFilteredData]) => {
-            setBtwYearFilteredData(btwYearFilteredData);
 
             const { tripsChartData, durationChartData, minYear, maxYear, optionChanges, sampleSizeTableData } = prepareVerticalChartData(btwYearFilteredData, btwYearSelections.optionValue, btwYearSelections.activeOption, btwYearSelections.startYear, btwYearSelections.endYear);
 
+            setBtwYearFilteredData(btwYearFilteredData);
             setTripChartData(tripsChartData);
             setDurationChartData(durationChartData);
             setMinYear(minYear);
@@ -57,11 +57,11 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
             setIsBtwYearLoading(false);
         });
 
-    }, [menuSelectedOptions, btwYearSelections]);
+    }, [menuSelectedOptions, btwYearSelections, toggleState]);
 
     return (
         <>
-            <div className='home' style={{ padding: '20px 0' }}>
+            <div className='home'>
 
                 <BtwYearMenu onSelectionChange={handleBtwYearMenuChange} />
                 <div className="betweenYearTravel">
@@ -91,7 +91,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsBtw
                         <Infobox>
                             <p>Change in daily travel duration per person from the start year to the end year, expressed in both absolute and percentage terms.</p>
                         </Infobox></div>
-                    <div className="box DurationTripsBtwYearChartComponent"><RechartsAreaChart
+                    <div className="box DurationTripsBtwYearChartComponent"><LineChart
                         chartData={durationChartData}
                         title="Average travel duration per person (min)"
                         showLegend={true}

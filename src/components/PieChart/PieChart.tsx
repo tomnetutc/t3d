@@ -4,6 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartData, ChartOptions } from 'chart.js';
 import { useEffect, useState } from "react";
+import { update } from "lodash";
 
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
@@ -16,19 +17,20 @@ interface PieChartProps {
 
 const PieChart = ({ title, data }: PieChartProps): JSX.Element => {
 
-    const [aspectRatio, setAspectRatio] = useState((window.innerWidth <= 1800 ? 1.2 : 1.7));
+    const [aspectRatio, setAspectRatio] = useState((window.innerWidth <= 1800 ? 1.48 : 1.7));
+    const [updateKey, setUpdateKey] = useState(0);
 
     useEffect(() => {
         const handleResize = () => {
-            setAspectRatio(window.innerWidth <= 1800 ? 1.2 : 1.7);
+            setAspectRatio(window.innerWidth <= 1800 ? 1.48 : 1.7);
+            setUpdateKey(prevKey => prevKey + 1);
         };
         window.addEventListener('resize', handleResize);
 
-        // Cleanup function
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    });
+    }, []);
 
     const options: ChartOptions<"pie"> = {
         responsive: true,
@@ -73,7 +75,7 @@ const PieChart = ({ title, data }: PieChartProps): JSX.Element => {
             </div>
             <div className="bottom">
                 <div className="chart-container">
-                    <Pie data={data} options={options} />
+                    <Pie key={updateKey} data={data} options={options} />
                 </div>
             </div>
         </div>

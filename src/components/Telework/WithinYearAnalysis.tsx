@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { weekOption, Option, ChartDataProps, BubbleDataProps } from "../Types";
 import Segment from '../Segment/Segment';
 import YearMenu from '../WithinYearMenu';
@@ -8,24 +8,21 @@ import "../../css/telework.scss";
 import { segmentShare, segmentSize, updateSegmentShare, updateSegmentSize } from "../data";
 import { ChartData } from 'chart.js';
 import PieChart from '../PieChart/PieChart';
-import VerticalStackedBarChart from '../VerticalChart/VerticalChart';
-import { set } from 'lodash';
 import ChartComponent from '../Chart/Chart';
-import RechartsAreaChart from '../AreaChart/AreaChart';
 import BubbleChart, { GridBubbleChart } from '../Bubble/Bubble';
 import Infobox from '../InfoBox/InfoBox';
 
-export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, setIsWithinYearLoading }) => {
+export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsWithinYearLoading }) => {
 
     const [filteredData, setFilteredData] = useState<any[]>([]);
-    const [yearMenuSelections, setYearMenuSelections] = useState<{ week: weekOption, year: string }>({ week: WeekOptions[0], year: "" });
+    const [yearMenuSelections, setYearMenuSelections] = useState<{ week: weekOption, year: string, employment?: Option }>({ week: WeekOptions[0], year: "", employment: { label: "All", value: "All", id: "All", val: "All", groupId: "All" } });
     const [workArrangementData, setWorkArrangementData] = useState<ChartData<"pie", number[], string | string[]>>({ labels: [], datasets: [] });
     const [workDurationChartData, setWorkDurationChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [workArrangmentByDayOfWeek, setWorkArrangmentByDayOfWeek] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [timePoorWorkArrangementData, setTimePoorWorkArrangementData] = useState<BubbleDataProps[]>([]);
 
-    const handleYearMenuChange = useCallback((selections: { week: weekOption, year: string }) => {
-        if (selections.year === yearMenuSelections.year && selections.week === yearMenuSelections.week) {
+    const handleYearMenuChange = useCallback((selections: { week: weekOption, year: string, employment?: Option }) => {
+        if (selections.year === yearMenuSelections.year && selections.week === yearMenuSelections.week && selections.employment === yearMenuSelections.employment) {
             return;
         }
         setYearMenuSelections(selections);
@@ -42,9 +39,13 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
         setIsWithinYearLoading(true);
 
         Promise.all([
-            fetchAndFilterData(DataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption, true),
+            fetchAndFilterData(DataProvider.getInstance(), menuSelectedOptions, selectedYear, weekOption, toggleState, true),
             getTotalRowsForYear(DataProvider.getInstance(), selectedYear, true)
         ]).then(([filteredData, totalRowsForYear]) => {
+
+            if (yearMenuSelections.employment?.id != "All") {
+                filteredData = filteredData.filter(row => row[yearMenuSelections.employment?.id ?? ''] === yearMenuSelections.employment?.val);
+            }
 
             updateSegmentSize(filteredData.length);
             updateSegmentShare(filteredData.length, totalRowsForYear);
@@ -58,11 +59,11 @@ export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], setIs
         }).finally(() => {
             setIsWithinYearLoading(false);
         });
-    }, [menuSelectedOptions, yearMenuSelections]);
+    }, [menuSelectedOptions, yearMenuSelections, toggleState]);
 
     return (
         <>
-            <div className='home' style={{ padding: '20px 0' }}>
+            <div className='home'>
                 <YearMenu onSelectionChange={handleYearMenuChange} callingComponent='Telework' />
                 <div className="telework">
                     <div className="box WorkArrangementPie"><PieChart

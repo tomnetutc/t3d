@@ -26,14 +26,14 @@ export function About(): JSX.Element {
                 <Content />
             </Container>
             <Footer
-                    //Unique for each page
-                    flagCounterHref=''
-                    flagCounterSrc=''
-                    docRefID=""
-                    page=""
-                    expiry=''
-                    hideFlagAndTracking={true}
-            /> 
+                //Unique for each page
+                flagCounterHref=''
+                flagCounterSrc=''
+                docRefID=""
+                page=""
+                expiry=''
+                footerBackgroundcolor="white"
+            />
         </>
     );
 }

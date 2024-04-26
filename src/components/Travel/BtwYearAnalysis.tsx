@@ -102,6 +102,9 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleSt
                 </div>
                 <div className="sampeSizeTable">
                     <SampleSizeTable years={sampleSizeTableData.years} counts={sampleSizeTableData.counts} />
+                    <Infobox style={{ padding: '20px' }}>
+                        <p>Number of respondents per year for the selected segment. It is displayed for “All” by default.</p>
+                    </Infobox>
                 </div>
             </div>
         </>

@@ -202,7 +202,7 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
                     </Button>
                 </div>
                 <Infobox style={{ display: 'flex', position: 'relative', padding: 12 }}>
-                    <p>i7</p>
+                    <p>Select up to three attributes to define and add a specific population segment for comparison purposes. The default view shows data for ‘all’ individuals aged 15 and older. </p>
                 </Infobox>
 
                 <Box display="flex" justifyContent="flex-end" alignItems="center" style={{ marginLeft: 'auto' }}>
@@ -213,6 +213,9 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
                         checked={includeDecember}
                         onChange={handleToggleChange} />
                 </Box>
+                <Infobox style={{ display: 'flex', position: 'relative', padding: '3px' }}>
+                    <p>Exclude or include the respondents surveyed in December from the analysis.</p>
+                </Infobox>
             </div>
         </div>
 

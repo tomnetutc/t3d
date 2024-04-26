@@ -61,7 +61,7 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
                             title="Segments"
                         />
                         <Infobox>
-                            <p>i5</p>
+                            <p>Add up to four additional user-defined segments for comparison purposes and display their characteristics.</p>
                         </Infobox>
                     </div>
                     <div className='box MultiChartAvearge'>
@@ -71,12 +71,15 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
                             showLegend={true}
                         />
                         <Infobox>
-                            <p>i6</p>
+                            <p>The distribution of workers by work arrangement for each segment over the selected period.</p>
                         </Infobox>
                     </div>
                 </div>
                 <div className="sampeSizeTable">
                     <SampleSizeTable years={sampleSizeTableData.years} counts={sampleSizeTableData.counts} crossSegment={true} />
+                    <Infobox style={{ padding: '20px' }}>
+                        <p>Number of respondents per year for each segment.</p>
+                    </Infobox>
                 </div>
             </div>
         </>

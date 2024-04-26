@@ -24,8 +24,8 @@ export default function Footer({ docRefID, page, expiry, footerBackgroundcolor =
                             paddingRight: '10px',
                             position: 'relative'
                         }}>
-                            <span className="d-block mb-3 mt-3" style={{ fontWeight: "700" }}>
-                                Have any questions or feedback?
+                            <span className="d-block mb-3 mt-3" >
+                                <h5> Have Questions or Feedback?</h5>
                             </span>
                             <span className="d-block mb-3">
                                 For any inquiries or feedback, please contact Dr. Irfan Batur at
@@ -47,8 +47,8 @@ export default function Footer({ docRefID, page, expiry, footerBackgroundcolor =
                             width: '40%',
                             paddingLeft: '10px',
                         }}>
-                            <span className="d-block mb-3 mt-3" style={{ fontWeight: "700" }}>
-                                Visitor Statistics
+                            <span className="d-block mb-3 mt-3">
+                                <h5>Visitor Statistics</h5>
                             </span>
                             <div style={{
                                 display: 'flex',
@@ -77,24 +77,24 @@ export default function Footer({ docRefID, page, expiry, footerBackgroundcolor =
 
                 <div className='d-block mt-2'>
                     <div style={{ paddingTop: '20px' }}>
-                        <span style={{ marginRight: "15px", fontWeight: "700", paddingTop: '10px' }}>Our Sponsors</span>
+                        <span style={{ marginRight: "15px", fontWeight: "700", paddingTop: '10px' }}><h3>Our Sponsors</h3></span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 60px', flexWrap: 'wrap' }}>
                     <a href='https://www.transportation.gov/' target='_blank' rel='noreferrer'>
-                        <img src={usDotLogo} alt="USDOT Logo" style={{ width: "250px", marginRight: "15px" }} />
+                        <img src={usDotLogo} alt="USDOT Logo" style={{ width: "270px", marginRight: "15px" }} />
                     </a>
                     <a href="https://www.utexas.edu/" target='_blank' rel="noreferrer">
-                        <img src={utAustinLogo} alt="UT Austin Logo" style={{ width: "170px", margin: "10px" }} />
+                        <img src={utAustinLogo} alt="UT Austin Logo" style={{ width: "180px", margin: "10px" }} />
                     </a>
                     <a href="https://tbd.ctr.utexas.edu/" target='_blank' rel="noreferrer">
-                        <img src={tbdLogo} alt="UT CTR Logo" style={{ width: "200px", margin: "10px" }} />
+                        <img src={tbdLogo} alt="UT CTR Logo" style={{ width: "220px", margin: "10px" }} />
                     </a>
                     <a href='https://tomnet-utc.engineering.asu.edu/' target='_blank' rel='noreferrer'>
-                        <img src={tomnetLogo} alt="TOMNET Logo" style={{ width: "280px", margin: "10px" }} />
+                        <img src={tomnetLogo} alt="TOMNET Logo" style={{ width: "300px", margin: "10px" }} />
                     </a>
                     <a href="https://www.asu.edu/" target="_blank" rel="noreferrer">
-                        <img src={asuLogo} alt="ASU Logo" style={{ width: "200px", margin: "10px" }} />
+                        <img src={asuLogo} alt="ASU Logo" style={{ width: "210px", margin: "10px" }} />
                     </a>
                 </div>
 

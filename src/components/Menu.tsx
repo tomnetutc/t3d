@@ -213,6 +213,7 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
                     <p>Select up to three attributes to define a specific population segment. The default view shows data for ‘all’ individuals aged 15 and older.</p>
                 </Infobox>
 
+
                 <Box display="flex" justifyContent="flex-end" alignItems="center" style={{ marginLeft: 'auto' }}>
                     <Box marginRight={0.2} className="segment-label">Include December:</Box>
                     <IOSSwitch
@@ -221,6 +222,10 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
                         checked={includeDecember}
                         onChange={handleToggleChange} />
                 </Box>
+                <Infobox style={{ display: 'flex', position: 'relative', padding: '3px' }}>
+                    <p>Exclude or include the respondents surveyed in December from the analysis.</p>
+                </Infobox>
+
             </div>
         </div>
 

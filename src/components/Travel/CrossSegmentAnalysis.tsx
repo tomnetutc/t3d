@@ -18,6 +18,7 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
     const [ChartData, setChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [sampleSizeTableData, setSampleSizeTableData] = useState<SampleSizeTableProps>({ years: [], counts: [] });
     const [chartTitle, setChartTitle] = useState<string>("Average number of trips per person");
+    const [chartIButton, setChartIButton] = useState<string>("The average number of trips per person per day for each segment, calculated over the years from the start year to the end year.");
 
     const handleCrossSegmentMenuChange = useCallback((selections: { week: weekOption, optionValue: TripPurposeOption | TravelModeOption, activeOption: string, analysisType: AnalysisTypeOption, startYear: string, endYear: string }) => {
         if (selections.week === crossSegmentSelections.week && selections.optionValue == crossSegmentSelections.optionValue && selections.activeOption === crossSegmentSelections.activeOption && selections.analysisType === crossSegmentSelections.analysisType && selections.startYear === crossSegmentSelections.startYear && selections.endYear === crossSegmentSelections.endYear) {
@@ -44,9 +45,11 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
 
             if (crossSegmentSelections.analysisType.value == "NumberTrips") {
                 setChartTitle("Average number of trips per person");
+                setChartIButton("The average number of trips per person per day for each segment, calculated over the years from the start year to the end year.");
             }
             else {
                 setChartTitle("Average travel duration per person (min)");
+                setChartIButton("The average daily travel duration per person for each segment, calculated over the years from the start year to the end year.")
             }
 
         }).finally(() => {
@@ -68,7 +71,7 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
                             title="Segments"
                         />
                         <Infobox>
-                            <p>i3</p>
+                            <p>Add up to four additional user-defined segments for comparison purposes and display their characteristics.</p>
                         </Infobox>
                     </div>
                     <div className='box MultiChartAvearge'>
@@ -78,12 +81,15 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
                             showLegend={true}
                         />
                         <Infobox>
-                            <p>i4</p>
+                            <p>{chartIButton}</p>
                         </Infobox>
                     </div>
                 </div>
                 <div className="sampeSizeTable">
                     <SampleSizeTable years={sampleSizeTableData.years} counts={sampleSizeTableData.counts} crossSegment={true} />
+                    <Infobox style={{ padding: '20px' }}>
+                        <p>Number of respondents per year for each segment.</p>
+                    </Infobox>
                 </div>
             </div>
         </>

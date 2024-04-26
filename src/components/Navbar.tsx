@@ -7,8 +7,9 @@ import '../css/navbar.css';
 import Menu from './Menu';
 import { NavbarProps } from './Types';
 import { Button } from 'react-bootstrap';
+import CrossSegmentMenu from './CrossSegmentMenu';
 
-export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState, analysisType, onAnalysisTypeChange, isTeleworkPage = false }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState, analysisType, onAnalysisTypeChange, isTeleworkPage = false, updatedCrossSegmentSelections }) => {
     const activeButtonStyle = {
         backgroundColor: '#C4F5B0',
         color: 'black',
@@ -67,12 +68,32 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState,
                         style={analysisType === "betweenYears" ? activeButtonStyle : defaultButtonStyle}>
                         Between Year Analysis
                     </Button>
+
+                    <Button
+                        size="sm"
+                        onClick={() => onAnalysisTypeChange('crossSegment')}
+                        style={analysisType === "crossSegment" ? activeButtonStyle : defaultButtonStyle}>
+                        Cross Segment Analysis
+                    </Button>
                 </div>
             </div>
             <div className='hr-content'>
                 <hr className='hr-spec' />
             </div>
-            <Menu onOptionChange={onMenuOptionChange} toggleState={toggleState} filterOptionsForTelework={isTeleworkPage} />
+            {analysisType === "crossSegment" ? (
+                <CrossSegmentMenu
+                    onOptionChange={onMenuOptionChange}
+                    toggleState={toggleState}
+                    filterOptionsForTelework={isTeleworkPage}
+                    updatedSelections={updatedCrossSegmentSelections}
+                />
+            ) : (
+                <Menu
+                    onOptionChange={onMenuOptionChange}
+                    toggleState={toggleState}
+                    filterOptionsForTelework={isTeleworkPage}
+                />
+            )}
         </NavbarBs>
     );
 }

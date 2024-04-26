@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Select, { MultiValue, SingleValue } from 'react-select';
-import { weekOption, TripPurposeOption, YearOption, TravelModeOption } from '../Types';
+import { weekOption, TripPurposeOption, YearOption, TravelModeOption, AnalysisTypeOption } from '../Types';
 import { WeekOptions, TripPurposeOptions, DataProvider, TravelModeOptions } from '../../utils/Helpers';
 import '../../css/menu.scss';
 import '../../App.css';
 import { max } from 'd3';
 import { Button } from 'react-bootstrap';
+import { useMediaQuery } from 'react-responsive';
 
 
-const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption, optionValue: TripPurposeOption[] | TravelModeOption[], activeOption: string, startYear: string, endYear: string }) => void }> = ({ onSelectionChange }) => {
+
+const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption, optionValue: TripPurposeOption | TravelModeOption, activeOption: string, analysisType: AnalysisTypeOption, startYear: string, endYear: string }) => void }> = ({ onSelectionChange }) => {
 
     const [weekValue, setWeekValue] = useState<weekOption>(WeekOptions[0]);
     const [startYear, setStartYear] = useState<YearOption>({ label: '', value: '' });
@@ -18,11 +20,12 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
     const [startYearOptions, setStartYearOptions] = useState<YearOption[]>([]);
     const [tripPurposeDropdownOptions, setTripPurposeDropdownOptions] = useState<TripPurposeOption[]>([]);
     const [travelModeDropdownOptions, setTravelModeDropdownOptions] = useState<TravelModeOption[]>([]);
+    const [activityLocationDropdownOptions, setActivityLocationDropdownOptions] = useState<AnalysisTypeOption[]>([]);
     const [activeOptionType, setActiveOptionType] = useState("Trip purpose");
-    const [optionValue, setOptionValue] = useState<TripPurposeOption[] | TravelModeOption[]>([TripPurposeOptions[0]]);
-    const [isOptionDisabled, setIsOptionDisabled] = useState(false);
+    const [optionValue, setOptionValue] = useState<TripPurposeOption | TravelModeOption>(TripPurposeOptions[0]);
     const [dropdownOptions, setDropdownOptions] = useState<TripPurposeOption[] | TravelModeOption[]>(TripPurposeOptions); // Default to Trip Purpose Options
     const [dropdownLabel, setDropdownLabel] = useState<string>("Trip purpose");
+    const [analysisType, setAnalysisType] = useState<AnalysisTypeOption>({ label: "", value: "" });
 
     useEffect(() => {
         const allTripPurposeOption = TripPurposeOptions.find(option => option.label === "All");
@@ -45,9 +48,16 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         // Travel Mode Dropdown Options
         const travelModeDropdownOptions = allTravelModeOption ? [allTravelModeOption, ...sortedTravelModeOptions] : sortedTravelModeOptions;
 
+        const analysisTypeDropdownOptions = [
+            { label: "Number of trips", value: "NumberTrips" },
+            { label: "Travel duration", value: "TravelDuration" }
+        ];
+
+        setActivityLocationDropdownOptions(analysisTypeDropdownOptions);
         setTravelModeDropdownOptions(travelModeDropdownOptions);
         setDropdownOptions(tripPurposeDropdownOptions); // Default to Trip Purpose Options
-        setOptionValue([tripPurposeDropdownOptions[0]]); // Default to "All" option for Trip Purpose
+        setOptionValue(tripPurposeDropdownOptions[0]); // Default to "All" option for Trip Purpose
+        setAnalysisType(analysisTypeDropdownOptions[0]); //Default to "Number of trips" option for Analysis Type
     }, []);
 
     function setYearDropdownOptions(maxYear: any) {
@@ -101,9 +111,9 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     useEffect(() => {
         if (isMaxYearLoaded) {
-            onSelectionChange({ week: weekValue, optionValue: optionValue, activeOption: activeOptionType, startYear: startYear.value, endYear: endYear.value });
+            onSelectionChange({ week: weekValue, optionValue: optionValue, activeOption: activeOptionType, analysisType: analysisType, startYear: startYear.value, endYear: endYear.value });
         } // optionValue: This can now be either a TripPurposeOption or a TravelModeOption
-    }, [isMaxYearLoaded, weekValue, optionValue, activeOptionType, startYear, endYear, onSelectionChange]);
+    }, [isMaxYearLoaded, weekValue, optionValue, activeOptionType, analysisType, startYear, endYear, onSelectionChange]);
 
     const handleStartYearChange = (selectedOption: SingleValue<YearOption>) => {
         if (selectedOption) {
@@ -140,42 +150,26 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         if (selectedType === "Trip purpose") {
             setDropdownOptions(tripPurposeDropdownOptions);
             setDropdownLabel("Trip purpose");
-            setOptionValue([tripPurposeDropdownOptions[0]]);
+            setOptionValue(tripPurposeDropdownOptions[0]);
         } else if (selectedType === "Travel mode") {
             setDropdownOptions(travelModeDropdownOptions);
             setDropdownLabel("Travel mode");
-            setOptionValue([travelModeDropdownOptions[0]]);
+            setOptionValue(travelModeDropdownOptions[0]);
         }
 
         setWeekValue(WeekOptions[0]); // Reset week value
         setStartYear(yearOptions[yearOptions.length - 1]); // Reset start year
         setEndYear(yearOptions[0]); // Reset end year
-        setIsOptionDisabled(false); // Reset option disabled state
     };
 
     // Handle dropdown value change based on active option type
-    const handleDropdownValueChange = (selectedOption: MultiValue<TripPurposeOption | TravelModeOption>) => {
-        if (selectedOption.length === 0) {
-            setOptionValue([tripPurposeDropdownOptions[0]]);
-        }
-        else if (selectedOption) {
-            setOptionValue(selectedOption as TripPurposeOption[] | TravelModeOption[]);
-        }
-
-        setIsOptionDisabled(selectedOption.length >= 5);
+    const handleDropdownValueChange = (selectedOption: SingleValue<TripPurposeOption | TravelModeOption>) => {
+        setOptionValue(selectedOption as TripPurposeOption | TravelModeOption);
     };
 
-    const getOptionDisabledState = (option: TripPurposeOption | TravelModeOption) => {
-        // If option is already selected, it should not be disabled
-        const isSelected = optionValue.some((selectedOption) => selectedOption.value === option.value);
-        return isOptionDisabled && !isSelected;
+    const handleActivityLocationChange = (selectedOption: SingleValue<AnalysisTypeOption>) => {
+        setAnalysisType(selectedOption as AnalysisTypeOption);
     };
-
-    // Modify options to include a `isDisabled` property based on the number of selected options
-    const modifiedDropdownOptions = dropdownOptions.map((option) => ({
-        ...option,
-        isDisabled: getOptionDisabledState(option),
-    }));
 
     const activeButtonStyle = {
         backgroundColor: '#C4F5B0',
@@ -190,6 +184,10 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         borderColor: 'black'
     };
 
+    const isDesktopOrLaptop = useMediaQuery({
+        query: '(min-width: 1700px)'
+    });
+
     // Scroll to the selected option when the dropdown is opened
     const scrollToSelectedOption = () => {
         setTimeout(() => {
@@ -202,13 +200,13 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     // Set the width of the dotted line dynamically
     useEffect(() => {
-        const menuHeader = document.querySelector('#travel-btw-year-menu-header') as HTMLElement;
-        const dropdownsContainer = document.querySelector('#travel-btw-year-dropdowns-container') as HTMLElement;
+        const menuHeader = document.querySelector('#travel-csa-year-menu-header') as HTMLElement;
+        const dropdownsContainer = document.querySelector('#travel-csa-year-dropdowns-container') as HTMLElement;
 
         if (menuHeader && dropdownsContainer) {
             const menuHeaderRight = menuHeader.getBoundingClientRect().left;
             const dropdownsLeft = dropdownsContainer.getBoundingClientRect().left;
-            const width = dropdownsLeft - menuHeaderRight - 290; //Slight offset to account for the title text and character diffences between the two headers
+            const width = dropdownsLeft - menuHeaderRight - 310; //Slight offset to account for the title text and character diffences between the two headers
 
             menuHeader.style.setProperty('--dotted-line-width', `${width}px`);
         }
@@ -231,11 +229,11 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     return (
         <div className="year-menu-container" style={{ padding: '5px 20px' }}>
-            <div className='btw-menu-header' id='travel-btw-year-menu-header'>
+            <div className='btw-menu-header' id='travel-csa-year-menu-header'>
                 <div className="title-and-select">
-                    <h4 className="fw-bold-menu">Between Year Analysis</h4>
+                    <h4 className="fw-bold-menu">Cross Segment Analysis</h4>
                 </div>
-                <div className="dropdowns-container" id='travel-btw-year-dropdowns-container'>
+                <div className="dropdowns-container" id='travel-csa-year-dropdowns-container'>
                     <label className="segment-label">Start year:</label>
                     <Select
                         className="dropdown-select"
@@ -280,6 +278,38 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         menuPosition={'fixed'}
                         maxMenuHeight={120}
                     />
+                    <label className="segment-label">{dropdownLabel}:</label>
+                    <Select
+                        className="dropdown-select"
+                        classNamePrefix="dropdown-select"
+                        value={optionValue as TripPurposeOption | TravelModeOption}
+                        onChange={handleDropdownValueChange}
+                        options={dropdownOptions}
+                        isSearchable={false}
+                        styles={customStyles}
+                        components={{ DropdownIndicator: CustomDropdownIndicator }}
+                        menuPosition={'fixed'}
+                        maxMenuHeight={200}
+                    />
+
+                    {isDesktopOrLaptop && (
+                        <>
+                            <label className='segment-label'>Analysis type:</label>
+                            <Select
+                                className='dropdown-select'
+                                classNamePrefix='dropdown-select'
+                                onMenuOpen={scrollToSelectedOption}
+                                value={analysisType}
+                                onChange={handleActivityLocationChange}
+                                options={activityLocationDropdownOptions}
+                                isSearchable={false}
+                                styles={customStyles}
+                                components={{ DropdownIndicator: CustomDropdownIndicator }}
+                                menuPosition={'fixed'}
+                                maxMenuHeight={120}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
             <div className="options-container">
@@ -298,30 +328,30 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                     </Button>
                 </div>
 
-                <div className="dropdowns-container" style={{ padding: '5px 0 0', justifyContent: "flex-end", alignItems: "center" }}>
-                    <label className="segment-label">{dropdownLabel}:</label>
-                    <Select
-                        className="dropdown-select"
-                        classNamePrefix="dropdown-select"
-                        value={optionValue as TripPurposeOption[] | TravelModeOption[]}
-                        onChange={handleDropdownValueChange}
-                        options={modifiedDropdownOptions}
-                        isSearchable={false}
-                        styles={customStyles}
-                        components={{ DropdownIndicator: CustomDropdownIndicator }}
-                        menuPosition={'fixed'}
-                        maxMenuHeight={200}
-                        hideSelectedOptions={false}
-                        isMulti
-                    />
-                </div>
+                {!isDesktopOrLaptop && (
+                    <div className="dropdowns-container" style={{ padding: '5px 0 0', justifyContent: "flex-end", alignItems: "center" }}>
+                        <label className='segment-label'>Analysis type:</label>
+                        <Select
+                            className='dropdown-select'
+                            classNamePrefix='dropdown-select'
+                            onMenuOpen={scrollToSelectedOption}
+                            value={analysisType}
+                            onChange={handleActivityLocationChange}
+                            options={activityLocationDropdownOptions}
+                            isSearchable={false}
+                            styles={customStyles}
+                            components={{ DropdownIndicator: CustomDropdownIndicator }}
+                            menuPosition={'fixed'}
+                            maxMenuHeight={120}
+                        />
+                    </div>
+                )}
             </div>
-
         </div>
     );
 };
 
-export default BtwYearMenu;
+export default CrossSegmentYearMenu;
 
 const CustomDropdownIndicator: React.FC<any> = () => (
     <div className="dropdown-indicator">

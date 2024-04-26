@@ -12,8 +12,7 @@ export function HomeIcons(): JSX.Element {
     <>
       <div className="HomeIconsDiv" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <span className="spanText" style={{ fontSize: 18.5, paddingTop: '30px', paddingBottom: '50px' }}><b>Dive into the American Time Use Survey data
-            to uncover trends and patterns</b></span>
+          <span className="spanText" style={{ fontSize: 18.5, paddingTop: '30px', paddingBottom: '50px' }}><b>Dive Into the American Time Use Survey Data to Uncover Trends and Patterns</b></span>
         </div>
       </div>
 

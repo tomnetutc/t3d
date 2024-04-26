@@ -10,7 +10,13 @@ const Progress: React.FC<ProgressComponentProps> = ({ title, data }) => {
             <div className="title">{title}</div>
             <div className="progress-grid">
                 {data.map((item, index) => {
-                    const percentValue = Math.abs(item.percentChange);
+                    let percentValue = Math.abs(item.percentChange);
+                    if (isNaN(percentValue)) {
+                        percentValue = 0;
+                    }
+                    else if (!isFinite(percentValue)) {
+                        percentValue = 50;
+                    }
                     return (
                         <div key={index} className="progress-item">
                             <div className="label">{item.label}</div>

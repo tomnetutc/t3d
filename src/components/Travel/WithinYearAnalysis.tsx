@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ChartDataProps, MenuSelectedProps, weekOption, Option } from "../Types";
+import { ChartDataProps, weekOption, Option } from "../Types";
 import YearMenu from "../WithinYearMenu";
 import { TravelDataProvider, WeekOptions, fetchAndFilterData, getTotalRowsForYear } from "../../utils/Helpers";
 import Segment from "../Segment/Segment";

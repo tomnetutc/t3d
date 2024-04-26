@@ -27,11 +27,9 @@ export function About(): JSX.Element {
             </Container>
             <Footer
                 //Unique for each page
-                flagCounterHref=''
-                flagCounterSrc=''
-                docRefID=""
-                page=""
-                expiry=''
+                docRefID="5oc3ShW8uDxTXf3ERsaF_about"
+                page="hasVisitedAboutPage"
+                expiry='aboutExpiry'
                 footerBackgroundcolor="white"
             />
         </>

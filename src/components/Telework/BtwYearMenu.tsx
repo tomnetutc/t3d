@@ -162,7 +162,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
     };
 
     return (
-        <div className="year-menu-container" style={{ padding: '0 20px' }}>
+        <div className="year-menu-container" style={{ padding: '5px 20px' }}>
             <div className='menu-header' id='timeuse-btw-year-menu-header'>
                 <h4 className="fw-bold-menu">Between Year Analysis</h4>
                 <div className="dropdowns-container" id='timeuse-btw-year-dropdowns-container'>
@@ -234,7 +234,7 @@ export default BtwYearMenu;
 
 const CustomDropdownIndicator: React.FC<any> = () => (
     <div className="dropdown-indicator">
-        <svg width="16" height="16" fill="currentColor" className="bi bi-chevron-down" viewBox="0 0 16 16">
+        <svg width="15" height="15" fill="currentColor" className="bi bi-chevron-down" viewBox="-2 -2 21 21">
             <path
                 fillRule="evenodd"
                 d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"

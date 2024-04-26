@@ -12,6 +12,8 @@ const timeUse_dailyTime_outOfHome = '#6DAFA0';
 const timeUse_change_inHomeDualValueSegment = '#BDABE6';
 const timeUse_change_outOfHomeDualValueSegment = '#8FD1BF';
 
+export const timeUse_crossSegmentColors = ['#9D83A7', '#6DAfA0', '#f9a875', '#ebc823', '#657383'];
+
 // Travel Page Color Variables
 const travel_tripMaking_tripMaker = '#EAD97C';
 const travel_tripMaking_zeroTripMaker = '#8E9B97';
@@ -23,11 +25,16 @@ const travel_modeShare_other = '#8E9B97';
 const travel_duration_chartDuration = '#6DAFA0';
 const travel_trips_chartTrips = '#9D83A7';
 
+export const tripsColorsForBtwYears = ['#9D83A7', '#6DAFA0', '#f9a875', '#ebc823', '#657383'];
+export const travel_crossSegmentColors = ['#9D83A7', '#6DAfA0', '#f9a875', '#ebc823', '#657383'];
+
 // Teleworker Page Color Variables
 const teleworker_workers_zero = '#C4C4C4';
 const teleworker_workers_inHome = '#F9A875';
 const teleworker_workers_multiSite = '#F9D423';
 const teleworker_workers_commutersOnly = '#657383';
+
+export const telework_crossSegmentColors = ['#9D83A7', '#6DAfA0', '#f9a875', '#ebc823', '#657383'];
 
 const Colors = {
     // Time Use Page

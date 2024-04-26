@@ -47,6 +47,11 @@ export type ActivityOption = {
     outHome: string;
 };
 
+export type ActivityLocationOption = {
+    label: string;
+    value: string;
+}
+
 export type TripPurposeOption = {
     label: string;
     value: string;
@@ -93,16 +98,21 @@ export interface DonutProps {
 };
 
 export interface NavbarProps {
-    onMenuOptionChange: (options: Option[]) => void;
+    onMenuOptionChange: (options: Option[] | Option[][]) => void;
     toggleState: (includeDecember: boolean) => void;
-    analysisType: 'withinYear' | 'betweenYears';
-    onAnalysisTypeChange: (type: 'withinYear' | 'betweenYears') => void;
+    analysisType: 'withinYear' | 'betweenYears' | 'crossSegment';
+    onAnalysisTypeChange: (type: 'withinYear' | 'betweenYears' | 'crossSegment') => void;
     isTeleworkPage?: boolean;
+    updatedCrossSegmentSelections: Option[][];
 };
 
-export interface MenuSelectedProps {
-    menuSelectedOptions: Option[];
-}
+export interface CrossSegmentNavbarProps {
+    onMenuOptionChange: (options: [Option[]]) => void;
+    toggleState: (includeDecember: boolean) => void;
+    analysisType: 'withinYear' | 'betweenYears' | 'crossSegment';
+    onAnalysisTypeChange: (type: 'withinYear' | 'betweenYears' | 'crossSegment') => void;
+    isTeleworkPage?: boolean;
+};
 
 export interface ChartDataProps {
     labels: (string | string[])[];
@@ -170,13 +180,35 @@ export interface CountObj {
 export interface SampleSizeTableProps {
     years: (string | undefined)[];
     counts: CountObj[];
+    crossSegment?: boolean;
 };
 
 export interface FooterProps {
-    flagCounterHref: string;
-    flagCounterSrc: string;
     docRefID: string;
     page: string;
     expiry: string;
     footerBackgroundcolor?: string; // This is for Home and About page (white background)
+};
+
+export interface ProfileObj {
+    [key: string]: Option[];
+};
+
+export interface IAddProfile {
+    (newProfile: { [key: string]: Option[] }): Promise<void>;
+};
+
+export interface IRemoveProfile {
+    (profileIndex: number): void;
+}
+
+export interface ProfileCardProps {
+    profileList: ProfileObj[];
+    removeProfile: IRemoveProfile;
+    title: string;
+};
+
+export type AnalysisTypeOption = {
+    label: string;
+    value: string;
 };

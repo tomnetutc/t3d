@@ -8,15 +8,18 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import { WithinYearAnalysis } from '../components/Telework/WithinYearAnalysis';
 import { BtwYearAnalysis } from '../components/Telework/BtwYearAnalysis';
 import { set } from 'lodash';
+import { CrossSegmentAnalysis } from '../components/Telework/CrossSegmentAnalysis';
 
 export function Telework(): JSX.Element {
     useDocumentTitle('Telework');
 
     const [menuSelectedOptions, setMenuSelectedOptions] = useState<Option[]>([]);
+    const [crossSegmentSelectedOptions, setCrossSegmentSelectedOptions] = useState<Option[][]>([[]]);
     const [includeDecemberToggle, setIncludeDecember] = useState(true);
     const [isWithinYearLoading, setIsWithinYearLoading] = useState(true);
     const [isBtwYearLoading, setIsBtwYearLoading] = useState(true);
-    const [analysisType, setAnalysisType] = useState<'withinYear' | 'betweenYears'>('withinYear');
+    const [isCrossSegmentLoading, setIsCrossSegmentLoading] = useState(false);
+    const [analysisType, setAnalysisType] = useState<'withinYear' | 'betweenYears' | 'crossSegment'>('withinYear');
 
     const analysisKey = analysisType + "-analysis";
 
@@ -31,24 +34,38 @@ export function Telework(): JSX.Element {
     useEffect(() => {
         setIsWithinYearLoading(true);
         setIsBtwYearLoading(true);
+        setIsCrossSegmentLoading(true); // change to true when cross segment is implemented
+        setMenuSelectedOptions([]);
+        setCrossSegmentSelectedOptions([[]]);
+        setIncludeDecember(true);
+        window.scrollTo(0, 0);
     }, [analysisType]);
 
-    const handleMenuOptionChange = useCallback((options: Option[]) => {
-        if (JSON.stringify(options) !== JSON.stringify(menuSelectedOptions)) {
-            setMenuSelectedOptions(options);
+    //Removes the ith entry from the cross segment segment selections
+    const handleProfileRemove = useCallback((IRemoveIndex: number) => {
+        setCrossSegmentSelectedOptions(prevOptions => prevOptions.filter((_, index) => index !== IRemoveIndex));
+    }, []);
+
+    const handleMenuOptionChange = useCallback((options: Option[] | Option[][]) => {
+        // Check if the first element is an array to determine if it's Option[][].
+        const isOptionArrayArray = Array.isArray(options[0]);
+
+        if (isOptionArrayArray) {
+            if (JSON.stringify(options) !== JSON.stringify(crossSegmentSelectedOptions)) {
+                setCrossSegmentSelectedOptions(options as Option[][]);
+            }
+        } else {
+            if (JSON.stringify(options) !== JSON.stringify(menuSelectedOptions)) {
+                setMenuSelectedOptions(options as Option[]);
+            }
         }
-    }, [menuSelectedOptions]);
+    }, [menuSelectedOptions, crossSegmentSelectedOptions]);
 
     const hangleToggleChange = useCallback((includeDecember: boolean) => {
         if (includeDecember !== includeDecemberToggle) {
             setIncludeDecember(includeDecember);
         }
     }, [includeDecemberToggle]);
-
-    useEffect(() => {
-        setMenuSelectedOptions([]);
-        setIncludeDecember(true);
-    }, [analysisType]);
 
     return (
         <>
@@ -58,9 +75,10 @@ export function Telework(): JSX.Element {
                 analysisType={analysisType}
                 onAnalysisTypeChange={setAnalysisType}
                 isTeleworkPage={true}
+                updatedCrossSegmentSelections={crossSegmentSelectedOptions}
             />
 
-            {((analysisType == 'withinYear' && isWithinYearLoading) || (analysisType == 'betweenYears' && isBtwYearLoading)) && <LoadingOverlay />}
+            {((analysisType == 'withinYear' && isWithinYearLoading) || (analysisType == 'betweenYears' && isBtwYearLoading) || (analysisType == 'crossSegment' && isCrossSegmentLoading)) && <LoadingOverlay />}
             <div className="home" style={{ backgroundColor: '#f5f5f5', padding: '30px 20px 20px' }}>
                 {analysisType === 'withinYear' ? (
                     <WithinYearAnalysis
@@ -68,21 +86,27 @@ export function Telework(): JSX.Element {
                         menuSelectedOptions={menuSelectedOptions} toggleState={includeDecemberToggle}
                         setIsWithinYearLoading={setIsWithinYearLoading}
                     />
-                ) : (
+                ) : analysisType === 'betweenYears' ? (
                     <BtwYearAnalysis
                         key={analysisKey} // And here
                         menuSelectedOptions={menuSelectedOptions} toggleState={includeDecemberToggle}
                         setIsBtwYearLoading={setIsBtwYearLoading}
                     />
+                ) : (
+                    <CrossSegmentAnalysis
+                        key={analysisKey}
+                        menuSelectedOptions={crossSegmentSelectedOptions}
+                        toggleState={includeDecemberToggle}
+                        setIsCrossSegmentLoading={setIsCrossSegmentLoading}
+                        onProfileRemove={handleProfileRemove}
+                    />
                 )}
-            </div>
-            <Footer
-                    flagCounterHref='https://www.flagcounter.me/details/ewp'
-                    flagCounterSrc='https://www.flagcounter.me/ewp/'
+                <Footer
                     docRefID="IdHegFzmqUaWsHomHVMe_telework"
                     page="hasVisitedTeleworkPage"
                     expiry='teleworkExpiry'
                 />
+            </div>
         </>
     );
 }

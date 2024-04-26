@@ -174,6 +174,41 @@ export const calculateYearlyActivityAverages = (data: DataRow[], selectedActivit
     }));
 };
 
+export const CrossSegmentDataFilter = async (dataProvider: { loadData: () => Promise<any[]> }, startYear: string, endYear: string, weekOption: weekOption, toggleState: boolean, filterUnemployed: boolean = false) => {
+
+    try {
+        const data = await dataProvider.loadData();
+        const startYearNum = parseInt(startYear, 10);
+        const endYearNum = parseInt(endYear, 10);
+
+        const filteredData = data.filter(row => {
+            const year = row.year;
+            const yearNum = parseInt(year, 10);
+            const month = row['month'];
+
+            if (!(startYear && yearNum >= startYearNum && endYear && yearNum <= endYearNum)) return false;
+
+            // Toggle state and month filter
+            if (!toggleState && month === "12.0") return false;
+
+            if (filterUnemployed && row['unemployed'] === "1.0") return false;
+
+            if (weekOption.value !== "All") {
+                if (row[weekOption.id] !== weekOption.val) return false;
+            }
+
+            return true;
+        });
+
+        // Return the filtered dataset
+        return filteredData;
+    } catch (error) {
+        console.error('Error fetching and filtering data:', error);
+        return [];
+    }
+
+};
+
 
 // Singleton class for Traveldata management
 export class TravelDataProvider {

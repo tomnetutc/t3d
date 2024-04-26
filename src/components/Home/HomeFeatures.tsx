@@ -9,16 +9,14 @@ import { useNavigate } from 'react-router-dom';
 
 export function HomeFeatures(): JSX.Element {
     const navigate = useNavigate();
-    const handleNavigate = (path) => {
+    const handleNavigate = (path: any) => {
         navigate(path);
-        window.scrollTo(0, 0);
     };
-
 
     return (
         <>
             <div className="HomeFeaturesDiv">
-                <div className="FeaturesTitleHolder"style={{ paddingTop:'20px'}}>
+                <div className="FeaturesTitleHolder" style={{ paddingTop: '20px' }}>
                     <img src={FeaturesLogo} alt="Logo" style={{ maxWidth: '50px', height: '50px' }} />
                     <span className="SpanHeader" style={{ fontSize: '23.5px' }}><b>Key Features</b></span>
                 </div>
@@ -49,10 +47,10 @@ export function HomeFeatures(): JSX.Element {
                         <span className="SpanContent">T3D updates dynamically, providing immediate visualizations that reflect the impact of user-selected segments. This feature encourages active exploration of the data, allowing for a deeper engagement and understanding of societal trends.</span>
                     </div>
                     <div className="FeatureLogo">
-                        <img src={InstantInsightsLogo} alt="InstantInsightsLogo" style={{ maxWidth: '100%', width:'140px', height:'140px' }} />
+                        <img src={InstantInsightsLogo} alt="InstantInsightsLogo" style={{ maxWidth: '100%', width: '140px', height: '140px' }} />
                     </div>
                 </div>
-                <div className="FeatureHolder" style={{ backgroundColor: "white", height:'auto', paddingBottom:'30px'}}>
+                <div className="FeatureHolder" style={{ backgroundColor: "white", height: 'auto', paddingBottom: '30px' }}>
                     <div className="FeatureText">
                         <span className="SpanHeader" style={{ paddingBottom: '15px', paddingTop: '30px' }}>How It Works</span>
                         <span className="SpanContent">
@@ -74,11 +72,11 @@ export function HomeFeatures(): JSX.Element {
                         </span>
                     </div>
                     <div className="FeatureLogo">
-                        <img src={HowItWorksLogo} alt="Dashboard" style={{ maxWidth: '100%', width:'140px', height:'140px'}} />
+                        <img src={HowItWorksLogo} alt="Dashboard" style={{ maxWidth: '100%', width: '140px', height: '140px' }} />
                     </div>
                 </div>
 
-                <div className="FeatureHolder" style={{ flexDirection: 'column', paddingTop: '60px', paddingBottom: '60px', marginBottom: '100px', height:'auto'}}>
+                <div className="FeatureHolder" style={{ flexDirection: 'column', paddingTop: '60px', paddingBottom: '60px', marginBottom: '100px', height: 'auto' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                         <span className="SpanContent" style={{ fontSize: '22px', fontWeight: 'bold', color: '#2E2E2E' }}>Begin Your Journey into Time, Travel, and Telework Analysis Now – Explore T3D to Uncover Hidden Patterns and Inform Future Decisions.</span>
                     </div>

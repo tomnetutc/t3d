@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import BtwYearMenu from "./BtwYearMenu";
-import { ChartDataProps, MenuSelectedProps, TravelModeOption, TripPurposeOption, weekOption, Option, SampleSizeTableProps } from "../Types";
+import { ChartDataProps, TravelModeOption, TripPurposeOption, weekOption, Option, SampleSizeTableProps } from "../Types";
 import { TravelDataProvider, TripPurposeOptions, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 import "../../css/travel.scss";
 import { prepareVerticalChartData } from "./BtwYearDataCalculations";

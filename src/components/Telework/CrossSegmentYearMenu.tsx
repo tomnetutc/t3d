@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
-import { weekOption, ActivityOption, YearOption } from '../Types';
-import { WeekOptions, ActivityOptions, DataProvider } from '../../utils/Helpers';
+import { weekOption, ActivityOption, YearOption, Option } from '../Types';
+import { WeekOptions, ActivityOptions, DataProvider, WorkArrangementOptions, EmploymentStatusOptions } from '../../utils/Helpers';
 import '../../css/menu.scss'
 import '../../App.css';
 import { max } from 'd3';
+import { useMediaQuery } from 'react-responsive';
 
 
-const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption, activity: ActivityOption, startYear: string, endYear: string }) => void }> = ({ onSelectionChange }) => {
+const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption, workArrangement: Option, employment: Option, startYear: string, endYear: string }) => void }> = ({ onSelectionChange }) => {
 
-    const [weekValue, setWeekValue] = useState<weekOption>(WeekOptions[0]);
-    const [activityValue, setActivityValue] = useState<ActivityOption>({ label: "All", value: "All", inHome: "All", outHome: "All" });
+    const [weekValue, setWeekValue] = useState<weekOption>(WeekOptions[1]); // Default to Weekday option
+    const [workArrangementValue, setWorkArrangementValue] = useState<Option>(WorkArrangementOptions[3]);
+    const [employmentValue, setEmploymentValue] = useState<Option>({ label: "All", value: "All", id: "All", val: "All", groupId: "All" });
     const [isMaxYearLoaded, setIsMaxYearLoaded] = useState(false);
     const [startYear, setStartYear] = useState<YearOption>({ label: '', value: '' });
     const [endYear, setEndYear] = useState<YearOption>({ label: '', value: '' });
@@ -70,9 +72,9 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     useEffect(() => {
         if (isMaxYearLoaded) {
-            onSelectionChange({ week: weekValue, activity: activityValue, startYear: startYear.value, endYear: endYear.value });
+            onSelectionChange({ week: weekValue, workArrangement: workArrangementValue, employment: employmentValue, startYear: startYear.value, endYear: endYear.value });
         }
-    }, [isMaxYearLoaded, weekValue, activityValue, startYear, endYear, onSelectionChange]);
+    }, [isMaxYearLoaded, weekValue, workArrangementValue, employmentValue, startYear, endYear, onSelectionChange]);
 
     const handleStartYearChange = (selectedOption: SingleValue<YearOption>) => {
         if (selectedOption) {
@@ -92,9 +94,15 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         }
     };
 
-    const handleActivityChange = (selectedOption: SingleValue<ActivityOption>) => {
+    const handleWorkArragementChange = (selectedOption: SingleValue<Option>) => {
         if (selectedOption) {
-            setActivityValue(selectedOption);
+            setWorkArrangementValue(selectedOption);
+        }
+    };
+
+    const handleEmploymentChange = (selectedOption: SingleValue<Option>) => {
+        if (selectedOption) {
+            setEmploymentValue(selectedOption);
         }
     };
 
@@ -106,9 +114,19 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         return startYear.value ? parseInt(option.value) < parseInt(startYear.value) : false;
     };
 
-    const sortedActivityOptions = [...ActivityOptions].sort((a, b) => { // Creating a copy to prevent mutating the original array as it is imported from a different file
-        return a.label.localeCompare(b.label);
+    const isDesktopOrLaptop = useMediaQuery({
+        query: '(min-width: 1700px)'
     });
+
+    const sortedWorkArrangementOptions = [...WorkArrangementOptions].filter(option => option.id != "unemployed") // Creating a copy to prevent mutating the original array as it is imported from a different file
+        .sort((a, b) => {
+            return a.label.localeCompare(b.label);
+        });
+
+    const sortedEmploymentOptions = [...EmploymentStatusOptions].filter(option => option.id != "unemployed") // Creating a copy to prevent mutating the original array as it is imported from a different file
+        .sort((a, b) => {
+            return a.label.localeCompare(b.label);
+        });
 
     // Scroll to the selected option when the dropdown is opened
     const scrollToSelectedOption = () => {
@@ -122,25 +140,38 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     // Set the width of the dotted line dynamically
     useEffect(() => {
-        const menuHeader = document.querySelector('#timeuse-btw-year-menu-header') as HTMLElement;
-        const dropdownsContainer = document.querySelector('#timeuse-btw-year-dropdowns-container') as HTMLElement;
+        const menuHeader = document.querySelector('#timeuse-csa-year-menu-header') as HTMLElement;
+        const dropdownsContainer = document.querySelector('#timeuse-csa-year-dropdowns-container') as HTMLElement;
 
         if (menuHeader && dropdownsContainer) {
             const menuHeaderRight = menuHeader.getBoundingClientRect().left;
             const dropdownsLeft = dropdownsContainer.getBoundingClientRect().left;
-            const width = dropdownsLeft - menuHeaderRight - 290; //Slight offset to account for the title text and character diffences between the two headers
+            const width = dropdownsLeft - menuHeaderRight - 310; //Slight offset to account for the title text and character diffences between the two headers
 
             menuHeader.style.setProperty('--dotted-line-width', `${width}px`);
         }
-    }, [activityValue]);
+    }, [workArrangementValue]);
 
-    const activityDropdownOptions = [
-        { label: "All", value: "All", inHome: "All", outHome: "All" },
-        ...sortedActivityOptions.map(option => ({
+    const workArrangementDropdownOptions = [
+        ...sortedWorkArrangementOptions.map(option => ({
             label: option.label,
             value: option.label,
-            inHome: option.inHome,
-            outHome: option.outHome
+            id: option.id,
+            val: option.val,
+            groupId: option.groupId
+        })),
+        { label: "All", value: "All", id: "All", val: "All", groupId: "All" }
+
+    ];
+
+    const employmentDropdownOptions = [
+        { label: "All", value: "All", id: "All", val: "All", groupId: "All" },
+        ...sortedEmploymentOptions.map(option => ({
+            label: option.label,
+            value: option.label,
+            id: option.id,
+            val: option.val,
+            groupId: option.groupId
         }))
     ];
 
@@ -158,27 +189,11 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         })
     };
 
-    const customStylesForActivityDropdown = {
-        control: (provided: any) => ({
-            ...provided,
-            border: '1px solid #ced4da',
-            borderRadius: '0.29rem',
-            minHeight: '36px',
-            minWidth: '220px',
-            fontSize: '14px',
-        }),
-        option: (provided: any) => ({
-            ...provided,
-            fontSize: '13.5px' // Smaller font size for options
-        })
-    };
-
-
     return (
         <div className="year-menu-container" style={{ padding: '5px 20px' }}>
-            <div className='menu-header' id='timeuse-btw-year-menu-header'>
-                <h4 className="fw-bold-menu">Between Year Analysis</h4>
-                <div className="dropdowns-container" id='timeuse-btw-year-dropdowns-container'>
+            <div className='menu-header' id='timeuse-csa-year-menu-header'>
+                <h4 className="fw-bold-menu">Cross Segment Analysis</h4>
+                <div className="dropdowns-container" id='timeuse-csa-year-dropdowns-container'>
                     <label className="segment-label">Start year:</label>
                     <Select
                         className="dropdown-select"
@@ -223,27 +238,63 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         menuPosition={'fixed'}
                         maxMenuHeight={120}
                     />
-                    <label className="segment-label">Activity:</label>
+                    <label className="segment-label">Work Arrangement:</label>
                     <Select
                         className="dropdown-select"
                         classNamePrefix="dropdown-select"
                         onMenuOpen={scrollToSelectedOption}
-                        value={activityValue}
-                        onChange={handleActivityChange}
-                        options={activityDropdownOptions}
+                        value={workArrangementValue}
+                        onChange={handleWorkArragementChange}
+                        options={workArrangementDropdownOptions}
                         isSearchable={false}
-                        styles={customStylesForActivityDropdown}
+                        styles={customStyles}
+                        components={{ DropdownIndicator: CustomDropdownIndicator }}
+                        menuPosition={'fixed'}
+                        maxMenuHeight={200}
+                    />
+                    {isDesktopOrLaptop && (
+                        <>
+                            <label className="segment-label">Employment:</label>
+                            <Select
+                                className="dropdown-select"
+                                classNamePrefix="dropdown-select"
+                                onMenuOpen={scrollToSelectedOption}
+                                value={employmentValue}
+                                onChange={handleEmploymentChange}
+                                options={employmentDropdownOptions}
+                                isSearchable={false}
+                                styles={customStyles}
+                                components={{ DropdownIndicator: CustomDropdownIndicator }}
+                                menuPosition={'fixed'}
+                                maxMenuHeight={200}
+                            />
+                        </>
+                    )}
+                </div>
+            </div>
+            {!isDesktopOrLaptop && (
+                <div className="dropdowns-container" style={{ padding: '5px 0 0', justifyContent: "flex-end", alignItems: "center" }}>
+                    <label className="segment-label">Employment:</label>
+                    <Select
+                        className="dropdown-select"
+                        classNamePrefix="dropdown-select"
+                        onMenuOpen={scrollToSelectedOption}
+                        value={employmentValue}
+                        onChange={handleEmploymentChange}
+                        options={employmentDropdownOptions}
+                        isSearchable={false}
+                        styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
                         maxMenuHeight={200}
                     />
                 </div>
-            </div>
+            )}
         </div>
     );
 };
 
-export default BtwYearMenu;
+export default CrossSegmentYearMenu;
 
 const CustomDropdownIndicator: React.FC<any> = () => (
     <div className="dropdown-indicator">

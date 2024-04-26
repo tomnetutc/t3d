@@ -8,21 +8,14 @@ import utAustinLogo from '../images/Logo/utaustin.png';
 import usDotLogo from '../images/Logo/us-dot.png';
 import tomnetLogo from '../images/Logo/tomnet.png';
 
-export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page, expiry, footerBackgroundcolor = '' }: FooterProps): JSX.Element {
+export default function Footer({ docRefID, page, expiry, footerBackgroundcolor = '' }: FooterProps): JSX.Element {
     useEffect(() => {
-
-        if (docRefID=="") {
-            hideFlagCounter();
-        }
-        else {
-            hideFlagCounter();
-            tracking(docRefID, page, expiry);
-        }
+        tracking(docRefID, page, expiry);
     }, []);
 
     return (
         <div style={{ zIndex: 1000, position: 'relative', backgroundColor: footerBackgroundcolor }}>
-            <div style={{ padding: '0 0px', textAlign: 'center' }}>
+            <div style={{ padding: '0 20px', textAlign: 'center' }}>
                 <hr className="hr-spec" />
                 <div style={{ padding: '3px 5px', textAlign: 'center' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -51,8 +44,8 @@ export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page
                         </div>
 
                         <div style={{
-                            width: '39%',
-                            paddingLeft: '20px'
+                            width: '40%',
+                            paddingLeft: '10px',
                         }}>
                             <span className="d-block mb-3 mt-3" style={{ fontWeight: "700" }}>
                                 Visitor Statistics
@@ -89,13 +82,13 @@ export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', flexWrap: 'wrap' }}>
                     <a href='https://www.transportation.gov/' target='_blank' rel='noreferrer'>
-                        <img src={usDotLogo} alt="USDOT Logo" style={{ width: "220px", margin: "10px" }} />
+                        <img src={usDotLogo} alt="USDOT Logo" style={{ width: "250px", marginRight: "15px" }} />
                     </a>
                     <a href="https://www.utexas.edu/" target='_blank' rel="noreferrer">
                         <img src={utAustinLogo} alt="UT Austin Logo" style={{ width: "170px", margin: "10px" }} />
                     </a>
                     <a href="https://tbd.ctr.utexas.edu/" target='_blank' rel="noreferrer">
-                        <img src={tbdLogo} alt="UT CTR Logo" style={{ width: "210px", margin: "10px" }} />
+                        <img src={tbdLogo} alt="UT CTR Logo" style={{ width: "200px", margin: "10px" }} />
                     </a>
                     <a href='https://tomnet-utc.engineering.asu.edu/' target='_blank' rel='noreferrer'>
                         <img src={tomnetLogo} alt="TOMNET Logo" style={{ width: "280px", margin: "10px" }} />

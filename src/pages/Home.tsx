@@ -1,11 +1,11 @@
 import { HeaderContent } from "../components/Home/HeaderContent";
 import "../App.css";
-import { Container} from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { LandingNavbar } from "../components/LandingNavbar";
 import { DataProvider, TravelDataProvider, useDocumentTitle } from "../utils/Helpers";
 import { useEffect } from "react";
 import { HomeIcons } from "../components/Home/HomeIcons";
-import {HomeFeatures} from "../components/Home/HomeFeatures";
+import { HomeFeatures } from "../components/Home/HomeFeatures";
 import Footer from "../components/Footer"
 
 export function Home(): JSX.Element {
@@ -24,16 +24,14 @@ export function Home(): JSX.Element {
             <LandingNavbar />
             <HeaderContent />
             <Container>
-                <HomeIcons/>
-                <HomeFeatures/>
+                <HomeIcons />
+                <HomeFeatures />
             </Container>
             <Footer
-                    //Unique for each page
-                    flagCounterHref=''
-                    flagCounterSrc=''
-                    docRefID=""
-                    page=""
-                    expiry=''
+                docRefID="SnaWZHT5yxieSlRV6WQ2_home"
+                page="hasVisitedHomePage"
+                expiry='homeExpiry'
+                footerBackgroundcolor="white"
             />
         </>
     );

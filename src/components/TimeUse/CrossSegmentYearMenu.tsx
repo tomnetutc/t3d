@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
-import { weekOption, ActivityOption, YearOption } from '../Types';
+import { useMediaQuery } from 'react-responsive';
+import { weekOption, ActivityOption, YearOption, ActivityLocationOption } from '../Types';
 import { WeekOptions, ActivityOptions, DataProvider } from '../../utils/Helpers';
 import '../../css/menu.scss'
 import '../../App.css';
 import { max } from 'd3';
 
 
-const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption, activity: ActivityOption, startYear: string, endYear: string }) => void }> = ({ onSelectionChange }) => {
+const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption, activity: ActivityOption, activityLocation: ActivityLocationOption, startYear: string, endYear: string }) => void }> = ({ onSelectionChange }) => {
 
     const [weekValue, setWeekValue] = useState<weekOption>(WeekOptions[0]);
-    const [activityValue, setActivityValue] = useState<ActivityOption>({ label: "All", value: "All", inHome: "All", outHome: "All" });
+    const [activityValue, setActivityValue] = useState<ActivityOption>(ActivityOptions[3]);
+    const [activityLocationValue, setActivityLocationValue] = useState<ActivityLocationOption>({ label: "All", value: "All" });
     const [isMaxYearLoaded, setIsMaxYearLoaded] = useState(false);
     const [startYear, setStartYear] = useState<YearOption>({ label: '', value: '' });
     const [endYear, setEndYear] = useState<YearOption>({ label: '', value: '' });
     const [yearOptions, setYearOptions] = useState<YearOption[]>([]);
     const [startYearOptions, setStartYearOptions] = useState<YearOption[]>([]);
+    const [activityDropdownOptions, setActivityDropdownOptions] = useState<ActivityOption[]>([]);
 
     function setYearDropdownOptions(maxYear: any) {
         const startYear = 2003;
@@ -70,9 +73,9 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     useEffect(() => {
         if (isMaxYearLoaded) {
-            onSelectionChange({ week: weekValue, activity: activityValue, startYear: startYear.value, endYear: endYear.value });
+            onSelectionChange({ week: weekValue, activity: activityValue, activityLocation: activityLocationValue, startYear: startYear.value, endYear: endYear.value });
         }
-    }, [isMaxYearLoaded, weekValue, activityValue, startYear, endYear, onSelectionChange]);
+    }, [isMaxYearLoaded, weekValue, activityValue, activityLocationValue, startYear, endYear, onSelectionChange]);
 
     const handleStartYearChange = (selectedOption: SingleValue<YearOption>) => {
         if (selectedOption) {
@@ -98,6 +101,12 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
         }
     };
 
+    const handleActivityLocationChange = (selectedOption: SingleValue<ActivityLocationOption>) => {
+        if (selectedOption) {
+            setActivityLocationValue(selectedOption);
+        }
+    };
+
     const isStartYearOptionDisabled = (option: YearOption): boolean => {
         return endYear.value ? parseInt(option.value) > parseInt(endYear.value) : false;
     };
@@ -108,6 +117,10 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     const sortedActivityOptions = [...ActivityOptions].sort((a, b) => { // Creating a copy to prevent mutating the original array as it is imported from a different file
         return a.label.localeCompare(b.label);
+    });
+
+    const isDesktopOrLaptop = useMediaQuery({
+        query: '(min-width: 1700px)'
     });
 
     // Scroll to the selected option when the dropdown is opened
@@ -122,26 +135,39 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     // Set the width of the dotted line dynamically
     useEffect(() => {
-        const menuHeader = document.querySelector('#timeuse-btw-year-menu-header') as HTMLElement;
-        const dropdownsContainer = document.querySelector('#timeuse-btw-year-dropdowns-container') as HTMLElement;
+        const menuHeader = document.querySelector('#timeuse-csa-year-menu-header') as HTMLElement;
+        const dropdownsContainer = document.querySelector('#timeuse-csa-year-dropdowns-container') as HTMLElement;
 
         if (menuHeader && dropdownsContainer) {
             const menuHeaderRight = menuHeader.getBoundingClientRect().left;
             const dropdownsLeft = dropdownsContainer.getBoundingClientRect().left;
-            const width = dropdownsLeft - menuHeaderRight - 290; //Slight offset to account for the title text and character diffences between the two headers
+            const width = dropdownsLeft - menuHeaderRight - 310; //Slight offset to account for the title text and character diffences between the two headers
 
             menuHeader.style.setProperty('--dotted-line-width', `${width}px`);
         }
     }, [activityValue]);
 
-    const activityDropdownOptions = [
-        { label: "All", value: "All", inHome: "All", outHome: "All" },
-        ...sortedActivityOptions.map(option => ({
-            label: option.label,
-            value: option.label,
-            inHome: option.inHome,
-            outHome: option.outHome
-        }))
+    useEffect(() => {
+        const activityDropdownOptions = [
+            ...sortedActivityOptions.map(option => ({
+                label: option.label,
+                value: option.label,
+                inHome: option.inHome,
+                outHome: option.outHome
+            })),
+            { label: "All", value: "All", inHome: "All", outHome: "All" }
+        ];
+
+        setActivityDropdownOptions(activityDropdownOptions);
+        setActivityValue(activityDropdownOptions[0]);
+    }, []);
+
+    // setActivityValue(activityDropdownOptions[0]);
+
+    const activityLocationDropdownOptions = [
+        { label: "All", value: "All" },
+        { label: "In home", value: "In-home" },
+        { label: "Out of home", value: "Out-home" }
     ];
 
     const customStyles = {
@@ -176,9 +202,9 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
     return (
         <div className="year-menu-container" style={{ padding: '5px 20px' }}>
-            <div className='menu-header' id='timeuse-btw-year-menu-header'>
-                <h4 className="fw-bold-menu">Between Year Analysis</h4>
-                <div className="dropdowns-container" id='timeuse-btw-year-dropdowns-container'>
+            <div className='menu-header' id='timeuse-csa-year-menu-header'>
+                <h4 className="fw-bold-menu">Cross Segment Analysis</h4>
+                <div className="dropdowns-container" id='timeuse-csa-year-dropdowns-container'>
                     <label className="segment-label">Start year:</label>
                     <Select
                         className="dropdown-select"
@@ -237,13 +263,49 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         menuPosition={'fixed'}
                         maxMenuHeight={200}
                     />
+                    {isDesktopOrLaptop && (
+                        <>
+                            <label className='segment-label'>Activity location:</label>
+                            <Select
+                                className='dropdown-select'
+                                classNamePrefix='dropdown-select'
+                                onMenuOpen={scrollToSelectedOption}
+                                value={activityLocationValue}
+                                onChange={handleActivityLocationChange}
+                                options={activityLocationDropdownOptions}
+                                isSearchable={false}
+                                styles={customStyles}
+                                components={{ DropdownIndicator: CustomDropdownIndicator }}
+                                menuPosition={'fixed'}
+                                maxMenuHeight={120}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
+            {!isDesktopOrLaptop && (
+                <div className="dropdowns-container" style={{ padding: '5px 0 0', justifyContent: "flex-end", alignItems: "center" }}>
+                    <label className='segment-label'>Activity location:</label>
+                    <Select
+                        className='dropdown-select'
+                        classNamePrefix='dropdown-select'
+                        onMenuOpen={scrollToSelectedOption}
+                        value={activityLocationValue}
+                        onChange={handleActivityLocationChange}
+                        options={activityLocationDropdownOptions}
+                        isSearchable={false}
+                        styles={customStyles}
+                        components={{ DropdownIndicator: CustomDropdownIndicator }}
+                        menuPosition={'fixed'}
+                        maxMenuHeight={120}
+                    />
+                </div>
+            )}
         </div>
     );
 };
 
-export default BtwYearMenu;
+export default CrossSegmentYearMenu;
 
 const CustomDropdownIndicator: React.FC<any> = () => (
     <div className="dropdown-indicator">

@@ -249,7 +249,7 @@ export function Content(): JSX.Element {
             Citations
           </h3>
           <p className="mt-4">
-            <strong>Note:</strong> When using any material from this website, please cite
+            <strong>Note:</strong> When using any material from this website, please consider citing
             the relevant papers listed below.
           </p>
           <ul>

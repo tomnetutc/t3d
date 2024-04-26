@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from "react-bootstrap/Button";
 import { Option } from './Types';
 import { groupedOptions } from '../utils/Helpers';
@@ -9,11 +9,19 @@ import Switch, { SwitchProps } from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
-const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState: (includeDecember: boolean) => void; filterOptionsForTelework?: boolean }> = ({ onOptionChange, toggleState, filterOptionsForTelework = false }) => {
+const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void; toggleState: (includeDecember: boolean) => void; filterOptionsForTelework?: boolean; updatedSelections: Option[][] }> = ({ onOptionChange, toggleState, filterOptionsForTelework = false, updatedSelections }) => {
     const [selectedOptions, setSelectedOptions] = useState<Array<Option | null>>([null, null, null]);
-    const [isAllSelected, setIsAllSelected] = useState(true);
+    const [submissions, setSubmissions] = useState<Array<Option[]>>([[]]);
     const [includeDecember, setIncludeDecember] = useState(true);
     const [isToggling, setIsToggling] = useState(false); // To track toggle cooldown
+
+    useEffect(() => {
+        onOptionChange(submissions);
+    }, [submissions]);
+
+    useEffect(() => {
+        setSubmissions(updatedSelections);
+    }, [updatedSelections]);
 
     const handleChange = (index: number, option: Option | null) => {
         const updatedSelectedOptions = [...selectedOptions];
@@ -26,24 +34,15 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
         groupedOptions.filter(group => group.label !== "Work arrangement" && group.label !== "Employment") :
         groupedOptions;
 
-    const handleAllSelectChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setIsAllSelected(event.target.checked);
-        if (event.target.checked) {
-            setSelectedOptions([null, null, null]);
-        }
-    };
-
     const handleReset = () => {
         setSelectedOptions([null, null, null]);
-        setIsAllSelected(true);
-        onOptionChange([] as Option[]);
     };
 
     const handleSubmit = () => {
-        if (isAllSelected || selectedOptions.some(option => option !== null)) {
-            onOptionChange(isAllSelected ? [] : selectedOptions.filter(Boolean) as Option[]);
-        } else {
-            alert("Please select an option or check 'All'");
+        if (selectedOptions.some(option => option !== null) && submissions.length < 5) {
+            setSubmissions(prev => [...prev, selectedOptions.filter(Boolean) as Option[]]);
+            setSelectedOptions([null, null, null]);
+            onOptionChange(submissions);
         }
     };
 
@@ -94,7 +93,7 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
     };
 
     const renderDropdown = (index: number) => (
-        <div className="dropdown-wrapper" onClick={() => isAllSelected && setIsAllSelected(false)}>
+        <div className="dropdown-wrapper">
             <Select
                 className="dropdown-select"
                 classNamePrefix="dropdown-select"
@@ -105,7 +104,7 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
                     label: group.label,
                     options: group.options.map(option => ({
                         ...option,
-                        isDisabled: isAllSelected || isOptionSelectedInOtherDropdown(option, index),
+                        isDisabled: isOptionSelectedInOtherDropdown(option, index),
                     })),
                 }))}
                 isSearchable={false}
@@ -116,7 +115,7 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
                 menuPortalTarget={document.body}
                 menuPosition={'fixed'}
                 maxMenuHeight={200}
-                isDisabled={isAllSelected}
+                isDisabled={submissions.length === 5}
                 placeholder="Select attribute"
             />
         </div>
@@ -177,15 +176,8 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
     return (
         <div className="menu-container">
             <div className="menu-header" style={{ position: 'relative' }}> {/* Ensure the parent is positioned relatively */}
-                <label className="segment-label">Select segment:</label>
-                <div className="all-select-checkbox">
-                    <input
-                        type="checkbox"
-                        checked={isAllSelected}
-                        onChange={handleAllSelectChange}
-                    />
-                    <span className="all-select-label">All</span>
-                </div>
+                <label className="segment-label" style={{ marginRight: "0.5rem" }}>Add a segment:</label>
+
                 <div className="dropdowns-container">
                     {selectedOptions.map((_, index) => (
                         <div key={index} className="dropdown-wrapper">
@@ -199,18 +191,18 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
                         variant='success'
                         onClick={handleSubmit}
                         className="submit-button"
-                        disabled={!isAllSelected && !selectedOptions.some(option => option !== null)}
+                        disabled={submissions.length == 5 || !selectedOptions.some(option => option !== null)}
                     >
-                        Apply
+                        Add
                     </Button>
                 </div>
                 <div className="button-container">
-                    <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px' }}>
+                    <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" disabled={submissions.length == 5 || !selectedOptions.some(option => option !== null)} style={{ marginLeft: '10px' }}>
                         Reset
                     </Button>
                 </div>
                 <Infobox style={{ display: 'flex', position: 'relative', padding: 12 }}>
-                    <p>Select up to three attributes to define a specific population segment. The default view shows data for ‘all’ individuals aged 15 and older.</p>
+                    <p>i7</p>
                 </Infobox>
 
                 <Box display="flex" justifyContent="flex-end" alignItems="center" style={{ marginLeft: 'auto' }}>
@@ -227,8 +219,8 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
     );
 
 };
+export default CrossSegmentMenu;
 
-export default Menu;
 
 const CustomDropdownIndicator: React.FC<any> = () => (
     <div className="dropdown-indicator">

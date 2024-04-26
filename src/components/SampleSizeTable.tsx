@@ -7,6 +7,7 @@ import { DSVRowString } from "d3";
 export default function SampleSizeTable({
     years,
     counts,
+    crossSegment = false,
 }: SampleSizeTableProps): JSX.Element {
     counts.map((count: any) => {
         const existingYears = count?.count?.map((ele: any) => {
@@ -21,7 +22,7 @@ export default function SampleSizeTable({
     });
 
     function downloadProfile(data: DSVRowString<string>[], index: number): void {
-        const fileName = index == 0 ? "Full Sample" : `Profile-${index}`;
+        const fileName = index == 0 ? "Full Sample" : `Segment-${index}`;
         exportFromJSON({ data, fileName, fields: [], exportType: "csv" });
     }
 
@@ -55,7 +56,7 @@ export default function SampleSizeTable({
                             <tr key={index}>
                                 {index === 0 ? (
                                     <td style={{ fontSize: "15px", display: "flex" }}>
-                                        <span>Selected segment</span>
+                                        <span>{crossSegment ? "All" : "Selected Segment"}</span>
                                         <button
                                             title="Download sample"
                                             className="btn profilebutton"
@@ -76,7 +77,7 @@ export default function SampleSizeTable({
                                     </td>
                                 ) : (
                                     <td style={{ fontSize: "15px" }}>
-                                        Profile {index}
+                                        Segment {index}
                                         <button
                                             title="Download sample"
                                             className="btn profilebutton"

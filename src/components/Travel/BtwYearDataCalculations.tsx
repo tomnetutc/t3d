@@ -2,6 +2,7 @@ import { active } from "d3";
 import { ChartDataProps, CountObj, DataRow, SampleSizeTableProps, TravelModeOption, TripPurposeOption } from "../Types"
 import { TravelModeOptions, TripPurposeOptions } from "../../utils/Helpers";
 import { Travel } from "../../pages/Travel";
+import { tripsColorsForBtwYears } from "../../Colors";
 
 
 export const prepareVerticalChartData = (filteredData: DataRow[], optionValues: (TripPurposeOption | TravelModeOption)[], activeOption: string, startYear: string, endYear: string): {
@@ -13,7 +14,7 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValues: 
     sampleSizeTableData: SampleSizeTableProps
 } => {
 
-    const tripsColors = ['#9D83A7', '#6DAFA0', '#f9a875', '#ebc823', '#657383'];
+
 
     // Filter data by startYear and endYear
     const filteredByYearData = filteredData.filter(dataRow => {
@@ -65,8 +66,8 @@ export const prepareVerticalChartData = (filteredData: DataRow[], optionValues: 
 
     optionValues.forEach((option, index) => {
 
-        const colorIndex = index % tripsColors.length;
-        const tripBackgroundColor = tripsColors[colorIndex];
+        const colorIndex = index % tripsColorsForBtwYears.length;
+        const tripBackgroundColor = tripsColorsForBtwYears[colorIndex];
 
         const tripData = labels.map(year => {
             const data = YearDataPerOption[option.label][year];

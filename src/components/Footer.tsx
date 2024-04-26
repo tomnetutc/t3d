@@ -25,7 +25,7 @@ export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page
             <div style={{ padding: '0 0px', textAlign: 'center' }}>
                 <hr className="hr-spec" />
                 <div style={{ padding: '3px 5px', textAlign: 'center' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div style={{
                             width: '60%',
                             paddingRight: '10px',

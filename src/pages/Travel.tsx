@@ -75,16 +75,15 @@ export function Travel(): JSX.Element {
                         setIsBtwYearLoading={setIsBtwYearLoading}
                     />
                 )}
-                <Footer
+            </div>
+            <Footer
                     //Unique for each page
                     flagCounterHref='https://www.flagcounter.me/details/ewo'
                     flagCounterSrc='https://www.flagcounter.me/ewo/'
                     docRefID="YUVbvahGYJyzJNon5CGl_travel"
                     page="hasVistedTravelPage"
                     expiry='travelExpiry'
-                    hideFlagAndTracking={false}
                 />
-            </div>
         </>
     );
 }

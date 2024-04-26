@@ -77,16 +77,15 @@ export function TimeUse(): JSX.Element {
                         setIsBtwYearLoading={setIsBtwYearLoading}
                     />
                 )}
-                <Footer
+            </div>
+            <Footer
                     //Unique for each page
                     flagCounterHref='https://www.flagcounter.me/details/ewn'
                     flagCounterSrc='https://www.flagcounter.me/ewn/'
                     docRefID="8KJIyEzI8atItLmnwiou_timeuse"
                     page="hasVistedTimeUsePage"
                     expiry='timeUseExpiry'
-                    hideFlagAndTracking={false}
                 />
-            </div>
         </>
     );
 }

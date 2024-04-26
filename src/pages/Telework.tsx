@@ -75,15 +75,14 @@ export function Telework(): JSX.Element {
                         setIsBtwYearLoading={setIsBtwYearLoading}
                     />
                 )}
-                <Footer
+            </div>
+            <Footer
                     flagCounterHref='https://www.flagcounter.me/details/ewp'
                     flagCounterSrc='https://www.flagcounter.me/ewp/'
                     docRefID="IdHegFzmqUaWsHomHVMe_telework"
                     page="hasVisitedTeleworkPage"
                     expiry='teleworkExpiry'
-                    hideFlagAndTracking={false}
                 />
-            </div>
         </>
     );
 }

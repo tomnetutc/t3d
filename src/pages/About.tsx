@@ -32,7 +32,6 @@ export function About(): JSX.Element {
                 docRefID=""
                 page=""
                 expiry=''
-                hideFlagAndTracking={true}
                 footerBackgroundcolor="white"
             />
         </>

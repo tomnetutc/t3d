@@ -178,6 +178,5 @@ export interface FooterProps {
     docRefID: string;
     page: string;
     expiry: string;
-    hideFlagAndTracking: boolean;
     footerBackgroundcolor?: string; // This is for Home and About page (white background)
 };

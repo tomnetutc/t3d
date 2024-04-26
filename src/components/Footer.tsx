@@ -8,10 +8,10 @@ import utAustinLogo from '../images/Logo/utaustin.png';
 import usDotLogo from '../images/Logo/us-dot.png';
 import tomnetLogo from '../images/Logo/tomnet.png';
 
-export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page, expiry, hideFlagAndTracking, footerBackgroundcolor = '' }: FooterProps): JSX.Element {
+export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page, expiry, footerBackgroundcolor = '' }: FooterProps): JSX.Element {
     useEffect(() => {
 
-        if (hideFlagAndTracking) {
+        if (docRefID=="") {
             hideFlagCounter();
         }
         else {
@@ -21,42 +21,91 @@ export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page
     }, []);
 
     return (
-        <div style={{ zIndex: 1000, position: 'relative' }}>
-            <div style={{ padding: '0 20px', textAlign: 'center', backgroundColor: footerBackgroundcolor }}>
+        <div style={{ zIndex: 1000, position: 'relative', backgroundColor: footerBackgroundcolor }}>
+            <div style={{ padding: '0 0px', textAlign: 'center' }}>
                 <hr className="hr-spec" />
-                <div className="d-flex justify-content-between">
-                    <span id="visit-count"></span>
-                    <span id="total-count"></span>
+                <div style={{ padding: '3px 5px', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{
+                            width: '60%',
+                            paddingRight: '10px',
+                            position: 'relative'
+                        }}>
+                            <span className="d-block mb-3 mt-3" style={{ fontWeight: "700" }}>
+                                Have any questions or feedback?
+                            </span>
+                            <span className="d-block mb-3">
+                                For any inquiries or feedback, please contact Dr. Irfan Batur at
+                                <a href="mailto:ibatur@asu.edu" className="ms-1">ibatur@asu.edu</a>
+                            </span>
+                            <div style={{
+                                position: 'absolute',
+                                top: '50%', // Starts at the middle
+                                right: 0,
+                                transform: 'translateY(-50%)', // Shifts it up by half its height to center
+                                height: '40px', // Smaller height as per your request
+                                width: '2px',
+                                backgroundColor: '#352c26',
+                                opacity: 0.2
+                            }}></div>
+                        </div>
+
+                        <div style={{
+                            width: '39%',
+                            paddingLeft: '20px'
+                        }}>
+                            <span className="d-block mb-3 mt-3" style={{ fontWeight: "700" }}>
+                                Visitor Statistics
+                            </span>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '20px',
+                                height: '20px',
+                            }}>
+                                <span id="visit-count">Visit Count</span>
+
+                                <div style={{
+                                    width: '1px',
+                                    height: '100%',
+                                    backgroundColor: '#352c26',
+                                    opacity: 0.2,
+                                }}></div>
+
+                                <span id="total-count">Total Count</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <span className="d-block mb-3 mt-3 fst-italic">
-                    For any inquiries or feedback, please contact Dr. Irfan Batur at
-                    <a href="mailto:ibatur@asu.edu" className="ms-1">ibatur@asu.edu</a>
-                </span>
+
+                <hr className="hr-spec"></hr>
 
                 <div className='d-block mt-2'>
-                    <span style={{ marginRight: "15px" }}>Sponsored by</span>
-                    <a href='https://www.transportation.gov/' target='_blank' rel='noreferrer'>
-                        <img src={usDotLogo} alt="USDOT Logo" style={{ width: "110px", marginRight: "15px" }} />
-                    </a>
+                    <div style={{ paddingTop: '20px' }}>
+                        <span style={{ marginRight: "15px", fontWeight: "700", paddingTop: '10px' }}>Our Sponsors</span>
+                    </div>
                 </div>
-                <span className='d-block mt-2'>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', flexWrap: 'wrap' }}>
+                    <a href='https://www.transportation.gov/' target='_blank' rel='noreferrer'>
+                        <img src={usDotLogo} alt="USDOT Logo" style={{ width: "220px", margin: "10px" }} />
+                    </a>
                     <a href="https://www.utexas.edu/" target='_blank' rel="noreferrer">
-                        <img src={utAustinLogo} alt="UT Austin Logo" style={{ width: "170px", marginRight: "15px" }} />
+                        <img src={utAustinLogo} alt="UT Austin Logo" style={{ width: "170px", margin: "10px" }} />
                     </a>
-
                     <a href="https://tbd.ctr.utexas.edu/" target='_blank' rel="noreferrer">
-                        <img src={tbdLogo} alt="UT CTR Logo" style={{ width: "210px", marginRight: "15px" }} />
+                        <img src={tbdLogo} alt="UT CTR Logo" style={{ width: "210px", margin: "10px" }} />
                     </a>
-
                     <a href='https://tomnet-utc.engineering.asu.edu/' target='_blank' rel='noreferrer'>
-                        <img src={tomnetLogo} alt="TOMNET Logo" style={{ width: "280px", marginRight: "15px" }} />
+                        <img src={tomnetLogo} alt="TOMNET Logo" style={{ width: "280px", margin: "10px" }} />
                     </a>
                     <a href="https://www.asu.edu/" target="_blank" rel="noreferrer">
-                        <img src={asuLogo} alt="ASU Logo" style={{ width: "200px" }} />
+                        <img src={asuLogo} alt="ASU Logo" style={{ width: "200px", margin: "10px" }} />
                     </a>
+                </div>
 
-                </span>
+                <hr className="hr-spec"></hr>
 
                 <span
                     style={{
@@ -68,11 +117,6 @@ export default function Footer({ flagCounterHref, flagCounterSrc, docRefID, page
                 >
                     &copy; 2024 TOMNET UTC
                 </span>
-                {!hideFlagAndTracking && (
-                    <a href={flagCounterHref}>
-                        <img src={flagCounterSrc} alt="Flag Counter" id="flag-counter-img" />
-                    </a>
-                )}
             </div>
         </div>
     );

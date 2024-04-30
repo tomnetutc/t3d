@@ -4,10 +4,10 @@ import { ChartDataProps, TravelModeOption, TripPurposeOption, weekOption, Option
 import { TravelDataProvider, TripPurposeOptions, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 import "../../css/travel.scss";
 import { prepareVerticalChartData } from "./BtwYearDataCalculations";
-import LineChart from "../LineChart/LineChart";
 import MaterialsTable from "../Table/Table";
 import Infobox from '../InfoBox/InfoBox';
 import SampleSizeTable from "../SampleSizeTable";
+import RechartsLineChart from "../LineChart/LineChart";
 
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsBtwYearLoading }) => {
@@ -72,7 +72,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleSt
                         <Infobox>
                             <p>Change in the number of trips per person from the start year to the end year, expressed in both absolute and percentage terms.</p>
                         </Infobox></div>
-                    <div className="box NumberTripsBtwYearChartComponent"><LineChart
+                    <div className="box NumberTripsBtwYearChartComponent"><RechartsLineChart
                         chartData={tripChartData}
                         title="Average number of trips per person"
                         showLegend={true}
@@ -89,7 +89,7 @@ export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleSt
                         <Infobox>
                             <p>Change in daily travel duration per person from the start year to the end year, expressed in both absolute and percentage terms.</p>
                         </Infobox></div>
-                    <div className="box DurationTripsBtwYearChartComponent"><LineChart
+                    <div className="box DurationTripsBtwYearChartComponent"><RechartsLineChart
                         chartData={durationChartData}
                         title="Average travel duration per person (min)"
                         showLegend={true}

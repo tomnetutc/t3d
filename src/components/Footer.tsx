@@ -103,7 +103,7 @@ export default function Footer({ docRefID, page, expiry, footerBackgroundcolor =
                 <span
                     style={{
                         fontSize: "15px",
-                        padding: "20px 0 5px 0",
+                        padding: "20px 0",
                         display: "block",
                         width: "100%",
                     }}

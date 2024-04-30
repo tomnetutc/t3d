@@ -115,7 +115,10 @@ export function Content(): JSX.Element {
             Segment attributes
           </h5>
           <p className="mt-4 mb-4">
-            Each page offers users the ability to tailor their analysis to specific market segments (subpopulation groups). Users can define these segments by choosing up to three attributes from a range of socio-demographic, household, travel, and other variables. Detailed explanations of these attributes are available in this <a href="#" target="_blank" download>
+            Each page offers users the ability to tailor their analysis to specific market segments (subpopulation groups). Users can define these segments by choosing up to three attributes from a range of socio-demographic, household, travel, and other variables.
+          </p>
+          <p className="mt-4">
+            Detailed explanations of these attributes are available in this <a href="data_dictionary.xlsx" target="_blank" download>
               data dictionary
             </a>.
           </p>

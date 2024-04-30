@@ -1,6 +1,6 @@
 import { ActivityOption, ChartDataProps, CountObj, DataRow, SampleSizeTableProps } from '../Types';
 import { calculateYearlyActivityAverages } from '../../utils/Helpers';
-import Colors from '../../Colors'
+import Colors from '../../Colors';
 
 export const prepareVerticalChartData = (filteredData: DataRow[], selectedActivity: ActivityOption, startYear: string, endYear: string): {
     chartData: ChartDataProps, averages: { inHomeAvg: number, outHomeAvg: number }, minYear: string, maxYear: string,

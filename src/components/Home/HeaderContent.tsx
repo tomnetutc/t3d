@@ -1,7 +1,7 @@
 import "../../App.css";
 import './HeaderContent.scss';
-import graphImage from '../../images/HomePage/Graph.png';
 import Logo from '../../images/HomePage/LogoSVG.svg';
+import graphImage from '../../images/HomePage/Graph.png';
 
 export function HeaderContent(): JSX.Element {
   return (
@@ -11,7 +11,7 @@ export function HeaderContent(): JSX.Element {
         <div className="HeaderContent">
           <div className="contentWrapper">
             <div className="logoContainer">
-              <img src={Logo} alt="Logo" className="logo"/>
+              <img src={Logo} alt="Logo" className="logo" />
             </div>
             <div className="textContainer">
               <span className="title">Time Use, Travel, and Telework Dashboard</span>
@@ -25,7 +25,7 @@ export function HeaderContent(): JSX.Element {
       </div>
       <div className="rightColumn">
         <div className="graphImageContainer">
-          <img src={graphImage} alt="Dashboard" className="graphImage"/>
+          <img src={graphImage} alt="Dashboard" className="graphImage" />
         </div>
       </div>
     </div>

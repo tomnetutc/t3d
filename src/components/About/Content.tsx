@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import "../../App.css";
 import { Col, Row } from "react-bootstrap";
 import ibatur from '../../images/Head Shots/ibatur.jpeg';
@@ -116,7 +115,7 @@ export function Content(): JSX.Element {
             Segment attributes
           </h5>
           <p className="mt-4 mb-4">
-            Each page offers users the ability to tailor their analysis to specific market segments (subpopulation groups). Users can define these segments by choosing up to three attributes from a range of socio-demographic, household, travel, and other variables. Detailed explanations of these attributes are available in this <a href="#" target="_blank">
+            Each page offers users the ability to tailor their analysis to specific market segments (subpopulation groups). Users can define these segments by choosing up to three attributes from a range of socio-demographic, household, travel, and other variables. Detailed explanations of these attributes are available in this <a href="#" target="_blank" download>
               data dictionary
             </a>.
           </p>
@@ -163,7 +162,7 @@ export function Content(): JSX.Element {
                 <figure className="figure">
                   <img src={ibatur} className="figure-img img-fluid rounded-circle" alt="Irfan Batur, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Irfan Batur, PhD</figcaption>
-                  <figcaption className="figure-caption">Principal Investigator</figcaption>
+                  <figcaption className="figure-caption">Role: Principal Investigator</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
                 </figure>
               </a>
@@ -173,7 +172,7 @@ export function Content(): JSX.Element {
                 <figure className="figure">
                   <img src={abhat} className="figure-img img-fluid rounded-circle" alt="Ashwath Bhat L" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }} >Ashwath Bhat L</figcaption>
-                  <figcaption className="figure-caption">Lead Developer</figcaption>
+                  <figcaption className="figure-caption">Role: Lead Developer</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
                 </figure>
               </a>
@@ -183,7 +182,7 @@ export function Content(): JSX.Element {
                 <figure className="figure">
                   <img src={rvarghese} className="figure-img img-fluid rounded-circle" alt="Roshan Varghese" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Roshan Varghese</figcaption>
-                  <figcaption className="figure-caption">Developer</figcaption>
+                  <figcaption className="figure-caption">Role: Developer</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
                 </figure>
               </a>
@@ -193,7 +192,7 @@ export function Content(): JSX.Element {
                 <figure className="figure">
                   <img src={rpendyala} className="figure-img img-fluid rounded-circle" alt="Ram M. Pendyala, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Ram M. Pendyala, PhD</figcaption>
-                  <figcaption className="figure-caption">Chief Science Officer</figcaption>
+                  <figcaption className="figure-caption">Role: Chief Science Officer</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
                 </figure>
               </a>
@@ -205,7 +204,7 @@ export function Content(): JSX.Element {
                 <figure className="figure">
                   <img src={cbhat} className="figure-img img-fluid rounded-circle" alt="Chandra R. Bhat, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Chandra R. Bhat, PhD</figcaption>
-                  <figcaption className="figure-caption">Co-Principal Investigator</figcaption>
+                  <figcaption className="figure-caption">Role: Co-Principal Investigator</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >The University of Texas at Austin</figcaption>
                 </figure>
               </a>
@@ -215,7 +214,7 @@ export function Content(): JSX.Element {
                 <figure className="figure">
                   <img src={plmokhtarian} className="figure-img img-fluid rounded-circle" alt="Patricia L. Mokhtarian, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Patricia L. Mokhtarian, PhD</figcaption>
-                  <figcaption className="figure-caption">Senior Advisor</figcaption>
+                  <figcaption className="figure-caption">Role: Senior Advisor</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Georgia Institute of Technology</figcaption>
                 </figure>
               </a>
@@ -225,7 +224,7 @@ export function Content(): JSX.Element {
                 <figure className="figure">
                   <img src={spolzin} className="figure-img img-fluid rounded-circle" alt="Steven E. Polzin, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Steven E. Polzin, PhD</figcaption>
-                  <figcaption className="figure-caption">Senior Advisor</figcaption>
+                  <figcaption className="figure-caption">Role: Senior Advisor</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >Arizona State University</figcaption>
                 </figure>
               </a>
@@ -235,7 +234,7 @@ export function Content(): JSX.Element {
                 <figure className="figure">
                   <img src={cchen} className="figure-img img-fluid rounded-circle" alt="Cynthia Chen, PhD" style={{ width: '150px', height: '150px' }} />
                   <figcaption className="figure-caption" style={{ fontWeight: 'bold' }}>Cynthia Chen, PhD</figcaption>
-                  <figcaption className="figure-caption">Senior Advisor</figcaption>
+                  <figcaption className="figure-caption">Role: Senior Advisor</figcaption>
                   <figcaption className="figure-caption" style={{ fontStyle: 'italic' }} >University of Washington</figcaption>
                 </figure>
               </a>

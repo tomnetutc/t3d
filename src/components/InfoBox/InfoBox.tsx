@@ -1,7 +1,8 @@
+import './InfoBox.scss';
 import React, { ReactNode } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
-import './InfoBox.scss';
+
 interface InfoBoxProps {
   children: ReactNode;
   style?: any;

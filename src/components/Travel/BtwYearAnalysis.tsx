@@ -6,8 +6,6 @@ import "../../css/travel.scss";
 import { prepareVerticalChartData } from "./BtwYearDataCalculations";
 import LineChart from "../LineChart/LineChart";
 import MaterialsTable from "../Table/Table";
-import RechartsAreaChart from "../AreaChart/AreaChart";
-import { set } from "lodash";
 import Infobox from '../InfoBox/InfoBox';
 import SampleSizeTable from "../SampleSizeTable";
 

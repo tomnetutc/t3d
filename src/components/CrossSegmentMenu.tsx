@@ -107,7 +107,7 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
                         isDisabled: isOptionSelectedInOtherDropdown(option, index),
                     })),
                 }))}
-                isSearchable={false}
+                isSearchable={true}
                 styles={customStyles}
                 components={{
                     DropdownIndicator: CustomDropdownIndicator,
@@ -171,7 +171,6 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
             }),
         },
     }));
-
 
     return (
         <div className="menu-container">

@@ -1,7 +1,7 @@
 import "./Chart.scss";
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { ChartDataProps } from '../Types';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
 const calculateMaxYAxis = (data: ChartDataProps, isTelework: boolean = false) => {
     if (data.datasets && data.datasets.length >= 2) {

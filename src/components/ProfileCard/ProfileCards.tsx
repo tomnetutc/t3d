@@ -1,6 +1,6 @@
+import "./ProfileCards.scss";
 import { Col } from "react-bootstrap";
 import { ProfileCardProps } from "../Types";
-import "./ProfileCards.scss";
 
 export default function ProfileCards({
     profileList,

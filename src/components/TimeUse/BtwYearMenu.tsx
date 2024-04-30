@@ -188,7 +188,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         onChange={handleStartYearChange}
                         options={startYearOptions}
                         isOptionDisabled={isStartYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -203,7 +203,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         onChange={handleEndYearChange}
                         options={yearOptions}
                         isOptionDisabled={isEndYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -217,7 +217,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         value={weekValue}
                         onChange={handleWeekChange}
                         options={WeekOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -231,7 +231,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         value={activityValue}
                         onChange={handleActivityChange}
                         options={activityDropdownOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStylesForActivityDropdown}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}

@@ -108,7 +108,7 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
                         isDisabled: isAllSelected || isOptionSelectedInOtherDropdown(option, index),
                     })),
                 }))}
-                isSearchable={false}
+                isSearchable={true}
                 styles={customStyles}
                 components={{
                     DropdownIndicator: CustomDropdownIndicator,

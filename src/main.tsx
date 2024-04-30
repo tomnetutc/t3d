@@ -1,7 +1,6 @@
-import React from 'react';
 import App from './App';
 import './App.css';
-import { HashRouter, BrowserRouter as Router } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css";
 

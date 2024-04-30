@@ -1,13 +1,12 @@
 import React from 'react';
-import { NavLink } from "react-router-dom";
-import { Navbar as NavbarBs, Nav } from "react-bootstrap";
-import timeTravelIcon from '../images/time-clockk.svg';
-import TimelapseIcon from '@mui/icons-material/Timelapse';
-import '../css/navbar.css';
 import Menu from './Menu';
+import '../css/navbar.css';
 import { NavbarProps } from './Types';
 import { Button } from 'react-bootstrap';
+import { NavLink } from "react-router-dom";
 import CrossSegmentMenu from './CrossSegmentMenu';
+import timeTravelIcon from '../images/time-clockk.svg';
+import { Navbar as NavbarBs, Nav } from "react-bootstrap";
 
 export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState, analysisType, onAnalysisTypeChange, isTeleworkPage = false, updatedCrossSegmentSelections }) => {
     const activeButtonStyle = {
@@ -50,9 +49,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState,
                     </NavLink>
                 </div>
             </Nav>
-            <div className='hr-content'>
+            {/* <div className='hr-content'>
                 <hr className='hr-spec' />
-            </div>
+            </div> */}
             <div className="title-and-buttons" style={{ padding: '10px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
                 <div className="analysis-buttons-container" style={{ display: 'flex' }}>
                     <Button

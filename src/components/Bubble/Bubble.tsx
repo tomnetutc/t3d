@@ -1,7 +1,6 @@
-import React from 'react';
 import './Bubble.scss';
+import Colors from '../../Colors';
 import { BubbleChartProps, BubbleComponentProps, FourBubbleChartProps } from '../Types';
-import Colors from '../../Colors'
 
 const BubbleComponent = ({ value, label, color, minData, maxData, minSize, maxSize }: BubbleComponentProps): JSX.Element => {
 

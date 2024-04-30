@@ -1,10 +1,9 @@
 import "../../App.css";
 import './HomeIcons.scss';
-import TimeUseLogo from '../../images/HomePage/TimeUseLogo.svg';
-import Travelogo from '../../images/HomePage/Travel logo.svg';
-import TeleworkLogo from '../../images/HomePage/Telework Logo.svg';
 import { Link } from 'react-router-dom';
-
+import Travelogo from '../../images/HomePage/Travel logo.svg';
+import TimeUseLogo from '../../images/HomePage/TimeUseLogo.svg';
+import TeleworkLogo from '../../images/HomePage/Telework Logo.svg';
 
 export function HomeIcons(): JSX.Element {
 

@@ -1,10 +1,10 @@
 import "./Donut.scss";
-import React, { useState, useEffect, useRef } from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement, CategoryScale, Tooltip, Legend, LegendItem, ChartEvent, TooltipItem, LegendElement } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { DonutProps } from "../Types";
 import { ChartOptions } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
+import React, { useState, useEffect } from 'react';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Chart, ArcElement, CategoryScale, Tooltip, Legend } from 'chart.js';
 
 
 Chart.register(ArcElement, CategoryScale, ChartDataLabels, Tooltip, Legend);

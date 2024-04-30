@@ -214,7 +214,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         onChange={handleStartYearChange}
                         options={startYearOptions}
                         isOptionDisabled={isStartYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -229,7 +229,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         onChange={handleEndYearChange}
                         options={yearOptions}
                         isOptionDisabled={isEndYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -243,7 +243,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         value={weekValue}
                         onChange={handleWeekChange}
                         options={WeekOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -257,7 +257,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         value={activityValue}
                         onChange={handleActivityChange}
                         options={activityDropdownOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStylesForActivityDropdown}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -273,7 +273,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                                 value={activityLocationValue}
                                 onChange={handleActivityLocationChange}
                                 options={activityLocationDropdownOptions}
-                                isSearchable={false}
+                                isSearchable={true}
                                 styles={customStyles}
                                 components={{ DropdownIndicator: CustomDropdownIndicator }}
                                 menuPosition={'fixed'}
@@ -293,7 +293,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         value={activityLocationValue}
                         onChange={handleActivityLocationChange}
                         options={activityLocationDropdownOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}

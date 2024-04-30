@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Select, { SingleValue } from 'react-select';
-import { weekOption, ActivityOption, YearOption, Option } from '../Types';
-import { WeekOptions, ActivityOptions, DataProvider, WorkArrangementOptions, EmploymentStatusOptions } from '../../utils/Helpers';
+import { weekOption, YearOption, Option } from '../Types';
+import { WeekOptions, DataProvider, EmploymentStatusOptions } from '../../utils/Helpers';
 import '../../css/menu.scss'
 import '../../App.css';
 import { max } from 'd3';
@@ -175,7 +175,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         onChange={handleStartYearChange}
                         options={startYearOptions}
                         isOptionDisabled={isStartYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -190,7 +190,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         onChange={handleEndYearChange}
                         options={yearOptions}
                         isOptionDisabled={isEndYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -204,7 +204,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         value={weekValue}
                         onChange={handleWeekChange}
                         options={WeekOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -218,7 +218,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
                         value={employmentValue}
                         onChange={handleEmploymentChange}
                         options={employmentDropdownOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}

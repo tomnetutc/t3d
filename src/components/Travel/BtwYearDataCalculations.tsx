@@ -1,7 +1,5 @@
-import { active } from "d3";
 import { ChartDataProps, CountObj, DataRow, SampleSizeTableProps, TravelModeOption, TripPurposeOption } from "../Types"
 import { TravelModeOptions, TripPurposeOptions } from "../../utils/Helpers";
-import { Travel } from "../../pages/Travel";
 import { tripsColorsForBtwYears } from "../../Colors";
 
 

@@ -1,12 +1,11 @@
-import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption, DayofWeekOption, YearOption } from "../components/Types";
 import { csv } from "d3";
-import { DSVRowString } from "d3-dsv";
-import firebase, { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore, doc, updateDoc, getDoc, increment } from 'firebase/firestore';
-import firebaseConfig from "../firebaseConfig";
 import { useEffect } from "react";
-
+import { DSVRowString } from "d3-dsv";
+import firebaseConfig from "../firebaseConfig";
+import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
+import { getFirestore, doc, updateDoc, getDoc, increment } from 'firebase/firestore';
+import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption, DayofWeekOption, YearOption } from "../components/Types";
 
 export const useDocumentTitle = (pageTitle: string) => {
     useEffect(() => {

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select, { SingleValue } from 'react-select';
-import { weekOption, ActivityOption, YearOption, Option } from '../Types';
-import { WeekOptions, ActivityOptions, DataProvider, WorkArrangementOptions, EmploymentStatusOptions } from '../../utils/Helpers';
+import { weekOption, YearOption, Option } from '../Types';
+import { WeekOptions, DataProvider, WorkArrangementOptions, EmploymentStatusOptions } from '../../utils/Helpers';
 import '../../css/menu.scss'
 import '../../App.css';
 import { max } from 'd3';
@@ -203,7 +203,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         onChange={handleStartYearChange}
                         options={startYearOptions}
                         isOptionDisabled={isStartYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -218,7 +218,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         onChange={handleEndYearChange}
                         options={yearOptions}
                         isOptionDisabled={isEndYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -232,7 +232,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         value={weekValue}
                         onChange={handleWeekChange}
                         options={WeekOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -246,7 +246,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         value={workArrangementValue}
                         onChange={handleWorkArragementChange}
                         options={workArrangementDropdownOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -262,7 +262,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                                 value={employmentValue}
                                 onChange={handleEmploymentChange}
                                 options={employmentDropdownOptions}
-                                isSearchable={false}
+                                isSearchable={true}
                                 styles={customStyles}
                                 components={{ DropdownIndicator: CustomDropdownIndicator }}
                                 menuPosition={'fixed'}
@@ -282,7 +282,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         value={employmentValue}
                         onChange={handleEmploymentChange}
                         options={employmentDropdownOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}

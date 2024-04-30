@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Select, { MultiValue, SingleValue } from 'react-select';
+import React, { useState, useEffect } from 'react';
+import Select, { SingleValue } from 'react-select';
 import { weekOption, TripPurposeOption, YearOption, TravelModeOption, AnalysisTypeOption } from '../Types';
 import { WeekOptions, TripPurposeOptions, DataProvider, TravelModeOptions } from '../../utils/Helpers';
 import '../../css/menu.scss';
@@ -243,7 +243,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         onChange={handleStartYearChange}
                         options={startYearOptions}
                         isOptionDisabled={isStartYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -258,7 +258,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         onChange={handleEndYearChange}
                         options={yearOptions}
                         isOptionDisabled={isEndYearOptionDisabled}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -272,7 +272,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         value={weekValue}
                         onChange={handleWeekChange}
                         options={WeekOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -285,7 +285,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                         value={optionValue as TripPurposeOption | TravelModeOption}
                         onChange={handleDropdownValueChange}
                         options={dropdownOptions}
-                        isSearchable={false}
+                        isSearchable={true}
                         styles={customStyles}
                         components={{ DropdownIndicator: CustomDropdownIndicator }}
                         menuPosition={'fixed'}
@@ -294,7 +294,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
 
                     {isDesktopOrLaptop && (
                         <>
-                            <label className='segment-label'>Analysis type:</label>
+                            <label className='segment-label'>Metric:</label>
                             <Select
                                 className='dropdown-select'
                                 classNamePrefix='dropdown-select'
@@ -302,7 +302,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                                 value={analysisType}
                                 onChange={handleActivityLocationChange}
                                 options={activityLocationDropdownOptions}
-                                isSearchable={false}
+                                isSearchable={true}
                                 styles={customStyles}
                                 components={{ DropdownIndicator: CustomDropdownIndicator }}
                                 menuPosition={'fixed'}
@@ -330,7 +330,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
 
                 {!isDesktopOrLaptop && (
                     <div className="dropdowns-container" style={{ padding: '5px 0 0', justifyContent: "flex-end", alignItems: "center" }}>
-                        <label className='segment-label'>Analysis type:</label>
+                        <label className='segment-label'>Metric:</label>
                         <Select
                             className='dropdown-select'
                             classNamePrefix='dropdown-select'
@@ -338,7 +338,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
                             value={analysisType}
                             onChange={handleActivityLocationChange}
                             options={activityLocationDropdownOptions}
-                            isSearchable={false}
+                            isSearchable={true}
                             styles={customStyles}
                             components={{ DropdownIndicator: CustomDropdownIndicator }}
                             menuPosition={'fixed'}

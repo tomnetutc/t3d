@@ -1,6 +1,6 @@
 import { ChartDataProps, DataRow } from '../Types';
 import { calculateActivityAverages } from '../../utils/Helpers';
-import Colors from '../../Colors'
+import Colors from '../../Colors';
 
 export const prepareChartData = (filteredData: DataRow[]): ChartDataProps => {
     const activityAverages = calculateActivityAverages(filteredData);

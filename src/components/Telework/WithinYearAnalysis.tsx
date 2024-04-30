@@ -9,7 +9,7 @@ import { segmentShare, segmentSize, updateSegmentShare, updateSegmentSize } from
 import { ChartData } from 'chart.js';
 import PieChart from '../PieChart/PieChart';
 import ChartComponent from '../Chart/Chart';
-import BubbleChart, { GridBubbleChart } from '../Bubble/Bubble';
+import { GridBubbleChart } from '../Bubble/Bubble';
 import Infobox from '../InfoBox/InfoBox';
 
 export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsWithinYearLoading }) => {

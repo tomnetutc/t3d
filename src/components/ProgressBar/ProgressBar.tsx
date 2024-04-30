@@ -1,8 +1,7 @@
 import React from 'react';
-import ProgressBar from 'react-bootstrap/ProgressBar'
-import { ProgressComponentProps } from '../Types';
 import './ProgressBar.scss';
-
+import { ProgressComponentProps } from '../Types';
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 const Progress: React.FC<ProgressComponentProps> = ({ title, data }) => {
     return (

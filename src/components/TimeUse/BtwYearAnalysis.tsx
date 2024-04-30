@@ -5,7 +5,7 @@ import BubbleChart from '../Bubble/Bubble';
 import VerticalStackedBarChart from '../VerticalChart/VerticalChart';
 import DualValueSegment from '../DualValueSegment/DualValueSegment';
 import { prepareVerticalChartData } from './BtwYearDataCalculations';
-import { ActivityOption, ChartDataProps, Option, SampleSizeTableProps, weekOption } from "../Types";
+import { ActivityOption, ChartDataProps, DataRow, Option, SampleSizeTableProps, weekOption } from "../Types";
 import { DataProvider, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 import Infobox from '../InfoBox/InfoBox';
 import SampleSizeTable from '../SampleSizeTable';
@@ -13,7 +13,7 @@ import SampleSizeTable from '../SampleSizeTable';
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsBtwYearLoading }) => {
 
-    const [btwYearFilteredData, setBtwYearFilteredData] = useState<any[]>([]);
+    const [btwYearFilteredData, setBtwYearFilteredData] = useState<DataRow[]>([]);
     const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, activity: ActivityOption, startYear: string, endYear: string }>({ week: WeekOptions[0], activity: { label: "All", inHome: "All", outHome: "All" }, startYear: "", endYear: "" });
     const [processedVerticalChartData, setProcessedVerticalChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [inHomeAverage, setInHomeAverage] = useState<number | null>(null);

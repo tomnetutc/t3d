@@ -5,7 +5,7 @@ import Donut from '../Donut/Donut';
 import Segment from '../Segment/Segment';
 import YearMenu from '../WithinYearMenu';
 import ChartComponent from '../Chart/Chart';
-import { ChartDataProps, Option, weekOption } from "../Types";
+import { ChartDataProps, DataRow, Option, weekOption } from "../Types";
 import { prepareChartData } from '../../components/TimeUse/ChartDataCalculations';
 import { segmentActivites, segmentShare, segmentSize, segmentTimeSpent } from "../../components/data";
 import { updateSegmentSize, updateSegmentShare, updateSegmentActivities, updateSegmentTimeSpent } from "../../components/data";
@@ -19,7 +19,7 @@ import Infobox from '../InfoBox/InfoBox';
 
 export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsWithinYearLoading }) => {
 
-    const [filteredData, setFilteredData] = useState<any[]>([]);
+    const [filteredData, setFilteredData] = useState<DataRow[]>([]);
     const [yearMenuSelections, setYearMenuSelections] = useState<{ week: weekOption, year: string }>({ week: WeekOptions[0], year: "" });
     const [timePovertyData, setTimePovertyData] = useState<ChartData<"doughnut", number[], unknown>>({ labels: [], datasets: [] });
     const [allocationData, setAllocationData] = useState<ChartData<"doughnut", number[], unknown>>({ labels: [], datasets: [] });

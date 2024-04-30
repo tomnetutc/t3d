@@ -1,8 +1,7 @@
 import React from 'react';
 import './DualValueSegment.scss';
+import Colors from '../../Colors';
 import { DualValueSegmentProps } from '../Types';
-import Colors from '../../Colors'
-
 
 const DualValueSegment: React.FC<DualValueSegmentProps> = ({ title, inHomeValue, outOfHomeValue, inHomeChangeValue, outOfHomeChangeValue }) => {
 

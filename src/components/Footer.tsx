@@ -76,25 +76,25 @@ export default function Footer({ docRefID, page, expiry, footerBackgroundcolor =
                 <hr className="hr-spec"></hr>
 
                 <div className='d-block mt-2'>
-                    <div style={{ paddingTop: '20px' }}>
-                        <span style={{ marginRight: "15px", fontWeight: "700", paddingTop: '10px' }}><h3>Our Sponsors</h3></span>
+                    <div style={{ paddingTop: '10px' }}>
+                        <span style={{ marginRight: "15px", fontWeight: "700" }}><h3>Our Sponsors</h3></span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 60px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0px 10px', flexWrap: 'wrap', marginTop: '-20px' }}>
                     <a href='https://www.transportation.gov/' target='_blank' rel='noreferrer'>
-                        <img src={usDotLogo} alt="USDOT Logo" style={{ width: "270px", marginRight: "15px" }} />
+                        <img src={usDotLogo} alt="USDOT Logo" style={{ width: "270px", margin: "10px" }} />
                     </a>
-                    <a href="https://www.utexas.edu/" target='_blank' rel="noreferrer">
-                        <img src={utAustinLogo} alt="UT Austin Logo" style={{ width: "180px", margin: "10px" }} />
+                    <a href="https://www.asu.edu/" target="_blank" rel="noreferrer">
+                        <img src={asuLogo} alt="ASU Logo" style={{ width: "210px", margin: "10px" }} />
+                    </a>
+                    <a href='https://tomnet-utc.engineering.asu.edu/' target='_blank' rel='noreferrer'>
+                        <img src={tomnetLogo} alt="TOMNET Logo" style={{ width: "310px", margin: "10px" }} />
                     </a>
                     <a href="https://tbd.ctr.utexas.edu/" target='_blank' rel="noreferrer">
                         <img src={tbdLogo} alt="UT CTR Logo" style={{ width: "220px", margin: "10px" }} />
                     </a>
-                    <a href='https://tomnet-utc.engineering.asu.edu/' target='_blank' rel='noreferrer'>
-                        <img src={tomnetLogo} alt="TOMNET Logo" style={{ width: "300px", margin: "10px" }} />
-                    </a>
-                    <a href="https://www.asu.edu/" target="_blank" rel="noreferrer">
-                        <img src={asuLogo} alt="ASU Logo" style={{ width: "210px", margin: "10px" }} />
+                    <a href="https://www.utexas.edu/" target='_blank' rel="noreferrer">
+                        <img src={utAustinLogo} alt="UT Austin Logo" style={{ width: "180px", margin: "10px" }} />
                     </a>
                 </div>
 
@@ -103,7 +103,7 @@ export default function Footer({ docRefID, page, expiry, footerBackgroundcolor =
                 <span
                     style={{
                         fontSize: "15px",
-                        padding: "30px",
+                        padding: "20px 0",
                         display: "block",
                         width: "100%",
                     }}

@@ -1,11 +1,12 @@
 import "../../App.css";
 import './HomeFeatures.scss';
+import { useNavigate } from 'react-router-dom';
 import FeaturesLogo from '../../images/HomePage/Features Logo.svg';
+import HowItWorksLogo from '../../images/HomePage/How It Works Logo.svg';
+import InstantInsightsLogo from '../../images/HomePage/Instant Insights Logo.svg';
 import FocusedAnalysisLogo from '../../images/HomePage/Focused Analysis Logo.svg';
 import UserDrivenCustomizationLogo from '../../images/HomePage/User-Driven Customization Logo.svg';
-import InstantInsightsLogo from '../../images/HomePage/Instant Insights Logo.svg';
-import HowItWorksLogo from '../../images/HomePage/How It Works Logo.svg';
-import { useNavigate } from 'react-router-dom';
+
 
 export function HomeFeatures(): JSX.Element {
     const navigate = useNavigate();
@@ -35,7 +36,8 @@ export function HomeFeatures(): JSX.Element {
                 <div className="FeatureHolder" style={{ backgroundColor: "white" }}>
                     <div className="FeatureText">
                         <span className="SpanHeader" style={{ paddingBottom: '15px' }}>User-Driven Customization</span>
-                        <span className="SpanContent">Select from a range of sociodemographic attributes to tailor analyses. Our dashboard enables users to conduct both within and between-year analyses for a comprehensive view of evolving trends for a selected population segment.</span>
+                        <span className="SpanContent">Select from a range of sociodemographic attributes to tailor your analyses. T3D allows users to conduct both within-year and between-year analyses, providing a comprehensive view of evolving trends for a selected population segment. It also facilitates comparisons among multiple user-defined segments across three topical areas.
+                        </span>
                     </div>
                     <div className="FeatureLogo">
                         <img src={UserDrivenCustomizationLogo} alt="UserDrivenCustomizationLogo" style={{ maxWidth: '100%', height: '140px' }} />
@@ -65,7 +67,7 @@ export function HomeFeatures(): JSX.Element {
                                     <strong>Explore the Insights:</strong> View instant updates on the dashboard as you refine your criteria.
                                 </li>
                                 <li className="mt-2">
-                                    <strong>Deepen Your Analysis:</strong> Utilize the within and between-year comparison features to understand how behaviors and trends change within a single year or evolve over multiple years, offering a complete picture of the dynamics at play.
+                                    <strong>Deepen Your Analysis:</strong> Utilize the within-year and between-year comparison features, along with cross-segment analysis, to understand how behaviors and trends change in a single year or evolve across multiple years, offering a complete picture of the dynamics at play.
                                 </li>
                             </ol>
 

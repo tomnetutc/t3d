@@ -1,11 +1,9 @@
 import "./PieChart.scss";
 import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { ChartData, ChartOptions } from 'chart.js';
 import { useEffect, useState } from "react";
-import { update } from "lodash";
-
+import { ChartData, ChartOptions } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -17,12 +15,12 @@ interface PieChartProps {
 
 const PieChart = ({ title, data }: PieChartProps): JSX.Element => {
 
-    const [aspectRatio, setAspectRatio] = useState((window.innerWidth <= 1800 ? 1.48 : 1.7));
+    const [aspectRatio, setAspectRatio] = useState((window.innerWidth <= 1800 ? 1.48 : 2));
     const [updateKey, setUpdateKey] = useState(0);
 
     useEffect(() => {
         const handleResize = () => {
-            setAspectRatio(window.innerWidth <= 1800 ? 1.48 : 1.7);
+            setAspectRatio(window.innerWidth <= 1800 ? 1.48 : 2);
             setUpdateKey(prevKey => prevKey + 1);
         };
         window.addEventListener('resize', handleResize);
@@ -40,7 +38,8 @@ const PieChart = ({ title, data }: PieChartProps): JSX.Element => {
             datalabels: {
                 color: '#FFF',
                 font: {
-                    weight: 'bold'
+                    weight: 'bold',
+                    size: 14
                 },
                 formatter: (value: number) => {
                     return value > 5 ? `${value}%` : null;

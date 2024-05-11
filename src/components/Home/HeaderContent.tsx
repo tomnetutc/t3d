@@ -2,8 +2,15 @@ import "../../App.css";
 import './HeaderContent.scss';
 import Logo from '../../images/HomePage/LogoSVG.svg';
 import graphImage from '../../images/HomePage/Graph.png';
+import YouTubeModal from './YouTubeModal';
+import React, { useState } from 'react';
+
 
 export function HeaderContent(): JSX.Element {
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
   return (
     <div className="mainContainer">
       <div className="leftColumn"></div> {/* Left section for future content or spacing */}
@@ -19,8 +26,9 @@ export function HeaderContent(): JSX.Element {
             </div>
           </div>
           <div className="demoButtonContainer">
-            <button className="demoButton">WATCH DEMO</button>
-          </div>
+              <button className="demoButton" onClick={openModal}>WATCH DEMO</button>
+              <YouTubeModal isOpen={modalOpen} onClose={closeModal} videoId="8khT9BQESjw" />
+            </div>
         </div>
       </div>
       <div className="rightColumn">

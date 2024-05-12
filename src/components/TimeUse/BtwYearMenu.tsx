@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { weekOption, ActivityOption, YearOption } from '../Types';
 import { WeekOptions, ActivityOptions, DataProvider } from '../../utils/Helpers';
@@ -245,7 +245,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
 
 export default BtwYearMenu;
 
-const CustomDropdownIndicator: React.FC<any> = () => (
+const CustomDropdownIndicator: React.FC<{}> = () => (
     <div className="dropdown-indicator">
         <svg width="15" height="15" fill="currentColor" className="bi bi-chevron-down" viewBox="-2 -2 21 21">
             <path

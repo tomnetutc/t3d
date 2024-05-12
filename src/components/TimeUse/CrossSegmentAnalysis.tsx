@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { mean } from 'd3';
 import "../../css/timeuse.scss";
 import SampleSizeTable from '../SampleSizeTable';
 import ProfileCards from '../ProfileCard/ProfileCards';
@@ -6,9 +7,18 @@ import RechartsLineChart from '../LineChart/LineChart';
 import CrossSegmentYearMenu from "./CrossSegmentYearMenu";
 import { timeUse_crossSegmentColors } from "../../Colors";
 import Infobox from '../InfoBox/InfoBox';
-import { ActivityLocationOption, ActivityOption, ChartDataProps, CountObj, DataRow, GroupedOptions, Option, SampleSizeTableProps, weekOption } from "../Types";
 import { ActivityOptions, CrossSegmentDataFilter, DataProvider, WeekOptions } from "../../utils/Helpers";
-import { mean } from 'd3';
+import {
+    ActivityLocationOption,
+    ActivityOption,
+    ChartDataProps,
+    CountObj,
+    DataRow,
+    GroupedOptions,
+    Option,
+    SampleSizeTableProps,
+    weekOption
+} from "../Types";
 
 export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], toggleState: boolean, setIsCrossSegmentLoading: (isLoading: boolean) => void, onProfileRemove: (index: number) => void }> = ({ menuSelectedOptions, toggleState, setIsCrossSegmentLoading, onProfileRemove }) => {
 

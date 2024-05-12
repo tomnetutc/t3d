@@ -235,7 +235,7 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
 
 export default Menu;
 
-const CustomDropdownIndicator: React.FC<any> = () => (
+const CustomDropdownIndicator: React.FC<{}> = () => (
     <div className="dropdown-indicator">
         <svg width="15" height="15" fill="currentColor" className="bi bi-chevron-down" viewBox="-2 -2 21 21">
             <path

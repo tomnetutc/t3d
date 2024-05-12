@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import BtwYearMenu from "./BtwYearMenu";
-import { ChartDataProps, TravelModeOption, TripPurposeOption, weekOption, Option, SampleSizeTableProps } from "../Types";
+import { ChartDataProps, TravelModeOption, TripPurposeOption, weekOption, Option, SampleSizeTableProps, DataRow } from "../Types";
 import { TravelDataProvider, TripPurposeOptions, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 import "../../css/travel.scss";
 import { prepareVerticalChartData } from "./BtwYearDataCalculations";
@@ -12,7 +12,7 @@ import RechartsLineChart from "../LineChart/LineChart";
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsBtwYearLoading }) => {
 
-    const [btwYearFilteredData, setBtwYearFilteredData] = useState<any[]>([]);
+    const [btwYearFilteredData, setBtwYearFilteredData] = useState<DataRow[]>([]);
     const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, optionValue: TripPurposeOption[] | TravelModeOption[], activeOption: string, startYear: string, endYear: string }>({ week: WeekOptions[0], optionValue: [TripPurposeOptions[9]], activeOption: "", startYear: "", endYear: "" });
     const [tripChartData, setTripChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [durationChartData, setDurationChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });

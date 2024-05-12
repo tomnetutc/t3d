@@ -5,7 +5,7 @@ import InfoIcon from '@mui/icons-material/Info';
 
 interface InfoBoxProps {
   children: ReactNode;
-  style?: any;
+  style?: React.CSSProperties;
 }
 
 const InfoBox: React.FC<InfoBoxProps> = ({ children, style }) => {

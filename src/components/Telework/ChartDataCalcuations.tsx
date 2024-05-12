@@ -1,8 +1,8 @@
 import { ChartData } from "chart.js";
-import { BubbleDataProps, ChartDataProps, Option, weekOption } from "../Types";
-import { DayofWeek, WeekOptions, WorkArrangementOptions } from "../../utils/Helpers";
+import { BubbleDataProps, ChartDataProps, DataRow, Option, weekOption } from "../Types";
+import { DayofWeek, WorkArrangementOptions } from "../../utils/Helpers";
 
-export const calculateWorkArrangementData = (filteredData: any[]): ChartData<"pie", number[], string | string[]> => {
+export const calculateWorkArrangementData = (filteredData: DataRow[]): ChartData<"pie", number[], string | string[]> => {
 
     // Filters out the "Non-worker" option
     const validOptions = WorkArrangementOptions.filter(option => option.id !== 'unemployed');
@@ -45,7 +45,7 @@ const calculateAverage = (data: any, field: string) => {
 };
 
 
-export const generateWorkDurationChartData = (filteredData: any[]): ChartDataProps => {
+export const generateWorkDurationChartData = (filteredData: DataRow[]): ChartDataProps => {
 
     // Excluding worker types that should not be included in this chart
     const validOptions = WorkArrangementOptions.filter(option => option.id !== 'unemployed' && option.id !== 'zero_work');
@@ -86,7 +86,7 @@ export const generateWorkDurationChartData = (filteredData: any[]): ChartDataPro
     return chartData;
 };
 
-export const calculateWorkArrangementByDayOfWeek = (filteredData: any[], week: weekOption): ChartDataProps => {
+export const calculateWorkArrangementByDayOfWeek = (filteredData: DataRow[], week: weekOption): ChartDataProps => {
 
     let relevantDays = DayofWeek;
     if (week.value !== "All") {
@@ -143,7 +143,7 @@ export const calculateWorkArrangementByDayOfWeek = (filteredData: any[], week: w
     return { labels, datasets };
 };
 
-export const calculateTimePoorWorkArrangementData = (filteredData: any[]): BubbleDataProps[] => {
+export const calculateTimePoorWorkArrangementData = (filteredData: DataRow[]): BubbleDataProps[] => {
 
     const validOptions = WorkArrangementOptions.filter(option => option.id !== 'unemployed');
     const colors = ['#CFCCCC', '#FBC6A0', '#F4DF3B', '#9AAABF'];

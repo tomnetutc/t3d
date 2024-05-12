@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import "../App.css";
-import { hideFlagCounter, tracking } from "../utils/Helpers";
+import { tracking } from "../utils/Helpers";
 import { FooterProps } from './Types';
 import asuLogo from '../images/Logo/asu.png';
 import tbdLogo from '../images/Logo/tbd.png';

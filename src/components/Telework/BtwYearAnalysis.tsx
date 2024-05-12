@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ChartDataProps, weekOption, Option, ProgressBarData, SampleSizeTableProps } from "../Types";
+import { ChartDataProps, weekOption, Option, ProgressBarData, SampleSizeTableProps, DataRow } from "../Types";
 import { DataProvider, WeekOptions, fetchAndFilterDataForBtwYearAnalysis } from "../../utils/Helpers";
 import BtwYearMenu from "./BtwYearMenu";
 import VerticalStackedBarChart from "../VerticalChart/VerticalChart";
@@ -10,7 +10,7 @@ import SampleSizeTable from "../SampleSizeTable";
 
 export const BtwYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsBtwYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsBtwYearLoading }) => {
 
-    const [btwYearFilteredData, setBtwYearFilteredData] = useState<any[]>([]);
+    const [btwYearFilteredData, setBtwYearFilteredData] = useState<DataRow[]>([]);
     const [btwYearSelections, setBtwYearSelections] = useState<{ week: weekOption, employment: Option, startYear: string, endYear: string }>({ week: WeekOptions[0], employment: { label: "All", value: "All", id: "All", val: "All", groupId: "All" }, startYear: "", endYear: "" });
     const [workersShare, setworkersShareChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [percentageChange, setPercentageChange] = useState<ProgressBarData[]>([]);

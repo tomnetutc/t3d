@@ -111,27 +111,26 @@ img.graphImage {
   padding: 10%;
 }
 
-/* Assuming styles are in HeaderContent.scss */
 
 .modal-overlay {
   position: absolute;
   width: 1000px;
   height: 600px;
-  background-color: rgba(0, 0, 0, 0.8);  /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.8); //Semi-transparent background
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;  /* High z-index to ensure it covers other content */
+  z-index: 1000; //High z-index to ensure it covers other content
 }
 
 .modal-content {
   background: white;
   border-radius: 4px;
-  width: 640px;  /* Width of the video */
-  height: 360px; /* Height of the video, maintaining a 16:9 aspect ratio */
-  display: flex; /* Ensures contents are flexibly laid out */
-  justify-content: center; /* Center contents horizontally */
-  align-items: center; /* Center contents vertically */
+  width: 640px; //Width of the video 
+  height: 360px; // Height of the video, maintaining a 16:9 aspect ratio
+  display: flex; // Ensures contents are flexibly laid out 
+  justify-content: center; // Center contents horizontally
+  align-items: center; // Center contents vertically
 }
 
 .close {

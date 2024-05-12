@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { ChartDataProps, weekOption, Option } from "../Types";
+import { ChartDataProps, weekOption, Option, DataRow } from "../Types";
 import YearMenu from "../WithinYearMenu";
 import { TravelDataProvider, WeekOptions, fetchAndFilterData, getTotalRowsForYear } from "../../utils/Helpers";
 import Segment from "../Segment/Segment";
-import { segmentShare, segmentSize, segmentTravel, segmentTrips, updateSegmentShare, updateSegmentSize, updateSegmentTravel, updateSegmentTrips } from "../data";
 import "../../css/travel.scss";
 import { ChartData } from "chart.js";
 import Donut from "../Donut/Donut";
@@ -11,12 +10,22 @@ import { prepareChartData } from "./ChartDataCalculations";
 import ChartComponent from "../Chart/Chart";
 import VerticalStackedBarChart from "../VerticalChart/VerticalChart";
 import Infobox from '../InfoBox/InfoBox';
-import Colors from '../../Colors'
+import Colors from '../../Colors';
+import {
+    segmentShare,
+    segmentSize,
+    segmentTravel,
+    segmentTrips,
+    updateSegmentShare,
+    updateSegmentSize,
+    updateSegmentTravel,
+    updateSegmentTrips
+} from "../data";
 
 
 export const WithinYearAnalysis: React.FC<{ menuSelectedOptions: Option[], toggleState: boolean, setIsWithinYearLoading: (isLoading: boolean) => void }> = ({ menuSelectedOptions, toggleState, setIsWithinYearLoading }) => {
 
-    const [filteredData, setFilteredData] = useState<any[]>([]);
+    const [filteredData, setFilteredData] = useState<DataRow[]>([]);
     const [yearMenuSelections, setYearMenuSelections] = useState<{ week: weekOption, year: string }>({ week: WeekOptions[0], year: "" });
     const [tripMakingData, setTripMakingData] = useState<ChartData<"doughnut", number[], unknown>>({ labels: [], datasets: [] });
     const [modeShareData, setModeShareData] = useState<ChartData<"doughnut", number[], unknown>>({ labels: [], datasets: [] });

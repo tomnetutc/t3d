@@ -1,6 +1,6 @@
 import "../../App.css";
 import { Col, Row } from "react-bootstrap";
-import ibatur from '../../images/Head Shots/ibatur.jpeg';
+import ibatur from '../../images/Head Shots/ibatur.jpg';
 import abhat from '../../images/Head Shots/abhat.jpg';
 import rvarghese from '../../images/Head Shots/rvarghese.jpeg';
 import rpendyala from '../../images/Head Shots/rpendyala.png';

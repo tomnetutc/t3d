@@ -1,7 +1,5 @@
-
 import { useCallback, useEffect, useState } from "react";
 import { CrossSegmentDataFilter, TravelDataProvider, TripPurposeOptions, WeekOptions } from "../../utils/Helpers";
-import { AnalysisTypeOption, ChartDataProps, CountObj, DataRow, GroupedOptions, Option, SampleSizeTableProps, TravelModeOption, TripPurposeOption, weekOption } from "../Types";
 import CrossSegmentYearMenu from "./CrossSegmentYearMenu";
 import ProfileCards from "../ProfileCard/ProfileCards";
 import SampleSizeTable from "../SampleSizeTable";
@@ -9,6 +7,18 @@ import Infobox from '../InfoBox/InfoBox';
 import { mean } from "d3";
 import { travel_crossSegmentColors } from "../../Colors";
 import RechartsLineChart from "../LineChart/LineChart";
+import {
+    AnalysisTypeOption,
+    ChartDataProps,
+    CountObj,
+    DataRow,
+    GroupedOptions,
+    Option,
+    SampleSizeTableProps,
+    TravelModeOption,
+    TripPurposeOption,
+    weekOption
+} from "../Types";
 
 
 export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], toggleState: boolean, setIsCrossSegmentLoading: (isLoading: boolean) => void, onProfileRemove: (index: number) => void }> = ({ menuSelectedOptions, toggleState, setIsCrossSegmentLoading, onProfileRemove }) => {

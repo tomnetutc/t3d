@@ -1,8 +1,5 @@
-// YouTubeModal.tsx
-
 import React from 'react';
-import './HeaderContent.scss';  // Assuming modal styles are here
-
+import './HeaderContent.scss';
 interface YouTubeModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -10,15 +7,15 @@ interface YouTubeModalProps {
 }
 
 const YouTubeModal: React.FC<YouTubeModalProps> = ({ isOpen, onClose, videoId }) => {
-  if (!isOpen) return null; 
+  if (!isOpen) return null;
 
   const videoSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=1&enablejsapi=1`;
 
   return (
     <div className="modal-overlay">
-        <span className="close" onClick={onClose}>&times;</span>
+      <span className="close" onClick={onClose}>&times;</span>
       <div className="modal-content">
-        <iframe 
+        <iframe
           src={videoSrc}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

@@ -22,13 +22,13 @@ export function HeaderContent(): JSX.Element {
             </div>
             <div className="textContainer">
               <span className="title">Time Use, Travel, and Telework Dashboard</span>
-              <span className="subtitle"><i>-- by TOMNET and TBD University Transportation Centers</i></span>
+              <span className="subtitle"><em>-- by TOMNET and TBD University Transportation Centers</em></span>
             </div>
           </div>
           <div className="demoButtonContainer">
-              <button className="demoButton" onClick={openModal}>WATCH DEMO</button>
-              <YouTubeModal isOpen={modalOpen} onClose={closeModal} videoId="8khT9BQESjw" />
-            </div>
+            <button className="demoButton" onClick={openModal}>WATCH DEMO</button>
+            <YouTubeModal isOpen={modalOpen} onClose={closeModal} videoId="8khT9BQESjw" />
+          </div>
         </div>
       </div>
       <div className="rightColumn">

@@ -5,11 +5,22 @@ import firebaseConfig from "../firebaseConfig";
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, updateDoc, getDoc, increment } from 'firebase/firestore';
-import { Option, GroupedOption, weekOption, GroupedOptions, DataRow, ActivityOption, YearlyActivityData, TripPurposeOption, TravelModeOption, DayofWeekOption, YearOption } from "../components/Types";
+import {
+    Option,
+    GroupedOption,
+    weekOption,
+    GroupedOptions,
+    DataRow,
+    ActivityOption,
+    YearlyActivityData,
+    TripPurposeOption,
+    TravelModeOption,
+    DayofWeekOption
+} from "../components/Types";
 
 export const useDocumentTitle = (pageTitle: string) => {
     useEffect(() => {
-        const initialTitle = 'T3 Data Dashboard';
+        const initialTitle = 'T3 Dashboard';
         document.title = `${initialTitle} | ${pageTitle}`;
     }, [pageTitle]);
 };

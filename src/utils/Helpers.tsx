@@ -500,6 +500,37 @@ export const HouseholdSize: Option[] = [
     },
 ];
 
+const CensusRegionOptions: Option[] = [
+    {
+        value: "Northeast",
+        label: "Northeast",
+        id: "region",
+        val: '1.0',
+        groupId: "CensusRegion",
+    },
+    {
+        value: "Midwest",
+        label: "Midwest",
+        id: "region",
+        val: '2.0',
+        groupId: "CensusRegion",
+    },
+    {
+        value: "South",
+        label: "South",
+        id: "region",
+        val: '3.0',
+        groupId: "CensusRegion",
+    },
+    {
+        value: "West",
+        label: "West",
+        id: "region",
+        val: '4.0',
+        groupId: "CensusRegion",
+    },
+];
+
 const LocationOptions: Option[] = [
     {
         value: "Urban",
@@ -654,6 +685,13 @@ export const groupedOptions: GroupedOption[] = [
         options: HouseholdSize.map((obj) => ({
             ...obj,
             groupName: "Household size",
+        })),
+    },
+    {
+        label: "Census region",
+        options: CensusRegionOptions.map((obj) => ({
+            ...obj,
+            groupName: "Census region",
         })),
     },
     {

@@ -500,35 +500,70 @@ export const HouseholdSize: Option[] = [
     },
 ];
 
-const CensusRegionOptions: Option[] = [
+const CensusDivisionOptions: Option[] = [
     {
-        value: "Northeast",
-        label: "Northeast",
-        id: "region",
+        value: "New England",
+        label: "New England",
+        id: "division",
         val: '1.0',
-        groupId: "CensusRegion",
+        groupId: "CensusDivision",
     },
     {
-        value: "Midwest",
-        label: "Midwest",
-        id: "region",
+        value: "Middle Atlantic",
+        label: "Middle Atlantic",
+        id: "division",
         val: '2.0',
-        groupId: "CensusRegion",
+        groupId: "CensusDivision",
     },
     {
-        value: "South",
-        label: "South",
-        id: "region",
+        value: "East North Central",
+        label: "East North Central",
+        id: "division",
         val: '3.0',
-        groupId: "CensusRegion",
+        groupId: "CensusDivision",
     },
     {
-        value: "West",
-        label: "West",
-        id: "region",
+        value: "West North Central",
+        label: "West North Central",
+        id: "division",
         val: '4.0',
-        groupId: "CensusRegion",
+        groupId: "CensusDivision",
     },
+    {
+        value: "South Atlantic",
+        label: "South Atlantic",
+        id: "division",
+        val: '5.0',
+        groupId: "CensusDivision",
+    },
+    {
+        value: "East South Central",
+        label: "East South Central",
+        id: "division",
+        val: '6.0',
+        groupId: "CensusDivision",
+    },
+    {
+        value: "West South Central",
+        label: "West South Central",
+        id: "division",
+        val: '7.0',
+        groupId: "CensusDivision",
+    },
+    {
+        value: "Mountain",
+        label: "Mountain",
+        id: "division",
+        val: '8.0',
+        groupId: "CensusDivision",
+    },
+    {
+        value: "Pacific",
+        label: "Pacific",
+        id: "division",
+        val: '9.0',
+        groupId: "CensusDivision",
+    }
 ];
 
 const LocationOptions: Option[] = [
@@ -688,10 +723,10 @@ export const groupedOptions: GroupedOption[] = [
         })),
     },
     {
-        label: "Census region",
-        options: CensusRegionOptions.map((obj) => ({
+        label: "Census division",
+        options: CensusDivisionOptions.map((obj) => ({
             ...obj,
-            groupName: "Census region",
+            groupName: "Census division",
         })),
     },
     {

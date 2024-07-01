@@ -14,7 +14,7 @@ const DualValueSegment: React.FC<DualValueSegmentProps> = ({ title, inHomeValue,
         const absoluteValue = Math.abs(value);
 
         // Determine the unit based on the absolute value
-        const unit = absoluteValue === 1 ? 'min' : 'mins';
+        const unit = absoluteValue === 1 ? 'min' : 'min';
 
         // Format the value with sign and unit
         return `${value >= 0 ? '+' : '-'}${absoluteValue.toFixed(1)} ${unit}`;

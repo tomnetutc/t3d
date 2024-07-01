@@ -36,7 +36,7 @@ export default function SampleSizeTable({
     return (
         <div style={boxStyle}>
             {/* <hr className="hr-spec" /> */}
-            <h5 className="text-center fw-bold">Sample sizes</h5>
+            <h5 className="text-center fw-bold">Sample Sizes</h5>
             <Table responsive>
                 <thead>
                     <tr>

@@ -113,31 +113,38 @@ img.graphImage {
 
 
 .modal-overlay {
-  position: absolute;
-  width: 1000px;
-  height: 600px;
-  background-color: rgba(0, 0, 0, 0.8); //Semi-transparent background
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000; //High z-index to ensure it covers other content
+  justify-content: center;
+  z-index: 1000;
 }
 
 .modal-content {
-  background: white;
-  border-radius: 4px;
-  width: 640px; //Width of the video 
-  height: 360px; // Height of the video, maintaining a 16:9 aspect ratio
-  display: flex; // Ensures contents are flexibly laid out 
-  justify-content: center; // Center contents horizontally
-  align-items: center; // Center contents vertically
+  position: relative;
+  background-color: #000;
+  width: 80%;
+  height: 80%;
+  max-width: 900px;
+  max-height: 500px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
 .close {
-  position: absolute;
-  top: 5px;
-  right: 20px;
-  font-size: 24px;
+  position: relative;
+  top: -240px;
+  font-size: 30px;
+  color: #fff;
   cursor: pointer;
-  color: white;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }

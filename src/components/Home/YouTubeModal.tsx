@@ -1,5 +1,5 @@
-import React from 'react';
-import './HeaderContent.scss';
+import React, { useEffect } from 'react';
+
 interface YouTubeModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -7,23 +7,39 @@ interface YouTubeModalProps {
 }
 
 const YouTubeModal: React.FC<YouTubeModalProps> = ({ isOpen, onClose, videoId }) => {
-  if (!isOpen) return null;
-
   const videoSrc = `https://www.youtube.com/embed/${videoId}?autoplay=1&cc_load_policy=1&enablejsapi=1`;
+
+  // Close modal if clicked outside the modal content
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const modalContent = document.querySelector('.modal-content');
+      if (modalContent && !modalContent.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
-      <span className="close" onClick={onClose}>&times;</span>
       <div className="modal-content">
         <iframe
           src={videoSrc}
-          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           title="YouTube video player"
-          style={{ width: '50%', height: '100%' }}
         ></iframe>
       </div>
+      <span className="close" onClick={onClose}>&times;</span>
     </div>
   );
 }

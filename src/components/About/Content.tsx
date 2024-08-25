@@ -122,7 +122,12 @@ export function Content(): JSX.Element {
               data dictionary
             </a>.
           </p>
-
+          <p>
+            <em>
+              More details about T3D may be found in this&nbsp;
+              <a href="https://www.youtube.com/watch?v=eDY0rcXDm2A&t=3876s" target="_blank" rel="noopener noreferrer">webinar</a>.
+            </em>
+          </p>
         </section>
 
 

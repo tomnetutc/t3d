@@ -2,6 +2,9 @@ import "./Chart.scss";
 import { Bar } from 'react-chartjs-2';
 import { ChartDataProps } from '../Types';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { useMemo } from 'react';
+import { chartDataToCSV, downloadCSV } from '../../utils/Helpers';
+import DownloadButton from '../DownloadButton';
 
 const calculateMaxYAxis = (data: ChartDataProps, isTelework: boolean = false) => {
     if (data.datasets && data.datasets.length >= 2) {
@@ -31,6 +34,27 @@ ChartJS.register(
 );
 
 const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string, isStacked: boolean, showLegend: boolean, isTelework?: boolean }> = ({ chartData, title, isStacked, showLegend, isTelework }) => {
+
+    const transformedData = useMemo(() => {
+        return chartData.labels.map((label, index) => {
+            const obj: { [key: string]: string | number } = {
+                name: Array.isArray(label) ? label.join(', ') : label,
+            };
+            chartData.datasets.forEach(dataset => {
+                obj[dataset.label] = dataset.data[index] ?? 0;
+            });
+            return obj;
+        });
+    }, [chartData]);
+
+    const handleDownload = () => {
+        const csv = chartDataToCSV(
+            transformedData,
+            chartData.datasets.map(ds => ({ label: ds.label }))
+        );
+        const filename = `${title.replace(/\s+/g, "_")}.csv`;
+        downloadCSV(csv, filename);
+    };
 
     const options = {
         indexAxis: 'y' as const,
@@ -97,7 +121,10 @@ const ChartComponent: React.FC<{ chartData: ChartDataProps, title: string, isSta
     return (
         <div className="chart-container" >
             <div className="title-container">
-                <span className="title">{title}</span>
+                <span className="title">
+                    {title}
+                    <DownloadButton onClick={handleDownload} />
+                </span>
             </div>
             <div className="chart">
                 <Bar data={chartData} options={options} />

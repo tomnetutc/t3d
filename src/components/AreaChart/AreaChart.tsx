@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
     XAxis,
     YAxis,
@@ -11,16 +11,29 @@ import {
 } from 'recharts';
 import "../LineChart/LineChart.scss";
 import { ChartDataProps } from '../Types';
+import { chartDataToCSV, downloadCSV } from '../../utils/Helpers';
+import DownloadButton from '../DownloadButton';
 
 const RechartsAreaChart: React.FC<{ chartData: ChartDataProps, title: string, showLegend: boolean }> = ({ chartData, title, showLegend }) => {
 
-    const transformedData = chartData.labels.map((label, index) => {
-        const obj: { [key: string]: string | number } = { name: Array.isArray(label) ? label.join(', ') : label };
-        chartData.datasets.forEach(dataset => {
-            obj[dataset.label] = dataset.data[index];
+    const transformedData = useMemo(() => {
+        return chartData.labels.map((label, index) => {
+            const obj: { [key: string]: string | number } = { name: Array.isArray(label) ? label.join(', ') : label };
+            chartData.datasets.forEach(dataset => {
+                obj[dataset.label] = dataset.data[index] ?? 0;
+            });
+            return obj;
         });
-        return obj;
-    });
+    }, [chartData]);
+
+    const handleDownload = () => {
+        const csv = chartDataToCSV(
+            transformedData,
+            chartData.datasets.map(ds => ({ label: ds.label }))
+        );
+        const filename = `${title.replace(/\s+/g, "_")}.csv`;
+        downloadCSV(csv, filename);
+    };
 
     const maxValue = Math.max(...chartData.datasets.flatMap(dataset => dataset.data));
     // const nextScaleValue = maxValue + (maxValue * 0.1); // Add 10% to the max value to make the chart look better
@@ -28,7 +41,10 @@ const RechartsAreaChart: React.FC<{ chartData: ChartDataProps, title: string, sh
     return (
         <div className="chart-container">
             <div className="title-container">
-                <span className="title">{title}</span>
+                <span className="title">
+                    {title}
+                    <DownloadButton onClick={handleDownload} />
+                </span>
             </div>
             <ResponsiveContainer width="100%" height="90%">
                 <AreaChart data={transformedData} margin={{ top: 10, right: 0, left: -15, bottom: -10 }}>

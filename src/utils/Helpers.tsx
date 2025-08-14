@@ -1037,6 +1037,51 @@ export function hideFlagCounter() {
     }
 }
 
+// CSV field quoting utility
+export function quoteField(field: string | number): string {
+    const str = String(field);
+    if (str.includes('"')) {
+        return `"${str.replace(/"/g, '""')}"`;
+    }
+    if (str.includes(",") || str.includes("\n")) {
+        return `"${str}"`;
+    }
+    return str;
+}
+
+// CSV generation function for chart data
+export function chartDataToCSV(
+    data: { [key: string]: string | number }[],
+    datasets: { label: string }[]
+): string {
+    const header = ["Name", ...datasets.map((ds) => ds.label)]
+        .map(quoteField)
+        .join(",");
+
+    const rows = data.map((entry) => {
+        const row = [
+            entry.name,
+            ...datasets.map((ds) => entry[ds.label] || 0),
+        ].map(quoteField);
+        return row.join(",");
+    });
+
+    return [header, ...rows].join("\r\n");
+}
+
+// Download handler function
+export function downloadCSV(csv: string, filename: string) {
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const analytics = getAnalytics(app);

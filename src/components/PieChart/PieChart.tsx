@@ -1,9 +1,11 @@
 import "./PieChart.scss";
 import { Pie } from 'react-chartjs-2';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ChartData, ChartOptions } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { chartDataToCSV, downloadCSV } from '../../utils/Helpers';
+import DownloadButton from '../DownloadButton';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -17,6 +19,28 @@ const PieChart = ({ title, data }: PieChartProps): JSX.Element => {
 
     const [aspectRatio, setAspectRatio] = useState((window.innerWidth <= 1800 ? 1.48 : 2));
     const [updateKey, setUpdateKey] = useState(0);
+
+    const transformedData = useMemo(() => {
+        if (!data.labels || !data.datasets || !data.datasets[0] || !data.datasets[0].data) {
+            return [];
+        }
+        
+        return data.labels.map((label, index) => ({
+            name: Array.isArray(label) ? label.join(', ') : label,
+            value: data.datasets[0].data[index] ?? 0
+        }));
+    }, [data]);
+
+    const handleDownload = () => {
+        if (transformedData.length === 0) return;
+        
+        const csv = chartDataToCSV(
+            transformedData.map(item => ({ name: item.name, [title]: item.value })),
+            [{ label: title }]
+        );
+        const filename = `${title.replace(/\s+/g, "_")}.csv`;
+        downloadCSV(csv, filename);
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -70,7 +94,10 @@ const PieChart = ({ title, data }: PieChartProps): JSX.Element => {
     return (
         <div className="pie-chart">
             <div className="top">
-                <span className="title">{title}</span>
+                <span className="title">
+                    {title}
+                    <DownloadButton onClick={handleDownload} />
+                </span>
             </div>
             <div className="bottom">
                 <div className="chart-container">

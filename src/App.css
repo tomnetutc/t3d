@@ -83,3 +83,38 @@
   visibility: hidden;
   pointer-events: none;
 }
+
+/* Download Button Styles */
+.download-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  margin-left: 8px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.download-btn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.download-btn:hover {
+  color: #000;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.download-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.download-btn:active {
+  transform: translateY(1px);
+}

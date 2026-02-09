@@ -4,6 +4,10 @@
     background-color: white;
 }
 
+.my-navbar .navbar-nav {
+    align-items: center;
+}
+
 .navbar-brand {
     display: flex;
     align-items: center;

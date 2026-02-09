@@ -104,6 +104,8 @@ export interface NavbarProps {
     onAnalysisTypeChange: (type: 'withinYear' | 'betweenYears' | 'crossSegment') => void;
     isTeleworkPage?: boolean;
     updatedCrossSegmentSelections: Option[][];
+    hideAnalysisButtons?: boolean;
+    hideMenu?: boolean;
 };
 
 export interface CrossSegmentNavbarProps {

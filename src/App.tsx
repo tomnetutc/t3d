@@ -1,6 +1,7 @@
 import { TimeUse } from "./pages/TimeUse";
 import { Travel } from "./pages/Travel";
 import { Telework } from "./pages/Telework";
+import { SampleComposition } from "./pages/SampleComposition";
 import { Routes, Route, useLocation } from "react-router-dom";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
@@ -27,6 +28,7 @@ function App(): JSX.Element {
         <Route path="/timeuse" element={<TimeUse />} />
         <Route path="/travel" element={<Travel />} />
         <Route path="/telework" element={<Telework />} />
+        <Route path="/sample-composition" element={<SampleComposition />} />
       </Routes>
     </>
   );

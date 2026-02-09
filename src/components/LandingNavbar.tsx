@@ -30,6 +30,9 @@ export function LandingNavbar(): JSX.Element {
                             <NavLink to="/telework" className="nav-link">
                                 Telework
                             </NavLink>
+                            <NavLink to="/sample-composition" className="nav-link">
+                                Sample Composition
+                            </NavLink>
                         </Nav>
                     </NavbarBs.Collapse>
                 </Nav>

@@ -19,6 +19,16 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
         const updatedSelectedOptions = [...selectedOptions];
         updatedSelectedOptions[index] = option;
         setSelectedOptions(updatedSelectedOptions);
+        
+        // Auto-apply: immediately call onOptionChange when dropdown changes
+        const hasSelectedOptions = updatedSelectedOptions.some(opt => opt !== null);
+        if (hasSelectedOptions) {
+            onOptionChange(updatedSelectedOptions.filter(Boolean) as Option[]);
+        } else {
+            // If all options are cleared, reset to "All"
+            setIsAllSelected(true);
+            onOptionChange([] as Option[]);
+        }
     };
 
     // Filter out the "Work arrangement" and "Employment" options for the Telework Menu component
@@ -30,6 +40,7 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
         setIsAllSelected(event.target.checked);
         if (event.target.checked) {
             setSelectedOptions([null, null, null]);
+            onOptionChange([] as Option[]); // Auto-apply: reset to "All"
         }
     };
 
@@ -37,14 +48,6 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
         setSelectedOptions([null, null, null]);
         setIsAllSelected(true);
         onOptionChange([] as Option[]);
-    };
-
-    const handleSubmit = () => {
-        if (isAllSelected || selectedOptions.some(option => option !== null)) {
-            onOptionChange(isAllSelected ? [] : selectedOptions.filter(Boolean) as Option[]);
-        } else {
-            alert("Please select an option or check 'All'");
-        }
     };
 
     const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -194,18 +197,14 @@ const Menu: React.FC<{ onOptionChange: (options: Option[]) => void; toggleState:
                     ))}
                 </div>
                 <div className="button-container">
-                    <Button
-                        size="sm"
-                        variant='success'
-                        onClick={handleSubmit}
-                        className="submit-button"
-                        disabled={!isAllSelected && !selectedOptions.some(option => option !== null)}
+                    <Button 
+                        size="sm" 
+                        onClick={handleReset} 
+                        className="reset-button" 
+                        variant="danger" 
+                        style={{ marginLeft: '10px' }}
+                        disabled={isAllSelected && !selectedOptions.some(option => option !== null)}
                     >
-                        Apply
-                    </Button>
-                </div>
-                <div className="button-container">
-                    <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" style={{ marginLeft: '10px' }}>
                         Reset
                     </Button>
                 </div>

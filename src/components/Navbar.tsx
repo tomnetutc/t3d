@@ -8,7 +8,7 @@ import CrossSegmentMenu from './CrossSegmentMenu';
 import timeTravelIcon from '../images/time-clockk.svg';
 import { Navbar as NavbarBs, Nav } from "react-bootstrap";
 
-export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState, analysisType, onAnalysisTypeChange, isTeleworkPage = false, updatedCrossSegmentSelections }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState, analysisType, onAnalysisTypeChange, isTeleworkPage = false, updatedCrossSegmentSelections, hideAnalysisButtons = false, hideMenu = false }) => {
     const activeButtonStyle = {
         backgroundColor: '#C4F5B0',
         color: 'black',
@@ -47,51 +47,62 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState,
                     <NavLink to="/telework" className="nav-link">
                         Telework
                     </NavLink>
+                    <NavLink to="/sample-composition" className="nav-link">
+                        Sample Composition
+                    </NavLink>
                 </div>
             </Nav>
-            {/* <div className='hr-content'>
-                <hr className='hr-spec' />
-            </div> */}
-            <div className="title-and-buttons" style={{ padding: '10px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
-                <div className="analysis-buttons-container" style={{ display: 'flex' }}>
-                    <Button
-                        size="sm"
-                        onClick={() => onAnalysisTypeChange('withinYear')}
-                        style={analysisType === "withinYear" ? activeButtonStyle : defaultButtonStyle}>
-                        Within Year Analysis
-                    </Button>
+            {!hideAnalysisButtons && (
+                <>
+                    {/* <div className='hr-content'>
+                        <hr className='hr-spec' />
+                    </div> */}
+                    <div className="title-and-buttons" style={{ padding: '10px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+                        <div className="analysis-buttons-container" style={{ display: 'flex' }}>
+                            <Button
+                                size="sm"
+                                onClick={() => onAnalysisTypeChange('withinYear')}
+                                style={analysisType === "withinYear" ? activeButtonStyle : defaultButtonStyle}>
+                                Within Year Analysis
+                            </Button>
 
-                    <Button
-                        size="sm"
-                        onClick={() => onAnalysisTypeChange('betweenYears')}
-                        style={analysisType === "betweenYears" ? activeButtonStyle : defaultButtonStyle}>
-                        Between Year Analysis
-                    </Button>
+                            <Button
+                                size="sm"
+                                onClick={() => onAnalysisTypeChange('betweenYears')}
+                                style={analysisType === "betweenYears" ? activeButtonStyle : defaultButtonStyle}>
+                                Between Year Analysis
+                            </Button>
 
-                    <Button
-                        size="sm"
-                        onClick={() => onAnalysisTypeChange('crossSegment')}
-                        style={analysisType === "crossSegment" ? activeButtonStyle : defaultButtonStyle}>
-                        Cross Segment Analysis
-                    </Button>
-                </div>
-            </div>
-            <div className='hr-content'>
-                <hr className='hr-spec' />
-            </div>
-            {analysisType === "crossSegment" ? (
-                <CrossSegmentMenu
-                    onOptionChange={onMenuOptionChange}
-                    toggleState={toggleState}
-                    filterOptionsForTelework={isTeleworkPage}
-                    updatedSelections={updatedCrossSegmentSelections}
-                />
-            ) : (
-                <Menu
-                    onOptionChange={onMenuOptionChange}
-                    toggleState={toggleState}
-                    filterOptionsForTelework={isTeleworkPage}
-                />
+                            <Button
+                                size="sm"
+                                onClick={() => onAnalysisTypeChange('crossSegment')}
+                                style={analysisType === "crossSegment" ? activeButtonStyle : defaultButtonStyle}>
+                                Cross Segment Analysis
+                            </Button>
+                        </div>
+                    </div>
+                    <div className='hr-content'>
+                        <hr className='hr-spec' />
+                    </div>
+                </>
+            )}
+            {!hideMenu && (
+                <>
+                    {analysisType === "crossSegment" ? (
+                        <CrossSegmentMenu
+                            onOptionChange={onMenuOptionChange}
+                            toggleState={toggleState}
+                            filterOptionsForTelework={isTeleworkPage}
+                            updatedSelections={updatedCrossSegmentSelections}
+                        />
+                    ) : (
+                        <Menu
+                            onOptionChange={onMenuOptionChange}
+                            toggleState={toggleState}
+                            filterOptionsForTelework={isTeleworkPage}
+                        />
+                    )}
+                </>
             )}
         </NavbarBs>
     );

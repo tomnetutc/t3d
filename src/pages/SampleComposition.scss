@@ -6,42 +6,37 @@
         padding: 20px 20px 30px 20px;
     }
 
-    // Modern page header - sized to match navbar with elegant styling
+    // Modern page header - aligned with content
     .sc-page-header {
         margin-bottom: 24px;
         margin-top: 0;
         position: relative;
         
         .sc-page-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 6px;
-            letter-spacing: -0.3px;
+            // Match "Within Year Analysis" heading style (h4 with fw-bold-menu)
+            font-size: 1.5rem; // Bootstrap h4 default (24px)
+            font-weight: bold; // fw-bold-menu uses bold (700)
+            color: #000;
+            margin-bottom: 0;
+            margin-right: auto;
             position: relative;
-            padding-left: 20px;
-            display: inline-block;
+            padding-left: 0;
+            display: block;
             
+            // Remove the gradient bar to match other pages
             &::before {
-                content: '';
-                position: absolute;
-                left: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 4px;
-                height: 28px;
-                background: linear-gradient(180deg, #9D83A7 0%, #6DAFA0 100%);
-                border-radius: 2px;
+                display: none;
             }
         }
 
         .sc-page-subtitle {
-            font-size: 14px;
-            color: #6b7280;
+            font-size: 13.5px;
+            color: #6c757d;
             font-weight: 400;
             line-height: 1.5;
-            margin: 0;
-            padding-left: 20px;
+            margin: 8px 0 0 0;
+            padding-left: 0;
+            font-family: inherit; // Inherit Bootstrap's default font stack for consistency
         }
     }
 
@@ -54,11 +49,11 @@
 
             .sc-section-title {
                 font-size: 16px;
-                font-weight: 600;
+                font-weight: 500;
                 color: #333;
                 margin: 0;
-                padding-bottom: 8px;
-                border-bottom: 2px solid #e0e0e0;
+                padding-bottom: 2px;
+                border-bottom: 1px solid #6e6a6a;
             }
         }
     }
@@ -84,9 +79,9 @@
             gap: 16px;
 
             .sc-control-label {
-                font-weight: 600;
-                font-size: 14px;
-                color: #374151;
+                font-weight: 500;
+                font-size: 13.5px;
+                color: #000;
                 min-width: 140px;
             }
 
@@ -94,14 +89,14 @@
                 flex: 1;
                 max-width: 320px;
                 padding: 10px 16px;
-                border: 2px solid #e5e7eb;
-                border-radius: 8px;
-                font-size: 14px;
+                border: 1px solid #ced4da;
+                border-radius: 0.29rem;
+                font-size: 13.5px;
                 background-color: white;
                 cursor: pointer;
                 transition: all 0.2s ease;
-                font-weight: 500;
-                color: #1f2937;
+                font-weight: 400;
+                color: #000;
 
                 &:hover {
                     border-color: #d1d5db;
@@ -133,10 +128,10 @@
         }
 
         .sc-chart-title {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 500;
             color: #333;
-            margin-bottom: 16px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -167,10 +162,10 @@
         }
 
         .sc-table-title {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
             color: #333;
-            margin-bottom: 12px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -184,7 +179,7 @@
         width: 100%;
         border-collapse: separate;
         border-spacing: 0;
-        font-size: 14px;
+        font-size: 13.5px;
 
         thead {
             background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
@@ -192,53 +187,53 @@
             th {
                 padding: 16px 20px;
                 text-align: left;
-                font-weight: 600;
-                color: #374151;
+                font-weight: 500;
+                color: #000;
                 border-bottom: 2px solid #e5e7eb;
-                font-size: 13px;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
+                font-size: 13.5px;
+                text-transform: none;
+                letter-spacing: 0;
             }
         }
 
         tbody {
             tr {
-                transition: all 0.2s ease;
+                transition: background-color 0.2s ease;
+                background-color: transparent;
 
                 &:hover {
-                    background-color: #f9fafb;
-                    transform: scale(1.01);
+                    background-color: #f8f9fa;
                 }
 
                 // Add visual separation before each attribute group (except the first one)
                 &.sc-attribute-group-start:not(:first-child) {
                     td {
-                        padding-top: 24px;
-                        border-top: 2px solid #e5e7eb;
+                        border-top: 1px solid #e5e7eb;
                     }
 
                     td.sc-attribute-header {
-                        border-top: 2px solid #e5e7eb;
+                        border-top: 1px solid #e5e7eb;
                     }
                 }
 
                 // Add visual separation after the last row of each attribute group (except the last group)
                 &.sc-attribute-group-end:not(:last-child) {
                     td {
-                        padding-bottom: 20px;
-                        border-bottom: 2px solid #e5e7eb;
+                        border-bottom: 1px solid #e5e7eb;
                     }
                 }
 
                 td {
                     padding: 14px 20px;
                     border-bottom: 1px solid #f3f4f6;
-                    color: #4b5563;
+                    color: #000;
+                    font-size: 13.5px;
+                    transition: background-color 0.2s ease;
 
                     &.sc-attribute-header {
-                        font-weight: 600;
+                        font-weight: 500;
                         background-color: #f9fafb;
-                        color: #1f2937;
+                        color: #000;
                         border-right: 2px solid #e5e7eb;
                     }
                 }
@@ -257,7 +252,7 @@
         }
 
         .sc-page-header .sc-page-title {
-            font-size: 24px;
+            font-size: 1.5rem;
         }
 
         .sc-control-card .sc-control-field {
@@ -284,3 +279,4 @@
         }
     }
 }
+

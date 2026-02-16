@@ -144,7 +144,7 @@ export function Content(): JSX.Element {
             ). It collects detailed activity and time use data from randomly selected individuals (15+) who are interviewed only once for their time-use diary on the previous day (4 am to 4 am), resulting in nationally representative estimates of how people spend their time. The survey, which is sponsored by the Bureau of Labor Statistics (BLS), has been conducted by the U.S. Census Bureau every year since 2003 and consists of a sample of approximately 10,000 respondents per year.
           </p>
           <p className="mt-4">
-            Respondents in ATUS provide information on the time, location, and type of activities pursued, as well as who they were with during each activity, when reporting their time use data. Furthermore, respondents report their socio-demographic information, such as gender, race, age, educational attainment, occupation, income, marital status, and the presence of children in the household.
+          Respondents in ATUS provide information on the time, location, and type of activities pursued, as well as who they were with during each activity, when reporting their time use data. Furthermore, respondents report their socio-demographic information, such as gender, race, age, educational attainment, occupation, income, marital status, and the presence of children in the household. Additional details on the survey sample and respondent characteristics are available on the Survey Sample page.
           </p>
           <p className="mt-4">
             For more information on ATUS, please visit this

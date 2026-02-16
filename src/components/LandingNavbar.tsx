@@ -30,8 +30,9 @@ export function LandingNavbar(): JSX.Element {
                             <NavLink to="/telework" className="nav-link">
                                 Telework
                             </NavLink>
+                            <span className="nav-link disabled" style={{ cursor: 'default' }}>|</span>
                             <NavLink to="/sample-composition" className="nav-link">
-                                Sample Composition
+                                Survey Sample
                             </NavLink>
                         </Nav>
                     </NavbarBs.Collapse>

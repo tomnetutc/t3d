@@ -1,4 +1,12 @@
-import Colors from '../../Colors';
+// Consistent color palette for Survey Sample page charts
+const SURVEY_SAMPLE_PALETTE = [
+    '#507DBC', // Blue
+    '#F9A875', // Soft Orange
+    '#6DAFA0', // Teal
+    '#9D83A7', // Muted Purple
+    '#EBC823', // Yellow
+    '#657383'  // Slate Gray
+];
 
 export interface AttributeCategory {
     label: string;
@@ -19,11 +27,11 @@ export const ATTRIBUTE_CONFIG: Record<string, AttributeConfig> = {
             { label: 'Male', field: 'female', value: '0.0' },
             { label: 'Female', field: 'female', value: '1.0' }
         ],
-        // Use the core Time Use in-home / out-of-home palette to stay consistent
-        colors: [Colors.inHomeWithinBackground, Colors.outOfHomeWithinBackground]
+        // 2 categories: use first 2 colors
+        colors: SURVEY_SAMPLE_PALETTE.slice(0, 2)
     },
     age: {
-        name: 'Age Group',
+        name: 'Age',
         categories: [
             { label: '15 to 19 years', field: 'age_15_19', value: '1.0' },
             { label: '20 to 29 years', field: 'age_20_29', value: '1.0' },
@@ -31,22 +39,22 @@ export const ATTRIBUTE_CONFIG: Record<string, AttributeConfig> = {
             { label: '50 to 64 years', field: 'age_50_64', value: '1.0' },
             { label: '65 years or older', field: 'age_65p', value: '1.0' }
         ],
-        // Use the same 5-color palette as Education Level
-        colors: ['#9AAABF', '#CFCCCC', '#FBC6A0', '#F4DF3B', '#F9A875']
+        // 5 categories: use first 5 colors
+        colors: SURVEY_SAMPLE_PALETTE.slice(0, 5)
     },
     race: {
-        name: 'Race/Ethnicity',
+        name: 'Race',
         categories: [
             { label: 'White', field: 'white', value: '1.0' },
             { label: 'Black', field: 'black', value: '1.0' },
             { label: 'Asian', field: 'asian', value: '1.0' },
             { label: 'Other', field: 'race_other', value: '1.0' }
         ],
-        // Use work arrangement colors from Telework chart (4 colors): Workers with zero work, In-home only, Multi-site, Commuters only
-        colors: ['#9AAABF','#CFCCCC', '#FBC6A0', '#F4DF3B']
+        // 4 categories: use first 4 colors
+        colors: SURVEY_SAMPLE_PALETTE.slice(0, 4)
     },
     education: {
-        name: 'Education Level',
+        name: 'Education',
         categories: [
             { label: 'Less than high school', field: 'less_than_hs', value: '1.0' },
             { label: 'High school', field: 'hs_grad', value: '1.0' },
@@ -54,37 +62,30 @@ export const ATTRIBUTE_CONFIG: Record<string, AttributeConfig> = {
             { label: "Bachelor's degree", field: 'bachelor', value: '1.0' },
             { label: 'Graduate degree(s)', field: 'grad_sch', value: '1.0' }
         ],
-        // Use Telework work-arrangement palette (4 colors) + existing orange from current implementation
-        // Order: [blue-grey, light grey, peach, yellow, orange]
-        colors: ['#9AAABF', '#CFCCCC', '#FBC6A0', '#F4DF3B', '#F9A875']
-    },
-    income: {
-        name: 'Household Income',
-        categories: [
-            { label: '<$35K', field: 'inc_up35', value: '1.0' },
-            { label: '$35K to $50K', field: 'inc_35_50', value: '1.0' },
-            { label: '$50K to $75K', field: 'inc_50_75', value: '1.0' },
-            { label: '$75K to $100K', field: 'inc_75_100', value: '1.0' },
-            { label: '>$100K', field: 'inc_100p', value: '1.0' }
-        ],
-        // Also use the 5-color mode share palette here
-        colors: [
-            Colors.carModeShareBackground,
-            Colors.transitModeShareBackground,
-            Colors.walkModeShareBackground,
-            Colors.bikeModeShareBackground,
-            Colors.otherModeShareBackground
-        ]
+        // 5 categories: use first 5 colors
+        colors: SURVEY_SAMPLE_PALETTE.slice(0, 5)
     },
     employment: {
-        name: 'Employment Status',
+        name: 'Employment',
         categories: [
             { label: 'Full-time worker', field: 'full_time', value: '1.0' },
             { label: 'Part-time worker', field: 'part_time', value: '1.0' },
             { label: 'Non-worker', field: 'unemployed', value: '1.0' }
         ],
-        // Use Time allocation by activity type colors (3 colors): Necessary, Discretionary, Committed
-        colors: ['#8E9B97', '#F9A875', '#657383']
+        // 3 categories: use first 3 colors
+        colors: SURVEY_SAMPLE_PALETTE.slice(0, 3)
+    },
+    income: {
+        name: 'Household Income',
+        categories: [
+            { label: '<$35K', field: 'inc_up35', value: '1.0' },
+            { label: '≥$35K, <$50K', field: 'inc_35_50', value: '1.0' },
+            { label: '≥$50K, <$75K', field: 'inc_50_75', value: '1.0' },
+            { label: '≥$75K, <$100K', field: 'inc_75_100', value: '1.0' },
+            { label: '≥$100K', field: 'inc_100p', value: '1.0' }
+        ],
+        // 5 categories: use first 5 colors
+        colors: SURVEY_SAMPLE_PALETTE.slice(0, 5)
     },
     household_size: {
         name: 'Household Size',
@@ -93,8 +94,17 @@ export const ATTRIBUTE_CONFIG: Record<string, AttributeConfig> = {
             { label: 'Two', field: 'hhsize_2', value: '1.0' },
             { label: 'Three or more', field: 'hhsize_3p', value: '1.0' }
         ],
-        // Use first 3 colors from the Telework cross-segment palette directly
-        colors: ['#9D83A7', '#6DAfA0', '#f9a875']
+        // 3 categories: use first 3 colors
+        colors: SURVEY_SAMPLE_PALETTE.slice(0, 3)
+    },
+    location: {
+        name: 'Household Location',
+        categories: [
+            { label: 'Metropolitan', field: 'non_metropolitan', value: '0.0' },
+            { label: 'Non-metropolitan', field: 'non_metropolitan', value: '1.0' }
+        ],
+        // 2 categories: use first 2 colors
+        colors: SURVEY_SAMPLE_PALETTE.slice(0, 2)
     }
 };
 

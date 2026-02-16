@@ -188,12 +188,22 @@ export function SampleComposition(): JSX.Element {
                     size: 10,
                 },
                 formatter: (value: number) => {
-                    // Always show one decimal place, even for integers (e.g., 45.0)
+                    // Hide labels for very small segments (< 3%) to reduce congestion
+                    // Users can still see these values via tooltips
                     if (typeof value === 'number') {
+                        if (value < 3) {
+                            return null; // Hide label for segments < 3%
+                        }
                         return `${value.toFixed(1)}%`;
                     }
                     const num = Number(value);
-                    return isNaN(num) ? '' : `${num.toFixed(1)}%`;
+                    if (isNaN(num)) {
+                        return '';
+                    }
+                    if (num < 3) {
+                        return null; // Hide label for segments < 3%
+                    }
+                    return `${num.toFixed(1)}%`;
                 },
                 anchor: 'center' as const,
                 align: 'center' as const,
@@ -207,15 +217,18 @@ export function SampleComposition(): JSX.Element {
                     pointStyle: 'rect' as const,
                     padding: 15,
                     boxWidth: 10,
-                    boxHeight: 10
+                    boxHeight: 10,
+                    font: {
+                        size: 13.5
+                    }
                 }
             },
             tooltip: {
                 mode: 'index' as const,
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                 padding: 12,
-                titleFont: { size: 13, weight: 600 },
-                bodyFont: { size: 12 },
+                titleFont: { size: 13.5, weight: 500 },
+                bodyFont: { size: 13.5 },
                 callbacks: {
                     label: function (context: any) {
                         return context.dataset.label + ': ' + context.parsed.y.toFixed(1) + '%';
@@ -235,7 +248,7 @@ export function SampleComposition(): JSX.Element {
                 },
                 ticks: {
                     font: {
-                        size: 12
+                        size: 13.5
                     }
                 }
             },
@@ -248,7 +261,7 @@ export function SampleComposition(): JSX.Element {
                         return value + '%';
                     },
                     font: {
-                        size: 12
+                        size: 13.5
                     }
                 },
                 grid: {
@@ -292,9 +305,9 @@ export function SampleComposition(): JSX.Element {
                 <Container fluid className="sc-container">
                     <header className="sc-page-header">
                         <div>
-                            <h1 className="sc-page-title">Sample Composition Analysis</h1>
+                            <h4 className="fw-bold-menu sc-page-title">Survey Sample Overview</h4>
                             <p className="sc-page-subtitle">
-                                Explore how the ATUS survey sample composition changes across years and demographic groups.
+                                Explore how the socio-economic and demographic characteristics of the ATUS survey sample vary across and within survey years.
                             </p>
                         </div>
                     </header>
@@ -302,7 +315,7 @@ export function SampleComposition(): JSX.Element {
                     {/* Section 1: Between Years Analysis - Chart */}
                     <section className="sc-section">
                         <div className="sc-section-header">
-                            <h2 className="sc-section-title">Sample Composition Across Years</h2>
+                            <h2 className="sc-section-title">Sample Composition Between Years</h2>
                         </div>
 
                         <div className="sc-control-card">

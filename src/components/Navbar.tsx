@@ -1,5 +1,5 @@
 import React from 'react';
-import Menu from './Menu';
+import TopMenu from './TopMenu';
 import '../css/navbar.css';
 import { NavbarProps } from './Types';
 import { Button } from 'react-bootstrap';
@@ -8,7 +8,7 @@ import CrossSegmentMenu from './CrossSegmentMenu';
 import timeTravelIcon from '../images/time-clockk.svg';
 import { Navbar as NavbarBs, Nav } from "react-bootstrap";
 
-export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState, analysisType, onAnalysisTypeChange, isTeleworkPage = false, updatedCrossSegmentSelections, hideAnalysisButtons = false, hideMenu = false }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState, analysisType, onAnalysisTypeChange, isTeleworkPage = false, updatedCrossSegmentSelections, hideAnalysisButtons = false, hideMenu = false, dataProvider }) => {
     const activeButtonStyle = {
         backgroundColor: '#C4F5B0',
         color: 'black',
@@ -97,10 +97,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuOptionChange, toggleState,
                             updatedSelections={updatedCrossSegmentSelections}
                         />
                     ) : (
-                        <Menu
+                        <TopMenu
                             onOptionChange={onMenuOptionChange}
                             toggleState={toggleState}
                             filterOptionsForTelework={isTeleworkPage}
+                            dataProvider={dataProvider}
                         />
                     )}
                 </>

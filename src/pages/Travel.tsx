@@ -5,7 +5,7 @@ import { Option } from "../components/Types";
 import Footer from '../components/Footer';
 import { WithinYearAnalysis } from '../components/Travel/WithinYearAnalysis';
 import { BtwYearAnalysis } from '../components/Travel/BtwYearAnalysis';
-import { DataProvider, useDocumentTitle } from '../utils/Helpers';
+import { DataProvider, TravelDataProvider, useDocumentTitle } from '../utils/Helpers';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { CrossSegmentAnalysis } from '../components/Travel/CrossSegmentAnalysis';
 
@@ -75,6 +75,7 @@ export function Travel(): JSX.Element {
                 analysisType={analysisType}
                 onAnalysisTypeChange={setAnalysisType}
                 updatedCrossSegmentSelections={crossSegmentSelectedOptions}
+                dataProvider={TravelDataProvider.getInstance()}
             />
 
             {((analysisType == 'withinYear' && isWithinYearLoading) || (analysisType == 'betweenYears' && isBtwYearLoading) || (analysisType == 'crossSegment' && isCrossSegmentLoading)) && <LoadingOverlay />}

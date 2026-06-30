@@ -106,6 +106,7 @@ export interface NavbarProps {
     updatedCrossSegmentSelections: Option[][];
     hideAnalysisButtons?: boolean;
     hideMenu?: boolean;
+    dataProvider?: { loadData: () => Promise<any[]> };
 };
 
 export interface CrossSegmentNavbarProps {

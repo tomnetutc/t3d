@@ -5,7 +5,7 @@ import { WithinYearAnalysis } from "../components/TimeUse/WithinYearAnalysis";
 import { BtwYearAnalysis } from '../components/TimeUse/BtwYearAnalysis';
 import { Option } from "../components/Types";
 import Footer from '../components/Footer';
-import { TravelDataProvider, useDocumentTitle } from '../utils/Helpers';
+import { DataProvider, TravelDataProvider, useDocumentTitle } from '../utils/Helpers';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { CrossSegmentAnalysis } from '../components/TimeUse/CrossSegmentAnalysis';
 
@@ -75,6 +75,7 @@ export function TimeUse(): JSX.Element {
                 analysisType={analysisType}
                 onAnalysisTypeChange={setAnalysisType}
                 updatedCrossSegmentSelections={crossSegmentSelectedOptions}
+                dataProvider={DataProvider.getInstance()}
             />
 
             {((analysisType == 'withinYear' && isWithinYearLoading) || (analysisType == 'betweenYears' && isBtwYearLoading) || (analysisType == 'crossSegment' && isCrossSegmentLoading)) && <LoadingOverlay />}

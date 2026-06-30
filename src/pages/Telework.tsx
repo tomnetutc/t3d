@@ -3,7 +3,7 @@ import "../css/timeuse.scss";
 import { Navbar } from "../components/Navbar";
 import { Option } from "../components/Types";
 import Footer from '../components/Footer';
-import { TravelDataProvider, useDocumentTitle } from '../utils/Helpers';
+import { DataProvider, TravelDataProvider, useDocumentTitle } from '../utils/Helpers';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { WithinYearAnalysis } from '../components/Telework/WithinYearAnalysis';
 import { BtwYearAnalysis } from '../components/Telework/BtwYearAnalysis';
@@ -76,6 +76,7 @@ export function Telework(): JSX.Element {
                 onAnalysisTypeChange={setAnalysisType}
                 isTeleworkPage={true}
                 updatedCrossSegmentSelections={crossSegmentSelectedOptions}
+                dataProvider={DataProvider.getInstance()}
             />
 
             {((analysisType == 'withinYear' && isWithinYearLoading) || (analysisType == 'betweenYears' && isBtwYearLoading) || (analysisType == 'crossSegment' && isCrossSegmentLoading)) && <LoadingOverlay />}

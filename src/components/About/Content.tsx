@@ -261,7 +261,7 @@ export function Content(): JSX.Element {
           </p>
           <ul>
             <li className="mt-4">
-              Batur, I., Bhat, A. L., Varghese, R., Bhat, C. R., Mokhtarian, P. L., Polzin, S. E., Chen, C. and Pendyala, R. M. The Time Use, Travel, and Telework Dashboard (T3D). TOMNET and TBD University Transportation Centers, 2024.&nbsp;
+              Batur, I., Bhat, A. L., Varghese, R., Bhat, C. R., Mokhtarian, P. L., Polzin, S. E., Chen, C. and Pendyala, R. M. The Time Use, Travel, and Telework Dashboard (T3D). TOMNET and TBD University Transportation Centers, 2025.&nbsp;
               <a href="https://tomnetutc.github.io/t3d/" target="_blank" rel="noopener noreferrer">https://tomnetutc.github.io/t3d/</a>
             </li>
             <li className="mt-4">

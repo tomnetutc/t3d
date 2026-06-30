@@ -35,7 +35,7 @@ const BtwYearMenu: React.FC<{ onSelectionChange: (selections: { week: weekOption
     }
 
     async function loadCache() {
-        const cacheKey = "YearDataCache";
+        const cacheKey = "YearDataCache_2025";
         const cachedData = localStorage.getItem(cacheKey);
 
         if (cachedData) {

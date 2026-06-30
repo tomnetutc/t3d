@@ -24,7 +24,7 @@ const YearMenu: React.FC<YearMenuProps> = ({ onSelectionChange, callingComponent
     }, [callingComponent]);
 
     useEffect(() => {
-        const cacheKey = "YearDataCache";
+        const cacheKey = "YearDataCache_2025";
         const cachedData = localStorage.getItem(cacheKey);
 
         if (cachedData) {

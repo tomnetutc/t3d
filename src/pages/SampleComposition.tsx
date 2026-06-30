@@ -341,7 +341,7 @@ export function SampleComposition(): JSX.Element {
                                 <p>This chart shows the distribution of the selected attribute across all ATUS survey samples. Each bar represents one year, with categories stacked to total 100%. Values shown are unweighted percentages based on the raw sample composition.</p>
                             </InfoBox>
                             <div className="sc-chart-title">
-                                <span>{config.name} Distribution ({chartData?.labels[0] || '2003'}-{chartData?.labels[chartData?.labels.length - 1] || '2024'})</span>
+                                <span>{config.name} Distribution ({chartData?.labels[0] || '2003'}-{chartData?.labels[chartData?.labels.length - 1] || '2025'})</span>
                                 <DownloadButton onClick={handleDownloadChart} />
                             </div>
                             <div className="sc-chart-container">

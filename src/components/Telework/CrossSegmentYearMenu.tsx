@@ -37,7 +37,7 @@ const CrossSegmentYearMenu: React.FC<{ onSelectionChange: (selections: { week: w
     }
 
     async function loadCache() {
-        const cacheKey = "YearDataCache";
+        const cacheKey = "YearDataCache_2025";
         const cachedData = localStorage.getItem(cacheKey);
 
         if (cachedData) {

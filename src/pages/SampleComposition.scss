@@ -22,11 +22,6 @@
             position: relative;
             padding-left: 0;
             display: block;
-            
-            // Remove the gradient bar to match other pages
-            &::before {
-                display: none;
-            }
         }
 
         .sc-page-subtitle {

@@ -305,7 +305,7 @@ export function SampleComposition(): JSX.Element {
                 <Container fluid className="sc-container">
                     <header className="sc-page-header">
                         <div>
-                            <h4 className="fw-bold-menu sc-page-title">Survey Sample Overview</h4>
+                            <h4 className="sc-page-title">Survey Sample Overview</h4>
                             <p className="sc-page-subtitle">
                                 Explore how the socio-economic and demographic characteristics of the ATUS survey sample vary across and within survey years.
                             </p>

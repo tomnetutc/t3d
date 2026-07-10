@@ -3,6 +3,7 @@ import Switch, { SwitchProps } from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
 import { Option } from './Types';
 import { groupedOptions } from '../utils/Helpers';
+import FilterChipDetails from './FilterChipDetails';
 import '../css/topmenu.scss';
 
 const NO_MATCH: Option = {
@@ -265,19 +266,25 @@ const TopMenu: React.FC<{
           {chips.length > 0 && (
             <div className="fm-bar__chips">
               {chips.map(g => (
-                <span
+                <FilterChipDetails
                   key={g.label}
-                  className={`fm-chip${isEmptyApplied(g.label) ? ' fm-chip--warn' : ''}`}
+                  label={g.label}
+                  options={g.options}
+                  selected={appliedSels[g.label]}
                 >
-                  {chipLabel(g)}
-                  <button
-                    className="fm-chip__remove"
-                    onClick={() => removeChip(g.label)}
-                    aria-label={`Remove ${g.label} filter`}
+                  <span
+                    className={`fm-chip${isEmptyApplied(g.label) ? ' fm-chip--warn' : ''}`}
                   >
-                    ×
-                  </button>
-                </span>
+                    {chipLabel(g)}
+                    <button
+                      className="fm-chip__remove"
+                      onClick={() => removeChip(g.label)}
+                      aria-label={`Remove ${g.label} filter`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                </FilterChipDetails>
               ))}
             </div>
           )}

@@ -1,0 +1,269 @@
+/* ============================================================
+   Cross Segment "Select Segment" trigger + modal
+   Forked from topmenu.scss's .fm-* pattern so both pages share a
+   look without CrossSegmentMenu importing/depending on TopMenu.
+   ============================================================ */
+.csm-bar__label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.csm-bar__trigger {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 13px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #507dbc;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.18s;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background-color: #3d6aad;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.csm-bar__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #507dbc;
+  background: #fff;
+  border-radius: 50%;
+  margin-left: 4px;
+}
+
+/* ============================================================
+   Backdrop
+   ============================================================ */
+.csm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   Modal
+   ============================================================ */
+.csm-modal {
+  background: #fff;
+  border-radius: 8px;
+  width: min(980px, 92vw);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.csm-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 18px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.csm-modal__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.csm-modal__esc-btn {
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #666;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+/* Dimension grid */
+.csm-modal__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  padding: 14px 18px;
+  overflow-y: auto;
+  flex: 1;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Dimension card */
+.csm-dim {
+  background: #f8f9fa;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 9px 11px;
+  min-width: 0;
+
+  &--active {
+    border-color: #507dbc;
+  }
+}
+
+.csm-dim__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  gap: 4px;
+}
+
+.csm-dim__title {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #507dbc;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.csm-dim__shortcuts {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 11px;
+    color: #507dbc;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+      color: #2B2F88;
+    }
+  }
+
+  span {
+    font-size: 11px;
+    color: #ccc;
+  }
+}
+
+.csm-dim__opts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.csm-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  cursor: pointer;
+  margin: 0;
+
+  input[type='checkbox'] {
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: #507dbc;
+    cursor: pointer;
+    width: 13px;
+    height: 13px;
+  }
+}
+
+.csm-opt__label {
+  font-size: 12.5px;
+  color: #374151;
+  line-height: 1.35;
+  user-select: none;
+}
+
+/* Footer */
+.csm-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px 18px;
+  border-top: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.csm-modal__count {
+  font-size: 13px;
+  color: #6b7280;
+  margin-right: auto;
+}
+
+.csm-modal__footer-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.csm-btn {
+  padding: 6px 18px;
+  font-size: 13.5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.15s, color 0.15s, opacity 0.15s;
+
+  &--ghost {
+    background: none;
+    border: 1px solid #d1d5db;
+    color: #374151;
+
+    &:hover:not(:disabled) {
+      background: #f3f4f6;
+    }
+  }
+
+  &--primary {
+    background: #507dbc;
+    border: 1px solid #507dbc;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: #3d6aad;
+      border-color: #3d6aad;
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+}

@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import Button from "react-bootstrap/Button";
-import { Option } from './Types';
+import { Option, GroupedOption } from './Types';
 import { groupedOptions } from '../utils/Helpers';
 import '../css/menu.scss';
-import Select from 'react-select';
+import '../css/crosssegmentmodal.scss';
 import Infobox from './InfoBox/InfoBox';
 import Switch, { SwitchProps } from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
+const MAX_SEGMENTS = 4; // user-defined segments; submissions[0] is the implicit "All" segment
+const MAX_SUBMISSIONS = MAX_SEGMENTS + 1;
+
 const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void; toggleState: (includeDecember: boolean) => void; filterOptionsForTelework?: boolean; updatedSelections: Option[][] }> = ({ onOptionChange, toggleState, filterOptionsForTelework = false, updatedSelections }) => {
-    const [selectedOptions, setSelectedOptions] = useState<Array<Option | null>>([null, null, null]);
     const [submissions, setSubmissions] = useState<Array<Option[]>>([[]]);
     const [includeDecember, setIncludeDecember] = useState(true);
     const [isToggling, setIsToggling] = useState(false); // To track toggle cooldown
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalSels, setModalSels] = useState<Record<string, Set<string>>>({});
 
     useEffect(() => {
         onOptionChange(submissions);
@@ -23,27 +27,87 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
         setSubmissions(updatedSelections);
     }, [updatedSelections]);
 
-    const handleChange = (index: number, option: Option | null) => {
-        const updatedSelectedOptions = [...selectedOptions];
-        updatedSelectedOptions[index] = option;
-        setSelectedOptions(updatedSelectedOptions);
-    };
-
     // Filter out the "Work arrangement" and "Employment" options for the Telework Menu component
-    const filteredGroupedOptions = filterOptionsForTelework ?
+    const filteredGroupedOptions: GroupedOption[] = filterOptionsForTelework ?
         groupedOptions.filter(group => group.label !== "Work arrangement" && group.label !== "Employment") :
         groupedOptions;
 
-    const handleReset = () => {
-        setSelectedOptions([null, null, null]);
+    const atSegmentLimit = submissions.length >= MAX_SUBMISSIONS;
+
+    const openModal = () => {
+        if (atSegmentLimit) return;
+        setModalSels({});
+        setIsModalOpen(true);
     };
 
-    const handleSubmit = () => {
-        if (selectedOptions.some(option => option !== null) && submissions.length < 5) {
-            setSubmissions(prev => [...prev, selectedOptions.filter(Boolean) as Option[]]);
-            setSelectedOptions([null, null, null]);
-            onOptionChange(submissions);
-        }
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    useEffect(() => {
+        if (!isModalOpen) return;
+        const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal(); };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [isModalOpen]);
+
+    const toggleOpt = (groupLabel: string, optVal: string) => {
+        setModalSels(prev => {
+            const cur = prev[groupLabel] ?? new Set<string>();
+            const next = new Set(cur);
+            if (next.has(optVal)) next.delete(optVal);
+            else next.add(optVal);
+            return { ...prev, [groupLabel]: next };
+        });
+    };
+
+    const setAllForGroup = (groupLabel: string) => {
+        const group = filteredGroupedOptions.find(g => g.label === groupLabel)!;
+        setModalSels(prev => ({ ...prev, [groupLabel]: new Set(group.options.map(o => o.value)) }));
+    };
+
+    const setNoneForGroup = (groupLabel: string) => {
+        setModalSels(prev => ({ ...prev, [groupLabel]: new Set() }));
+    };
+
+    const isChecked = (groupLabel: string, optVal: string): boolean => {
+        const sel = modalSels[groupLabel];
+        return !!sel && sel.has(optVal);
+    };
+
+    const isActiveGroup = (group: GroupedOption) => {
+        const sel = modalSels[group.label];
+        return !!sel && sel.size > 0;
+    };
+
+    const hasAnySelection = Object.values(modalSels).some(sel => sel.size > 0);
+
+    // Convert the modal's Record<string, Set<string>> selections into the
+    // Option[] shape `submissions` expects, by looking each value back up
+    // in groupedOptions to recover the full Option object.
+    const buildSegmentOptions = (sels: Record<string, Set<string>>): Option[] => {
+        const result: Option[] = [];
+        filteredGroupedOptions.forEach(group => {
+            const sel = sels[group.label];
+            if (!sel || sel.size === 0) return;
+            group.options.forEach(opt => {
+                if (sel.has(opt.value)) result.push(opt);
+            });
+        });
+        return result;
+    };
+
+    const handleAddSegment = () => {
+        if (atSegmentLimit || !hasAnySelection) return;
+        const newSegment = buildSegmentOptions(modalSels);
+        if (newSegment.length === 0) return;
+        setSubmissions(prev => [...prev, newSegment]);
+        setModalSels({});
+        closeModal();
+    };
+
+    const handleResetModal = () => {
+        setModalSels({});
     };
 
     const handleToggleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,68 +122,6 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
             }, 500); // 0.5 second delay, adjust as needed
         }
     };
-
-    const isOptionSelectedInOtherDropdown = (option: Option, currentIndex: number) => {
-        return selectedOptions.some((selectedOption, index) => {
-            return selectedOption && selectedOption.value === option.value && index !== currentIndex;
-        });
-    };
-
-    const scrollToSelectedOption = () => {
-        setTimeout(() => {
-            const selectedEl = document.querySelector(".dropdown-select__option--is-selected");
-            if (selectedEl) {
-                selectedEl.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'start' });
-            }
-        }, 15);
-    };
-
-    const customStyles = {
-        control: (provided: any) => ({
-            ...provided,
-            border: '1px solid #ced4da',
-            borderRadius: '0.29rem',
-            minHeight: '36px',
-            fontSize: '13.5px',
-        }),
-        placeholder: (provided: any) => ({
-            ...provided,
-            color: '#6c757d'
-        }),
-        option: (provided: any) => ({
-            ...provided,
-            fontSize: '13.5px' // Smaller font size for options
-        })
-    };
-
-    const renderDropdown = (index: number) => (
-        <div className="dropdown-wrapper">
-            <Select
-                className="dropdown-select"
-                classNamePrefix="dropdown-select"
-                onMenuOpen={scrollToSelectedOption}
-                value={selectedOptions[index]}
-                onChange={(selectedOption) => handleChange(index, selectedOption)}
-                options={filteredGroupedOptions.map(group => ({
-                    label: group.label,
-                    options: group.options.map(option => ({
-                        ...option,
-                        isDisabled: isOptionSelectedInOtherDropdown(option, index),
-                    })),
-                }))}
-                isSearchable={true}
-                styles={customStyles}
-                components={{
-                    DropdownIndicator: CustomDropdownIndicator,
-                }}
-                menuPortalTarget={document.body}
-                menuPosition={'fixed'}
-                maxMenuHeight={200}
-                isDisabled={submissions.length === 5}
-                placeholder="Select attribute"
-            />
-        </div>
-    );
 
     const IOSSwitch = styled((props: SwitchProps) => (
         <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -175,33 +177,20 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
     return (
         <div className="menu-container">
             <div className="menu-header" style={{ position: 'relative' }}> {/* Ensure the parent is positioned relatively */}
-                <label className="segment-label" style={{ marginRight: "0.5rem" }}>Add a segment:</label>
+                <label className="csm-bar__label" style={{ marginRight: '0.5rem' }}>Select Segment:</label>
+                <button
+                    className="csm-bar__trigger"
+                    onClick={openModal}
+                    disabled={atSegmentLimit}
+                    title={atSegmentLimit ? `Maximum of ${MAX_SEGMENTS} segments reached` : undefined}
+                >
+                    <FilterIcon />
+                    Select Segment
+                    {submissions.length > 1 && <span className="csm-bar__badge">{submissions.length - 1}</span>}
+                </button>
 
-                <div className="dropdowns-container">
-                    {selectedOptions.map((_, index) => (
-                        <div key={index} className="dropdown-wrapper">
-                            {renderDropdown(index)}
-                        </div>
-                    ))}
-                </div>
-                <div className="button-container">
-                    <Button
-                        size="sm"
-                        variant='success'
-                        onClick={handleSubmit}
-                        className="submit-button"
-                        disabled={submissions.length == 5 || !selectedOptions.some(option => option !== null)}
-                    >
-                        Add
-                    </Button>
-                </div>
-                <div className="button-container">
-                    <Button size="sm" onClick={handleReset} className="reset-button" variant="danger" disabled={submissions.length == 5 || !selectedOptions.some(option => option !== null)} style={{ marginLeft: '10px' }}>
-                        Reset
-                    </Button>
-                </div>
                 <Infobox style={{ display: 'flex', position: 'relative', padding: 12 }}>
-                    <p>Select up to three attributes to define and add a specific population segment for comparison purposes. The default view shows data for ‘all’ individuals aged 15 and older. </p>
+                    <p>Select attributes to define and add a specific population segment for comparison purposes (up to {MAX_SEGMENTS} segments). The default view shows data for ‘all’ individuals aged 15 and older. </p>
                 </Infobox>
 
                 <Box display="flex" justifyContent="flex-end" alignItems="center" style={{ marginLeft: 'auto' }}>
@@ -216,6 +205,69 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
                     <p>Exclude or include the respondents surveyed in December from the analysis.</p>
                 </Infobox>
             </div>
+
+            {isModalOpen && (
+                <div
+                    className="csm-backdrop"
+                    onClick={e => { if (e.target === e.currentTarget) closeModal(); }}
+                >
+                    <div className="csm-modal" role="dialog" aria-modal="true" aria-label="Select segment attributes">
+                        <div className="csm-modal__header">
+                            <span className="csm-modal__title">Select segment attributes</span>
+                            <button className="csm-modal__esc-btn" onClick={closeModal}>ESC</button>
+                        </div>
+
+                        <div className="csm-modal__grid">
+                            {filteredGroupedOptions.map(group => {
+                                const active = isActiveGroup(group);
+                                return (
+                                    <div
+                                        key={group.label}
+                                        className={`csm-dim${active ? ' csm-dim--active' : ''}`}
+                                    >
+                                        <div className="csm-dim__head">
+                                            <span className="csm-dim__title">{group.label}</span>
+                                            <div className="csm-dim__shortcuts">
+                                                <button onClick={() => setAllForGroup(group.label)}>All</button>
+                                                <span>·</span>
+                                                <button onClick={() => setNoneForGroup(group.label)}>None</button>
+                                            </div>
+                                        </div>
+                                        <div className="csm-dim__opts">
+                                            {group.options.map(opt => (
+                                                <label key={opt.value} className="csm-opt">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isChecked(group.label, opt.value)}
+                                                        onChange={() => toggleOpt(group.label, opt.value)}
+                                                    />
+                                                    <span className="csm-opt__label">{opt.label}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className="csm-modal__footer">
+                            <div className="csm-modal__footer-btns">
+                                <button className="csm-btn csm-btn--ghost" onClick={handleResetModal}>
+                                    Reset
+                                </button>
+                                <button
+                                    className="csm-btn csm-btn--primary"
+                                    onClick={handleAddSegment}
+                                    disabled={atSegmentLimit || !hasAnySelection}
+                                    title={atSegmentLimit ? `Maximum of ${MAX_SEGMENTS} segments reached` : (!hasAnySelection ? 'Select at least one option' : undefined)}
+                                >
+                                    Add Segment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
 
     );
@@ -223,14 +275,8 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
 };
 export default CrossSegmentMenu;
 
-
-const CustomDropdownIndicator: React.FC<{}> = () => (
-    <div className="dropdown-indicator">
-        <svg width="15" height="15" fill="currentColor" className="bi bi-chevron-down" viewBox="-2 -2 21 21">
-            <path
-                fillRule="evenodd"
-                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-            />
-        </svg>
-    </div>
+const FilterIcon = () => (
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" style={{ marginRight: 5 }}>
+        <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
+    </svg>
 );

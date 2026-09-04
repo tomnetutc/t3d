@@ -18,7 +18,13 @@ const tooltipFormatter = (value: number) => {
     return Number(value) % 1 === 0 ? `${value}.0` : value.toString();
 };
 
-const RechartsLineChart: React.FC<{ chartData: ChartDataProps, title: string, showLegend: boolean }> = ({ chartData, title, showLegend }) => {
+const RechartsLineChart: React.FC<{
+    chartData: ChartDataProps,
+    title: string,
+    showLegend: boolean,
+    yAxisLabel?: string,
+    yAxisDomain?: [number | string, number | string],
+}> = ({ chartData, title, showLegend, yAxisLabel, yAxisDomain = [0, 'auto'] }) => {
 
     const transformedData = useMemo(() => {
         return chartData.labels.map((label, index) => {
@@ -51,10 +57,14 @@ const RechartsLineChart: React.FC<{ chartData: ChartDataProps, title: string, sh
                 </span>
             </div>
             <ResponsiveContainer width="100%" height="90%">
-                <LineChart data={transformedData} margin={{ top: 10, right: 0, left: -15, bottom: -10 }}>
+                <LineChart data={transformedData} margin={{ top: 10, right: 0, left: yAxisLabel ? 8 : -15, bottom: -10 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" padding={{ left: 20, right: 20 }} tick={{ fontSize: 13, fontFamily: 'sans-serif' }} />
-                    <YAxis domain={[0, 'auto']} tick={{ fontSize: 13, fontFamily: 'sans-serif' }} />
+                    <YAxis
+                        domain={yAxisDomain}
+                        tick={{ fontSize: 13, fontFamily: 'sans-serif' }}
+                        label={yAxisLabel ? { value: yAxisLabel, angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fontSize: 12, fontFamily: 'sans-serif' } } : undefined}
+                    />
                     <Tooltip formatter={tooltipFormatter} />
                     {showLegend && <Legend verticalAlign='top' align='right' />}
                     {chartData.datasets.map((dataset, idx) => (

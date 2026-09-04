@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CrossSegmentDataFilter, TravelDataProvider, TripPurposeOptions, WeekOptions } from "../../utils/Helpers";
 import CrossSegmentYearMenu from "./CrossSegmentYearMenu";
 import ProfileCards from "../ProfileCard/ProfileCards";
@@ -7,6 +7,7 @@ import Infobox from '../InfoBox/InfoBox';
 import { mean } from "d3";
 import { travel_crossSegmentColors } from "../../Colors";
 import RechartsLineChart from "../LineChart/LineChart";
+import DiffModeToggle, { ChartDisplayMode } from "../DiffModeToggle";
 import {
     AnalysisTypeOption,
     ChartDataProps,
@@ -20,6 +21,18 @@ import {
     weekOption
 } from "../Types";
 
+function toDiffFromAll(chartData: ChartDataProps, precision: number): ChartDataProps {
+    const allDataset = chartData.datasets.find(ds => ds.label === 'All');
+    if (!allDataset) return chartData;
+    return {
+        labels: chartData.labels,
+        datasets: chartData.datasets.map(ds => ({
+            ...ds,
+            data: ds.data.map((value, i) => parseFloat((value - (allDataset.data[i] ?? 0)).toFixed(precision))),
+        })),
+    };
+}
+
 
 export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], toggleState: boolean, setIsCrossSegmentLoading: (isLoading: boolean) => void, onProfileRemove: (index: number) => void }> = ({ menuSelectedOptions, toggleState, setIsCrossSegmentLoading, onProfileRemove }) => {
 
@@ -29,6 +42,7 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
     const [sampleSizeTableData, setSampleSizeTableData] = useState<SampleSizeTableProps>({ years: [], counts: [] });
     const [chartTitle, setChartTitle] = useState<string>("Average number of trips per person");
     const [chartIButton, setChartIButton] = useState<string>("The average number of trips per person per day for each segment, calculated over the years from the start year to the end year.");
+    const [displayMode, setDisplayMode] = useState<ChartDisplayMode>('actual');
 
     const handleCrossSegmentMenuChange = useCallback((selections: { week: weekOption, optionValue: TripPurposeOption | TravelModeOption, activeOption: string, analysisType: AnalysisTypeOption, startYear: string, endYear: string }) => {
         if (selections.week === crossSegmentSelections.week && selections.optionValue == crossSegmentSelections.optionValue && selections.activeOption === crossSegmentSelections.activeOption && selections.analysisType === crossSegmentSelections.analysisType && selections.startYear === crossSegmentSelections.startYear && selections.endYear === crossSegmentSelections.endYear) {
@@ -67,6 +81,22 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
         });
     }, [crossSegmentSelections, menuSelectedOptions, toggleState]);
 
+    useEffect(() => {
+        setDisplayMode('actual');
+    }, [crossSegmentSelections.analysisType.value]);
+
+    const isNumberTrips = crossSegmentSelections.analysisType.value === "NumberTrips";
+
+    const displayedChartData = useMemo(
+        () => (displayMode === 'diffFromAll' ? toDiffFromAll(ChartData, isNumberTrips ? 2 : 1) : ChartData),
+        [ChartData, displayMode, isNumberTrips]
+    );
+
+    const baseYAxisLabel = isNumberTrips ? "Number of trips" : "Duration (minutes)";
+    const yAxisLabel = displayMode === 'diffFromAll' ? `${baseYAxisLabel} — difference relative to all` : baseYAxisLabel;
+    const yAxisDomain: [number | string, number | string] = displayMode === 'diffFromAll' ? ['auto', 'auto'] : [0, 'auto'];
+    const chartSubtitle = displayMode === 'diffFromAll' ? `${chartTitle} — difference relative to all` : chartTitle;
+
     return (
         <>
             <div className='home'>
@@ -79,16 +109,20 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
                             }))}
                             removeProfile={index => onProfileRemove(index + 1)}
                             title="Segments"
+                            segmentColors={travel_crossSegmentColors}
                         />
                         <Infobox>
                             <p>Add up to four additional user-defined segments for comparison purposes and display their characteristics.</p>
                         </Infobox>
                     </div>
                     <div className='box MultiChartAvearge'>
+                        <DiffModeToggle mode={displayMode} onChange={setDisplayMode} />
                         <RechartsLineChart
-                            chartData={ChartData}
-                            title={chartTitle}
+                            chartData={displayedChartData}
+                            title={chartSubtitle}
                             showLegend={true}
+                            yAxisLabel={yAxisLabel}
+                            yAxisDomain={yAxisDomain}
                         />
                         <Infobox>
                             <p>{chartIButton}</p>

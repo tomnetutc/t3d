@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 import { Option } from './Types';
 import { groupedOptions } from '../utils/Helpers';
 import FilterChipDetails from './FilterChipDetails';
+import CategoryInfoTooltip from './CategoryInfoTooltip';
+import { categoryDefinitions } from './categoryDefinitions';
 import '../css/topmenu.scss';
 
 const NO_MATCH: Option = {
@@ -190,7 +192,6 @@ const TopMenu: React.FC<{
     setModalSels({});
     setAppliedSels({});
     onOptionChange([]);
-    closeModal();
   };
 
   const removeChip = (groupLabel: string) => {
@@ -345,7 +346,12 @@ const TopMenu: React.FC<{
                     className={`fm-dim${active ? ' fm-dim--active' : ''}${empty ? ' fm-dim--warn' : ''}`}
                   >
                     <div className="fm-dim__head">
-                      <span className="fm-dim__title">{group.label}</span>
+                      <span className="fm-dim__title">
+                        {group.label}
+                        {categoryDefinitions[group.label] && (
+                          <CategoryInfoTooltip definition={categoryDefinitions[group.label]} />
+                        )}
+                      </span>
                       <div className="fm-dim__shortcuts">
                         <button onClick={() => setAllForGroup(group.label)}>All</button>
                         <span>·</span>
@@ -387,7 +393,7 @@ const TopMenu: React.FC<{
                   disabled={hasEmptyModal}
                   title={hasEmptyModal ? 'Select at least one option per dimension' : undefined}
                 >
-                  Done ✓
+                  Apply ✓
                 </button>
               </div>
             </div>

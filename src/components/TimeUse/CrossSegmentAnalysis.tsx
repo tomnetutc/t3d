@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { mean } from 'd3';
 import "../../css/timeuse.scss";
 import SampleSizeTable from '../SampleSizeTable';
@@ -19,6 +19,21 @@ import {
     SampleSizeTableProps,
     weekOption
 } from "../Types";
+import DiffModeToggle, { ChartDisplayMode } from '../DiffModeToggle';
+
+const TIMEUSE_Y_AXIS_LABEL = "Minutes";
+
+function toDiffFromAll(chartData: ChartDataProps): ChartDataProps {
+    const allDataset = chartData.datasets.find(ds => ds.label === 'All');
+    if (!allDataset) return chartData;
+    return {
+        labels: chartData.labels,
+        datasets: chartData.datasets.map(ds => ({
+            ...ds,
+            data: ds.data.map((value, i) => parseFloat((value - (allDataset.data[i] ?? 0)).toFixed(1))),
+        })),
+    };
+}
 
 export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], toggleState: boolean, setIsCrossSegmentLoading: (isLoading: boolean) => void, onProfileRemove: (index: number) => void }> = ({ menuSelectedOptions, toggleState, setIsCrossSegmentLoading, onProfileRemove }) => {
 
@@ -26,6 +41,7 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
     const [crossSegmentFilteredData, setCrossSegmentFilteredData] = useState<DataRow[]>([]);
     const [ChartData, setChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [sampleSizeTableData, setSampleSizeTableData] = useState<SampleSizeTableProps>({ years: [], counts: [] });
+    const [displayMode, setDisplayMode] = useState<ChartDisplayMode>('actual');
 
     const handleCrossSegmentMenuChange = useCallback((selections: { week: weekOption, activity: ActivityOption, activityLocation: ActivityLocationOption, startYear: string, endYear: string }) => {
         if (selections.activity === crossSegmentSelections.activity && selections.activityLocation == crossSegmentSelections.activityLocation && selections.week === crossSegmentSelections.week && selections.startYear === crossSegmentSelections.startYear && selections.endYear === crossSegmentSelections.endYear) {
@@ -55,6 +71,15 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
         });
     }, [crossSegmentSelections, menuSelectedOptions, toggleState]);
 
+    const displayedChartData = useMemo(
+        () => (displayMode === 'diffFromAll' ? toDiffFromAll(ChartData) : ChartData),
+        [ChartData, displayMode]
+    );
+
+    const yAxisLabel = displayMode === 'diffFromAll' ? `${TIMEUSE_Y_AXIS_LABEL} — difference relative to all` : TIMEUSE_Y_AXIS_LABEL;
+    const chartSubtitle = displayMode === 'diffFromAll' ? "Average time spent per person per day (min) — difference relative to all" : "Average time spent per person per day (min)";
+    const yAxisDomain: [number | string, number | string] = displayMode === 'diffFromAll' ? ['auto', 'auto'] : [0, 'auto'];
+
     return (
         <>
             <div className='home'>
@@ -67,16 +92,20 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
                             }))}
                             removeProfile={index => onProfileRemove(index + 1)}
                             title="Segments"
+                            segmentColors={timeUse_crossSegmentColors}
                         />
                         <Infobox>
                             <p>Add up to four additional user-defined segments for comparison purposes and display their characteristics.</p>
                         </Infobox>
                     </div>
                     <div className='box MultiChartAvearge'>
+                        <DiffModeToggle mode={displayMode} onChange={setDisplayMode} />
                         <RechartsLineChart
-                            chartData={ChartData}
-                            title="Average time spent per person per day (min)"
+                            chartData={displayedChartData}
+                            title={chartSubtitle}
                             showLegend={true}
+                            yAxisLabel={yAxisLabel}
+                            yAxisDomain={yAxisDomain}
                         />
                         <Infobox>
                             <p>Average daily time spent per person per year for each segment during the selected period.</p>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Option, GroupedOption } from './Types';
 import { groupedOptions } from '../utils/Helpers';
+import CategoryInfoTooltip from './CategoryInfoTooltip';
+import { categoryDefinitions } from './categoryDefinitions';
 import '../css/menu.scss';
 import '../css/crosssegmentmodal.scss';
 import Infobox from './InfoBox/InfoBox';
@@ -185,7 +187,7 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
                     title={atSegmentLimit ? `Maximum of ${MAX_SEGMENTS} segments reached` : undefined}
                 >
                     <FilterIcon />
-                    Select Segment
+                    Add Segment
                     {submissions.length > 1 && <span className="csm-bar__badge">{submissions.length - 1}</span>}
                 </button>
 
@@ -226,7 +228,12 @@ const CrossSegmentMenu: React.FC<{ onOptionChange: (options: Option[][]) => void
                                         className={`csm-dim${active ? ' csm-dim--active' : ''}`}
                                     >
                                         <div className="csm-dim__head">
-                                            <span className="csm-dim__title">{group.label}</span>
+                                            <span className="csm-dim__title">
+                                                {group.label}
+                                                {categoryDefinitions[group.label] && (
+                                                    <CategoryInfoTooltip definition={categoryDefinitions[group.label]} />
+                                                )}
+                                            </span>
                                             <div className="csm-dim__shortcuts">
                                                 <button onClick={() => setAllForGroup(group.label)}>All</button>
                                                 <span>·</span>

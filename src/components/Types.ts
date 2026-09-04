@@ -209,6 +209,7 @@ export interface ProfileCardProps {
     profileList: ProfileObj[];
     removeProfile: IRemoveProfile;
     title: string;
+    segmentColors: string[];
 };
 
 export type AnalysisTypeOption = {

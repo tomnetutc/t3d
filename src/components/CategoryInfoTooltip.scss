@@ -1,0 +1,11 @@
+.category-info-icon {
+    font-size: 12px !important;
+    color: rgba(80, 125, 188, 0.6);
+    cursor: pointer;
+    vertical-align: middle;
+    margin-left: 3px;
+
+    &:hover {
+        color: #507dbc;
+    }
+}

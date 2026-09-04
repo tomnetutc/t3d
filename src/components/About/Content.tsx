@@ -8,6 +8,7 @@ import cbhat from '../../images/Head Shots/cbhat.jpg';
 import plmokhtarian from '../../images/Head Shots/plmokhtarian.webp';
 import spolzin from '../../images/Head Shots/spolzin.png';
 import cchen from '../../images/Head Shots/cchen.jpeg';
+import { timePovertyDefinition, zeroTripMakingDefinition, workArrangementDefinitions } from './definitions';
 
 
 export function Content(): JSX.Element {
@@ -52,19 +53,19 @@ export function Content(): JSX.Element {
         </section>
         <section style={{ textAlign: "justify" }}>
           <h5 className="mt-4 fw-bold contenthead">
-            Time poverty
+            {timePovertyDefinition.term}
           </h5>
           <p className="mt-4 mb-4">
-            The notion of time poverty is often used to describe individuals who do not have enough time to engage in discretionary activities that presumably enhance wellbeing. Similar to income-based poverty, time poverty is linked to poorer wellbeing. To identify individuals experiencing time poverty, activities are first classified into necessary, committed, and discretionary categories. Necessary and committed activities include personal care, household chores, caregiving, and work, while all other activities are considered discretionary. The time spent on necessary and committed activities is then aggregated for each respondent and subtracted from the 1,440 minutes available in a day to determine the remaining time for discretionary activities. Subsequently, the median discretionary time is calculated for the sample in a given year, and individuals with discretionary time less than 60% of this median are deemed time-poor (or not time-poor otherwise).
+            {timePovertyDefinition.definition}
           </p>
         </section>
 
         <section style={{ textAlign: "justify" }}>
           <h5 className="mt-4 fw-bold contenthead">
-            Zero trip-making
+            {zeroTripMakingDefinition.term}
           </h5>
           <p className="mt-4 mb-4">
-            Zero trip-making refers to situations where individuals do not undertake any trips throughout the day. This condition may lead to feelings of social isolation, depression, and other mental health problems as a result of not being able to interact in person with others outside the home. Zero trip-making is generally seen as a negative indicator of wellbeing, indicating that those who do not make any trips in a full day may have a lower quality of life. Identifying zero trip-makers in ATUS datasets is straightforward. If a person's activity time use diary does not report any travel outside the home, they are classified as a zero trip-maker in the dataset (or trip-maker otherwise).
+            {zeroTripMakingDefinition.definition}
           </p>
 
           <p className="mt-4">
@@ -92,21 +93,11 @@ export function Content(): JSX.Element {
             The T3D provides in-depth insights into work arrangement trends among workers. It classifies respondents in the ATUS data series into distinct groups based on their employment status and the location and presence of their work activities as recorded in their time use diaries:
           </p>
           <ol>
-            <li className="mt-4">
-              <strong>Non-workers</strong>: This group includes individuals who have indicated that they are not participating in the labor force.
-            </li>
-            <li className="mt-4">
-              <strong>Workers with Zero Work</strong>: This category comprises respondents who reported no work activity in their time use diary.
-            </li>
-            <li className="mt-4">
-              <strong>In-home Only Workers</strong>: These individuals are those who reported working exclusively from home, with no reported out-of-home work activity.
-            </li>
-            <li className="mt-4">
-              <strong>Commuters Only</strong>: Respondents in this group reported engaging in at least some out-of-home work activity in their time use diary, without any in-home work activity.
-            </li>
-            <li className="mt-4">
-              <strong>Multi-site Workers</strong>: This category encompasses those who reported both out-of-home and in-home work activity in their time use diary.
-            </li>
+            {workArrangementDefinitions.map(({ term, definition }) => (
+              <li className="mt-4" key={term}>
+                <strong>{term}</strong>: {definition}
+              </li>
+            ))}
           </ol>
         </section>
 

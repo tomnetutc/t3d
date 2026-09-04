@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import "../../css/telework.scss";
 import { ChartDataProps, CountObj, DataRow, GroupedOptions, Option, SampleSizeTableProps, weekOption } from "../Types";
 import { CrossSegmentDataFilter, DataProvider, WeekOptions } from '../../utils/Helpers';
@@ -9,6 +9,21 @@ import Infobox from '../InfoBox/InfoBox';
 import { telework_crossSegmentColors } from '../../Colors';
 import RechartsLineChart from '../LineChart/LineChart';
 import SampleSizeTable from '../SampleSizeTable';
+import DiffModeToggle, { ChartDisplayMode } from '../DiffModeToggle';
+
+const TELEWORK_Y_AXIS_LABEL = "Share (%)";
+
+function toDiffFromAll(chartData: ChartDataProps): ChartDataProps {
+    const allDataset = chartData.datasets.find(ds => ds.label === 'All');
+    if (!allDataset) return chartData;
+    return {
+        labels: chartData.labels,
+        datasets: chartData.datasets.map(ds => ({
+            ...ds,
+            data: ds.data.map((value, i) => parseFloat((value - (allDataset.data[i] ?? 0)).toFixed(1))),
+        })),
+    };
+}
 
 export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], toggleState: boolean, setIsCrossSegmentLoading: (isLoading: boolean) => void, onProfileRemove: (index: number) => void }> = ({ menuSelectedOptions, toggleState, setIsCrossSegmentLoading, onProfileRemove }) => {
 
@@ -16,6 +31,7 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
     const [crossSegmentFilteredData, setCrossSegmentFilteredData] = useState<DataRow[]>([]);
     const [ChartData, setChartData] = useState<ChartDataProps>({ labels: [], datasets: [] });
     const [sampleSizeTableData, setSampleSizeTableData] = useState<SampleSizeTableProps>({ years: [], counts: [] });
+    const [displayMode, setDisplayMode] = useState<ChartDisplayMode>('actual');
 
 
     const handleCrossSegmentMenuChange = useCallback((selections: { week: weekOption; workArrangement: Option; employment: Option, startYear: string; endYear: string; }) => {
@@ -47,6 +63,15 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
         });
     }, [crossSegmentSelections, menuSelectedOptions, toggleState]);
 
+    const displayedChartData = useMemo(
+        () => (displayMode === 'diffFromAll' ? toDiffFromAll(ChartData) : ChartData),
+        [ChartData, displayMode]
+    );
+
+    const yAxisLabel = displayMode === 'diffFromAll' ? `${TELEWORK_Y_AXIS_LABEL} — difference relative to all` : TELEWORK_Y_AXIS_LABEL;
+    const yAxisDomain: [number | string, number | string] = displayMode === 'diffFromAll' ? ['auto', 'auto'] : [0, 'auto'];
+    const chartSubtitle = displayMode === 'diffFromAll' ? "Work arrangement share (%) — difference relative to all" : "Work arrangement share (%)";
+
     return (
         <>
             <div className='home'>
@@ -59,16 +84,20 @@ export const CrossSegmentAnalysis: React.FC<{ menuSelectedOptions: Option[][], t
                             }))}
                             removeProfile={index => onProfileRemove(index + 1)}
                             title="Segments"
+                            segmentColors={telework_crossSegmentColors}
                         />
                         <Infobox>
                             <p>Add up to four additional user-defined segments for comparison purposes and display their characteristics.</p>
                         </Infobox>
                     </div>
                     <div className='box MultiChartAvearge'>
+                        <DiffModeToggle mode={displayMode} onChange={setDisplayMode} />
                         <RechartsLineChart
-                            chartData={ChartData}
-                            title="Work arrangement share (%)"
+                            chartData={displayedChartData}
+                            title={chartSubtitle}
                             showLegend={true}
+                            yAxisLabel={yAxisLabel}
+                            yAxisDomain={yAxisDomain}
                         />
                         <Infobox>
                             <p>The distribution of workers by work arrangement for each segment over the selected period.</p>

@@ -90,6 +90,18 @@
             grid-column: span 3;
             grid-row: span 4;
             position: relative;
+            // Cross Segment only: the "Actual values / Difference from All" toggle sits above the chart.
+            // Lay the box out as a column so the toggle takes its own height and the chart fills what is left;
+            // otherwise the toggle plus a height:100% chart overflow the 4 grid rows and the rows (and the
+            // Segments card beside it) stretch well past the usual 4 x 130px.
+            display: flex;
+            flex-direction: column;
+
+            > .chart-container {
+                flex: 1 1 0;
+                min-height: 0;
+                height: auto;
+            }
         }
     }
 
